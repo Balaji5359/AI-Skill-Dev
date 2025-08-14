@@ -65,18 +65,47 @@ const MentorJAMTestDashboard = () => {
         setFilteredStudents(filtered);
     }, [students, searchTerm, sortOrder, yearFilter, sectionFilter]);
 
-    const extractRating = (session) => {
-        const convo = session.conversation || [];
-        for (let exchange of convo) {
-            const ratingMatch = exchange.agent?.match(/Overall Rating:\*\* (\d+)/);
-            if (ratingMatch) return parseInt(ratingMatch[1], 10);
+    const extractFeedback = (conversationHistory) => {
+        if (Array.isArray(conversationHistory)) {
+            for (const item of conversationHistory) {
+                if (item.agent && (item.agent.includes('JAM Score:') || item.agent.includes('Overall Rating:'))) {
+                    const jamScoreMatch = item.agent.match(/JAM Score:\s*(\d+(?:\.\d+)?)\/10/)
+                    const overallRatingMatch = item.agent.match(/Overall Rating:\*\*\s*(\d+(?:\.\d+)?)\/10/)
+                    const scoreMatch = jamScoreMatch || overallRatingMatch
+                    
+                    return {
+                        score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A'
+                    }
+                }
+            }
+        } else {
+            for (const [user, agent] of Object.entries(conversationHistory)) {
+                if (agent && (agent.includes('JAM Score:') || agent.includes('Overall Rating:'))) {
+                    const jamScoreMatch = agent.match(/JAM Score:\s*(\d+(?:\.\d+)?)\/10/)
+                    const overallRatingMatch = agent.match(/Overall Rating:\*\*\s*(\d+(?:\.\d+)?)\/10/)
+                    const scoreMatch = jamScoreMatch || overallRatingMatch
+                    
+                    return {
+                        score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A'
+                    }
+                }
+            }
         }
-        return null;
+        return null
     };
 
-    const getAverageRating = (student) => {
-        const ratings = student.history?.map(extractRating).filter(r => r !== null) || [];
-        return ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : 'N/A';
+    const getAverageScore = (student) => {
+        const scores = student.history?.map(session => {
+            const feedback = extractFeedback(session.conversation);
+            return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : 0;
+        }).filter(score => score > 0) || [];
+        
+        return scores.length > 0 ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10 : 0;
+    };
+
+    const extractRating = (session) => {
+        const feedback = extractFeedback(session.conversation);
+        return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : null;
     };
 
     const getScoreCategory = (score) => {
@@ -249,11 +278,11 @@ const MentorJAMTestDashboard = () => {
                                 </div>
                                 
                                 <div className="rating-display">
-                                    <div className="rating-value" style={{ color: getScoreCategory(getAverageRating(student)).color }}>
-                                        {getAverageRating(student)}
+                                    <div className="rating-value" style={{ color: getScoreCategory(getAverageScore(student)).color }}>
+                                        {getAverageScore(student)}
                                     </div>
-                                    <div className="rating-label" style={{ color: getScoreCategory(getAverageRating(student)).color }}>
-                                        {getScoreCategory(getAverageRating(student)).text}
+                                    <div className="rating-label" style={{ color: getScoreCategory(getAverageScore(student)).color }}>
+                                        {getScoreCategory(getAverageScore(student)).text}
                                     </div>
                                 </div>
                                 

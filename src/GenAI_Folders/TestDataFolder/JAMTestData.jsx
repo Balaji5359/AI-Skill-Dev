@@ -40,10 +40,10 @@ function JAMTestData() {
     const getAverageScore = () => {
         const scores = sessions.map(session => {
             const feedback = extractFeedback(session.conversationHistory);
-            return feedback ? parseInt(feedback.score.split('/')[0]) : 0;
+            return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : 0;
         }).filter(score => score > 0);
         
-        return scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+        return scores.length > 0 ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10 : 0;
     };
 
     const getScoreCategory = (score) => {
@@ -141,7 +141,7 @@ function JAMTestData() {
                             >
                                 🎤 JAM Session Test - Click here to take test
                             </button>
-                            <button 
+                            {/* <button 
                                 onClick={() => window.location.href = '/jam-test-data'}
                                 className="test-activity-btn communication"
                             >
@@ -152,7 +152,7 @@ function JAMTestData() {
                                 className="test-activity-btn interview"
                             >
                                 👔 Mock Interview Test - Click here to take test
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 )}
@@ -324,30 +324,44 @@ function extractFeedback(conversationHistory) {
     if (Array.isArray(conversationHistory)) {
         // Handle array format
         for (const item of conversationHistory) {
-            if (item.user && item.agent && item.user.length > 10 && item.agent.includes('Overall Rating:')) {
-                const scoreMatch = item.agent.match(/Overall Rating:\*\*\s*(\d+\/10)/)
-                const feedbackLines = item.agent.split('\\n').filter(line => line.includes('**') && line.includes(':'))
-                const tipMatch = item.agent.match(/Tip:\*\*\s*(.+?)(?:\\n|$)/)
+            if (item.agent && (item.agent.includes('JAM Score:') || item.agent.includes('Overall Rating:'))) {
+                // Look for JAM Score format first, then fallback to Overall Rating
+                const jamScoreMatch = item.agent.match(/JAM Score:\s*(\d+(?:\.\d+)?)\/10/)
+                const overallRatingMatch = item.agent.match(/Overall Rating:\*\*\s*(\d+(?:\.\d+)?)\/10/)
+                const scoreMatch = jamScoreMatch || overallRatingMatch
+                
+                // Extract feedback lines
+                const feedbackLines = item.agent.split('\n')
+                    .filter(line => line.includes(':') && (line.includes('Grammar') || line.includes('Vocabulary') || line.includes('Content') || line.includes('Flow') || line.includes('Time')))
+                    .map(line => line.replace(/\*\*/g, '').trim())
+                
+                const tipMatch = item.agent.match(/(?:Tip|Remember):\s*(.+?)(?:\n|$)/s)
                 
                 return {
-                    score: scoreMatch ? scoreMatch[1] : 'N/A',
-                    details: feedbackLines.map(line => line.replace(/\*\*/g, '').trim()),
-                    tip: tipMatch ? tipMatch[1] : null
+                    score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A',
+                    details: feedbackLines.length > 0 ? feedbackLines : ['Feedback provided'],
+                    tip: tipMatch ? tipMatch[1].trim() : null
                 }
             }
         }
     } else {
         // Handle object format
         for (const [user, agent] of Object.entries(conversationHistory)) {
-            if (user.length > 10 && agent.includes('Overall Rating:')) {
-                const scoreMatch = agent.match(/Overall Rating:\*\*\s*(\d+\/10)/)
-                const feedbackLines = agent.split('\\n').filter(line => line.includes('**') && line.includes(':'))
-                const tipMatch = agent.match(/Tip:\*\*\s*(.+?)(?:\\n|$)/)
+            if (agent && (agent.includes('JAM Score:') || agent.includes('Overall Rating:'))) {
+                const jamScoreMatch = agent.match(/JAM Score:\s*(\d+(?:\.\d+)?)\/10/)
+                const overallRatingMatch = agent.match(/Overall Rating:\*\*\s*(\d+(?:\.\d+)?)\/10/)
+                const scoreMatch = jamScoreMatch || overallRatingMatch
+                
+                const feedbackLines = agent.split('\n')
+                    .filter(line => line.includes(':') && (line.includes('Grammar') || line.includes('Vocabulary') || line.includes('Content') || line.includes('Flow') || line.includes('Time')))
+                    .map(line => line.replace(/\*\*/g, '').trim())
+                
+                const tipMatch = agent.match(/(?:Tip|Remember):\s*(.+?)(?:\n|$)/s)
                 
                 return {
-                    score: scoreMatch ? scoreMatch[1] : 'N/A',
-                    details: feedbackLines.map(line => line.replace(/\*\*/g, '').trim()),
-                    tip: tipMatch ? tipMatch[1] : null
+                    score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A',
+                    details: feedbackLines.length > 0 ? feedbackLines : ['Feedback provided'],
+                    tip: tipMatch ? tipMatch[1].trim() : null
                 }
             }
         }

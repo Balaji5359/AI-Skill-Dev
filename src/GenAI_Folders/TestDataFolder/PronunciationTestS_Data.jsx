@@ -149,7 +149,7 @@ function PronunciationTestS_Data() {
                             >
                                 🎤 PronunciationTest-Spoken - Click here to take test
                             </button>
-                            <button 
+                            {/* <button 
                                 onClick={() => window.location.href = '/pronunciation-test-s-data'}
                                 className="test-activity-btn communication"
                             >
@@ -160,7 +160,7 @@ function PronunciationTestS_Data() {
                                 className="test-activity-btn interview"
                             >
                                 👔 Mock Interview Test - Click here to take test
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 )}

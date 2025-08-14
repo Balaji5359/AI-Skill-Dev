@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 // import './genai_interviewer_res.css'; // Removed - using Tailwind CSS
 // import { speakWithPolly, stopSpeech } from './PollyPlayer.jsx'; // Disabled due to credential issues
-import MicrophoneRecorder from './MicrophoneRecorder.jsx';
 
 function GenAI_JAM() {
         const [chat, setChat] = useState([]);
         const [message, setMessage] = useState('');
-        const [isMuted, setIsMuted] = useState(false);
+
         const [chatHistory, setChatHistory] = useState([]);
         const [showHistory, setShowHistory] = useState(false);
         const [isLoading, setIsLoading] = useState(false);
@@ -63,8 +62,13 @@ function GenAI_JAM() {
                         
                         setIsSubmitting(true);
                         
+                        // Stop recording gracefully
                         if (mediaRecorderRef.current && isRecordingRef.current) {
-                            mediaRecorderRef.current.stop();
+                            try {
+                                mediaRecorderRef.current.stop();
+                            } catch (e) {
+                                console.log('Recognition already stopped');
+                            }
                             setIsRecording(false);
                             isRecordingRef.current = false;
                             setMediaRecorder(null);
@@ -75,15 +79,16 @@ function GenAI_JAM() {
                         setTimerInterval(null);
                         setTimer(0);
                         
-                        // Submit accumulated text once
+                        // Submit whatever was captured
                         setTimeout(() => {
                             const finalText = accumulatedTextRef.current.trim();
-                            console.log('Submitting text:', finalText);
-                            if (finalText && !isSubmitting) {
-                                const cleanText = finalText.replace(/(\b\w+\b(?:\s+\b\w+\b)*?)\s+\1+/g, '$1');
-                                sendMessage(cleanText);
+                            
+                            if (finalText) {
+                                sendMessage(finalText);
                             }
-                        }, 100);
+                            
+                            setIsSubmitting(false);
+                        }, 200);
                         
                         return 60;
                     }
@@ -145,14 +150,7 @@ function GenAI_JAM() {
                 const botMessage = { sender: 'bot', text: aiResponse };
                 setChat((prev) => [...prev, botMessage]);
     
-                if (!isMuted && aiResponse && typeof aiResponse === 'string') {
-                    // Use browser's built-in speech synthesis instead of Polly
-                    if ('speechSynthesis' in window) {
-                        const utterance = new SpeechSynthesisUtterance(aiResponse.replace(/<[^>]*>/g, '').replace(/\*\*/g, ''));
-                        utterance.rate = 0.8;
-                        speechSynthesis.speak(utterance);
-                    }
-                }
+                // Text-to-voice functionality removed as requested
     
             } catch (err) {
                 console.error('Full API error:', err);
@@ -178,15 +176,14 @@ function GenAI_JAM() {
     
         const startRecording = async () => {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('Speech recognition not supported in this browser');
+                alert('Speech recognition not supported. Please use Chrome or Edge.');
                 return;
             }
 
-            // Request microphone permission first
             try {
                 await navigator.mediaDevices.getUserMedia({ audio: true });
             } catch (error) {
-                alert('Microphone access denied. Please allow microphone access and try again.');
+                alert('Microphone access denied.');
                 return;
             }
     
@@ -198,71 +195,53 @@ function GenAI_JAM() {
             recognition.lang = 'en-US';
     
             recognition.onstart = () => {
-                console.log('Speech recognition started');
+                console.log('Recording started');
                 setIsRecording(true);
                 isRecordingRef.current = true;
-                setAccumulatedText(''); // Clear previous text
+                setAccumulatedText('');
                 accumulatedTextRef.current = '';
-                setMessage('🎤 Listening... Start speaking now!'); // Show listening message
-                setIsSubmitting(false); // Reset submission flag
+                setMessage('');
+                setIsSubmitting(false);
                 startTimer();
             };
     
             recognition.onresult = (event) => {
-                let interimTranscript = '';
-                let finalTranscript = '';
+                let currentTranscript = '';
                 
-                // Only process NEW results from the last result index
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        finalTranscript += transcript + ' ';
-                    } else {
-                        interimTranscript += transcript;
+                for (let i = 0; i < event.results.length; i++) {
+                    currentTranscript += event.results[i][0].transcript;
+                    if (i < event.results.length - 1) {
+                        currentTranscript += ' ';
                     }
                 }
                 
-                // Only add NEW final transcript to avoid duplicates
-                if (finalTranscript.trim()) {
-                    const newAccumulated = accumulatedTextRef.current + finalTranscript;
-                    accumulatedTextRef.current = newAccumulated;
-                    setAccumulatedText(newAccumulated);
-                    setMessage(newAccumulated + interimTranscript);
-                } else if (interimTranscript.trim()) {
-                    // Show interim results with current accumulated text
-                    setMessage(accumulatedTextRef.current + interimTranscript);
-                }
+                // Always preserve and show current transcript
+                accumulatedTextRef.current = currentTranscript;
+                setAccumulatedText(currentTranscript);
+                setMessage(currentTranscript);
             };
     
             recognition.onerror = (event) => {
-                console.error('Speech recognition error:', event.error);
-                setIsRecording(false);
-                isRecordingRef.current = false;
-                
-                // Show user-friendly error messages
-                switch(event.error) {
-                    case 'not-allowed':
-                        alert('Microphone access denied. Please allow microphone access in your browser settings.');
-                        break;
-                    case 'no-speech':
-                        console.log('No speech detected, continuing...');
-                        break;
-                    case 'audio-capture':
-                        alert('No microphone found. Please check your microphone connection.');
-                        break;
-                    case 'network':
-                        alert('Network error occurred. Please check your internet connection.');
-                        break;
-                    default:
-                        console.log('Speech recognition error:', event.error);
+                if (event.error === 'no-speech') {
+                    // Don't stop on no-speech, just continue
+                    return;
                 }
+                console.error('Speech error:', event.error);
             };
     
             recognition.onend = () => {
-                console.log('Speech recognition ended');
-                setIsRecording(false);
-                isRecordingRef.current = false;
-                // Don't auto-submit here, let timer handle it
+                // Auto-restart to maintain continuous recording
+                if (isRecordingRef.current) {
+                    setTimeout(() => {
+                        if (isRecordingRef.current) {
+                            try {
+                                recognition.start();
+                            } catch (e) {
+                                console.log('Recognition restart failed');
+                            }
+                        }
+                    }, 100);
+                }
             };
     
             recognition.start();
@@ -273,21 +252,27 @@ function GenAI_JAM() {
         const stopRecording = () => {
             if (mediaRecorderRef.current && isRecordingRef.current && !isSubmitting) {
                 setIsSubmitting(true);
-                mediaRecorderRef.current.stop();
+                
+                try {
+                    mediaRecorderRef.current.stop();
+                } catch (e) {
+                    console.log('Recognition stopped');
+                }
+                
                 setIsRecording(false);
                 isRecordingRef.current = false;
                 setMediaRecorder(null);
                 mediaRecorderRef.current = null;
                 stopTimer();
                 
-                // Submit the accumulated text
                 setTimeout(() => {
                     const finalText = accumulatedTextRef.current.trim();
+                    
                     if (finalText) {
-                        // Clean up duplicate phrases
-                        const cleanText = finalText.replace(/(\b\w+\b(?:\s+\b\w+\b)*?)\s+\1+/g, '$1');
-                        sendMessage(cleanText);
+                        sendMessage(finalText);
                     }
+                    
+                    setIsSubmitting(false);
                 }, 200);
             }
         };
@@ -462,7 +447,7 @@ function GenAI_JAM() {
                                         color: '#374151',
                                         fontWeight: '500',
                                         margin: 0
-                                    }}>💬 Start with greeting: <span style={{ fontWeight: 'bold', color: '#2563eb' }}>"hi"</span>, mute mike if no need 🔇</p>
+                                    }}>💬 Start with greeting: <span style={{ fontWeight: 'bold', color: '#2563eb' }}>"hi"</span></p>
                                 </div>
                                 <div style={{
                                     padding: '16px',
@@ -510,8 +495,7 @@ function GenAI_JAM() {
                                         color: '#374151',
                                         fontWeight: '500',
                                         margin: 0
-                                    }}>🎤 Remember the rules, when you click <span style={{ fontWeight: 'bold', color: '#2563eb' }}>Record </span>
-                                        it will <span style={{ fontWeight: 'bold', color: 'red' }}>start recording voice</span>, when <span style={{ fontWeight: 'bold', color: '#2563eb' }}>clicked </span>again <span style={{ fontWeight: 'bold', color: 'red' }}>stop recording</span></p>
+                                    }}>🎤 <span style={{ fontWeight: 'bold', color: '#2563eb' }}>Smart Record</span> captures <span style={{ fontWeight: 'bold', color: 'green' }}>everything</span> - words, sounds (aww, haa), pauses. Auto-stops at <span style={{ fontWeight: 'bold', color: 'red' }}>60 seconds</span> and submits automatically</p>
                                 </div>
                                 <div style={{
                                     padding: '16px',
@@ -545,8 +529,8 @@ function GenAI_JAM() {
                                         color: '#374151',
                                         fontWeight: '500',
                                         margin: 0
-                                    }}>📊 After <span style={{ fontWeight: 'bold', color: '#2563eb' }}>1 minute </span>
-                                        the content will be auto submitted and you will get <span style={{ fontWeight: 'bold', color: '#2563eb' }}>Agent feedback</span></p>
+                                    }}>📊 After <span style={{ fontWeight: 'bold', color: '#2563eb' }}>60 seconds </span>
+                                        recording <span style={{ fontWeight: 'bold', color: 'green' }}>auto-stops & submits</span> with <span style={{ fontWeight: 'bold', color: '#2563eb' }}>AI feedback</span></p>
                                 </div>
                             </div>
                         </div>
@@ -632,51 +616,7 @@ function GenAI_JAM() {
                                         >
                                             ← Back
                                         </button>
-                                        <button
-                                            style={{
-                                                background: 'rgba(255, 255, 255, 0.2)',
-                                                color: 'white',
-                                                border: 'none',
-                                                padding: '10px 16px',
-                                                borderRadius: '12px',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.3s ease',
-                                                backdropFilter: 'blur(10px)',
-                                                fontSize: '16px'
-                                            }}
-                                            onMouseOver={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.3)'}
-                                            onMouseOut={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
-                                            onClick={() => {
-                                                setIsMuted(!isMuted);
-                                                if (!isMuted && 'speechSynthesis' in window) {
-                                                    speechSynthesis.cancel();
-                                                }
-                                            } }
-                                        >
-                                            {isMuted ? '🔇' : '🔊'}
-                                        </button>
-                                        <button
-                                            style={{
-                                                background: 'rgba(255, 255, 255, 0.2)',
-                                                color: 'white',
-                                                border: 'none',
-                                                padding: '10px 16px',
-                                                borderRadius: '12px',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.3s ease',
-                                                backdropFilter: 'blur(10px)',
-                                                fontSize: '16px'
-                                            }}
-                                            onMouseOver={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.3)'}
-                                            onMouseOut={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
-                                            onClick={() => {
-                                                if ('speechSynthesis' in window) {
-                                                    speechSynthesis.cancel();
-                                                }
-                                            } }
-                                        >
-                                            ⏹️
-                                        </button>
+
                                     </div>
                                 </div>
                             </div>
@@ -779,7 +719,7 @@ function GenAI_JAM() {
                                             color: timer > 50 ? '#dc2626' : '#16a34a',
                                             animation: timer > 50 ? 'pulse 1s infinite' : 'none'
                                         }}>
-                                            🎙️ Recording: {timer}s / 60s
+                                            🎙️ High-Accuracy Recording: {timer}s / 60s
                                         </div>
                                         <div style={{
                                             width: '100%',
@@ -805,7 +745,7 @@ function GenAI_JAM() {
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
                                         onKeyDown={handleKeyDown}
-                                        placeholder='Type "hi" to start your JAM session...'
+                                        placeholder='Type "hi" to start, or use Smart Record for high-accuracy voice capture...'
                                         disabled={isLoading}
                                         rows={4}
                                         style={{
@@ -835,7 +775,7 @@ function GenAI_JAM() {
                                         <button
                                             onClick={toggleRecording}
                                             disabled={isLoading}
-                                            title={isRecording ? 'Stop Recording' : 'Start 1-Minute Recording'}
+                                            title={isRecording ? 'Stop High-Accuracy Recording' : 'Start 1-Minute High-Accuracy Recording'}
                                             style={{
                                                 flex: 1,
                                                 padding: '12px 20px',
@@ -864,7 +804,7 @@ function GenAI_JAM() {
                                                     : 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
                                             } }
                                         >
-                                            {isRecording ? `🔴 ${timer}s` : '🎤 Record'}
+                                            {isRecording ? `🔴 ${timer}s` : '🎤 Smart Record'}
                                         </button>
                                         <button
                                             onClick={() => sendMessage()}

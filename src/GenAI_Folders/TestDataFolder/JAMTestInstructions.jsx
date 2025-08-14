@@ -14,7 +14,7 @@ function JAMTestInstructions() {
     }, [countdown, navigate]);
 
     const startTest = () => {
-        setCountdown(10);
+        setCountdown(5);
         const countdownInterval = setInterval(() => {
             setCountdown(prev => {
                 if (prev <= 1) {
