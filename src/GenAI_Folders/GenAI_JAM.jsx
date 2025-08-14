@@ -114,7 +114,7 @@ function GenAI_JAM() {
     
             try {
                 const res = await axios.post(
-                    'https://c9beky98gk.execute-api.ap-south-1.amazonaws.com/dev/activity-jam',
+                    'https://c9beky98gk.execute-api.ap-south-1.amazonaws.com/dev/activity-jam2',
                     // send message like this
                     {
                         "body": JSON.stringify
