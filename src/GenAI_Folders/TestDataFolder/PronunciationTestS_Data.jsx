@@ -49,18 +49,19 @@ function PronunciationTestS_Data() {
         return 0;
     };
 
+    // const getAverageScore = () => {
+    //     const scores = sessions.map(session => extractScore(session.conversationHistory)).filter(score => score > 0);
+    //     return scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+    // };
     const getAverageScore = () => {
-        const scores = sessions.map(session => extractScore(session.conversationHistory)).filter(score => score > 0);
-        return scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+        const scores = sessions.map(session => {
+            const feedback = extractFeedback(session.conversationHistory);
+            return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : 0;
+        }).filter(score => score > 0);
+        
+        return scores.length > 0 ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10 : 0;
     };
 
-    const getScoreCategory = (score) => {
-        if (score >= 9) return { text: 'Perfect Performance', color: '#4CAF50' };
-        if (score >= 8) return { text: 'Good Performance', color: '#2196F3' };
-        if (score >= 7) return { text: 'Average Performance', color: '#FF9800' };
-        if (score >= 6) return { text: 'Poor Performance', color: '#F44336' };
-        return { text: 'No Score Available', color: '#9E9E9E' };
-    };
 
     const CircularProgress = ({ percentage, size = 120, strokeWidth = 8, color = '#4CAF50' }) => {
         const radius = (size - strokeWidth) / 2;
@@ -107,12 +108,9 @@ function PronunciationTestS_Data() {
             <div className="dashboard-header">
                 <h1>Here is your PronunciationTest-Spoken <br></br>with GenAI Agent Details</h1>
                 <div className="overall-score">
-                    <CircularProgress percentage={getAverageScore()} size={150} color={getScoreCategory(getAverageScore()).color} />
+                    <CircularProgress percentage={getAverageScore()} size={150} />
                     <div className="score-details">
                         <h2>Average Score</h2>
-                        <p style={{ color: getScoreCategory(getAverageScore()).color, fontWeight: 'bold' }}>
-                            {getScoreCategory(getAverageScore()).text}
-                        </p>
                     </div>
                 </div>
             </div>

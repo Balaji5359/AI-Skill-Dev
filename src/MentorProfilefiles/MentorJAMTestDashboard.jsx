@@ -108,15 +108,7 @@ const MentorJAMTestDashboard = () => {
         return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : null;
     };
 
-    const getScoreCategory = (score) => {
-        const numScore = parseFloat(score);
-        if (isNaN(numScore)) return { text: 'No Score Available', color: '#9E9E9E' };
-        if (numScore >= 9) return { text: 'Perfect Performance', color: '#4CAF50' };
-        if (numScore >= 8) return { text: 'Good Performance', color: '#2196F3' };
-        if (numScore >= 7) return { text: 'Average Performance', color: '#FF9800' };
-        if (numScore >= 6) return { text: 'Poor Performance', color: '#F44336' };
-        return { text: 'Below Average', color: '#F44336' };
-    };
+
 
     const handleStudentClick = (student) => {
         setSelectedStudent(student);
@@ -278,11 +270,8 @@ const MentorJAMTestDashboard = () => {
                                 </div>
                                 
                                 <div className="rating-display">
-                                    <div className="rating-value" style={{ color: getScoreCategory(getAverageScore(student)).color }}>
+                                    <div className="rating-value">
                                         {getAverageScore(student)}
-                                    </div>
-                                    <div className="rating-label" style={{ color: getScoreCategory(getAverageScore(student)).color }}>
-                                        {getScoreCategory(getAverageScore(student)).text}
                                     </div>
                                 </div>
                                 
