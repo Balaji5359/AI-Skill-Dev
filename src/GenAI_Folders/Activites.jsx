@@ -15,6 +15,9 @@ function Activities() {
     const handleStartPronunciationTestL = () => {
         navigate("/pronunciation-test-l-data");
     };
+    const handleStartRoleBasedInterview = () => {
+        navigate("/role-based-interview-data");
+    };
 
     // Updated ActivityButton to accept onStart prop
     const ActivityButton = ({ path, title, icon, startButton, onStart }) => {
@@ -85,6 +88,13 @@ function Activities() {
                         icon="👂"
                         startButton="Start Pronunciation Test - Listening"
                         onStart={handleStartPronunciationTestL}
+                    />
+                    <ActivityButton
+                        path="/activities"
+                        title="Role Based Interview with GenAI Agent"
+                        icon="🎭"
+                        startButton="Start Role Based Interview"
+                        onStart={handleStartRoleBasedInterview}
                     />
                 </div>
 

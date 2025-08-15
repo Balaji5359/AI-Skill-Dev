@@ -55,6 +55,7 @@ const GenAIInterviewerRes = lazy(() => import('./GenAI_Folders/GenAI_Interviewer
 const GenAI_PronunciationTestSpoken = lazy(() => import('./GenAI_Folders/GenAI_PronunciationTestSpoken.jsx'));
 const GenAI_PronunciationTestListening = lazy(() => import('./GenAI_Folders/GenAI_PronunciationTestListening.jsx'));
 const GenAI_JAM = lazy(() => import('./GenAI_Folders/GenAI_JAM'));
+const Role_BasedInterviewData = lazy(() => import('./GenAI_Folders/TestDataFolder/Role_BasedInterviewData.jsx'));
 const JAMTestData = lazy(() => import('./GenAI_Folders/TestDataFolder/JAMTestData.jsx'));
 const PronunciationTestS_Data = lazy(() => import('./GenAI_Folders/TestDataFolder/PronunciationTestS_Data.jsx'));
 const PronunciationTestL_Data = lazy(() => import('./GenAI_Folders/TestDataFolder/PronunciationTestL_Data.jsx'));
@@ -63,6 +64,7 @@ const PronunciationTestL_Data = lazy(() => import('./GenAI_Folders/TestDataFolde
 const JAMTestInstructions = lazy(() => import('./GenAI_Folders/TestDataFolder/JAMTestInstructions.jsx'));
 const PronunciationTestS_Instructions = lazy(() => import('./GenAI_Folders/TestDataFolder/PronunciationTestS_Instructions.jsx'));
 const PronunciationTestL_Instructions = lazy(() => import('./GenAI_Folders/TestDataFolder/PronunciationTestL_Instructions.jsx'));
+const Role_BasedInterview_Instructions = lazy(() => import('./GenAI_Folders/TestDataFolder/Role_BasedInterview_Instructions.jsx'));
 const GenAI_Guidance = lazy(() => import('./GenAI_Folders/GenAI_Guidence.jsx'));
 const GenAI_Prev_Q_Interviewer = lazy(() => import('./GenAI_Folders/GenAI_Prev_Q_Interviewer.jsx'));
 const GenAI_Personality_Test = lazy(() => import('./GenAI_Folders/GenAI_Personality_Test.jsx'));
@@ -367,6 +369,13 @@ function App() {
               </DashboardLayout>
             </ProtectedRoute>
           } />
+          <Route path="/role-based-interview-data" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Role_BasedInterviewData />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
 
           <Route path="/jam-test-instructions" element={
             <ProtectedRoute>
@@ -386,6 +395,13 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <PronunciationTestL_Instructions />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/role-based-interview-instructions" element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Role_BasedInterview_Instructions />
               </DashboardLayout>
             </ProtectedRoute>
           } />
