@@ -51,7 +51,7 @@ const Tech = lazy(() => import("./FieldSelectionFiles/Tech.jsx"));
 const Tech_Selection = lazy(() => import("./FieldSelectionFiles/TechSelection.jsx"));
 const PlacementPrediction1 = lazy(() => import("./FieldSelectionFiles/Placement_Prediction1.jsx"));
 const PlacementRatingForm = lazy(() => import("./FieldSelectionFiles/PlacementRatingForm.jsx"));
-const GenAIInterviewerRes = lazy(() => import('./GenAI_Folders/GenAI_Interviewer_Res'));
+const GenAI_Interviewer_RoleBased = lazy(() => import('./GenAI_Folders/AI_InterviewToolsFolder/GenAI_Interviewer_RoleBased.jsx'));
 const GenAI_PronunciationTestSpoken = lazy(() => import('./GenAI_Folders/GenAI_PronunciationTestSpoken.jsx'));
 const GenAI_PronunciationTestListening = lazy(() => import('./GenAI_Folders/GenAI_PronunciationTestListening.jsx'));
 const GenAI_JAM = lazy(() => import('./GenAI_Folders/GenAI_JAM'));
@@ -70,6 +70,9 @@ const GenAI_Prev_Q_Interviewer = lazy(() => import('./GenAI_Folders/GenAI_Prev_Q
 const GenAI_Personality_Test = lazy(() => import('./GenAI_Folders/GenAI_Personality_Test.jsx'));
 const GenAI_Test_Tech = lazy(() => import('./GenAI_Folders/GenAI_Test_Tech.jsx'));
 // Layout components
+
+
+
 const MainLayout = ({ children }) => (
   <>
     <main className="main-content">
@@ -249,13 +252,13 @@ function App() {
 
 
           {/* Field selection routes */}
-          <Route path="/skill-assessment" element={
+          {/* <Route path="/skill-assessment" element={
             <ProtectedRoute>
               <DashboardLayout>
                 <GenAIInterviewerRes/>
               </DashboardLayout>
             </ProtectedRoute>
-          } />
+          } /> */}
           
           <Route path="/tech-list" element={
             <ProtectedRoute>
@@ -325,13 +328,12 @@ function App() {
             </ProtectedRoute>
           } />
 
-          <Route path="/genai-interviewer-res" element={
+          <Route path="/genai-interviewer-rolebased" element={
             <ProtectedRoute>
-              <DashboardLayout>
-                <GenAIInterviewerRes />
-              </DashboardLayout>
+              <GenAI_Interviewer_RoleBased />
             </ProtectedRoute>
           } />
+
           <Route path="/genai-jam" element={
             <ProtectedRoute>
               <GenAI_JAM />

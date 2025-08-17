@@ -8,7 +8,7 @@ function Role_Based_Interview_Instructions() {
 
     useEffect(() => {
         if (countdown === 0) {
-            window.open('#', '_blank');
+            window.open('/genai-interviewer-rolebased', '_blank');
             setShowReturnMessage(true);
         }
     }, [countdown, navigate]);
@@ -147,7 +147,8 @@ function Role_Based_Interview_Instructions() {
                     ) : (
                         <button className="start-test-btn" onClick={startTest}>
                             <span className="btn-icon">🚀</span>
-                            Start Interview                        </button>
+                            Start Interview
+                        </button>
                     )}
                 </div>
             </div>
