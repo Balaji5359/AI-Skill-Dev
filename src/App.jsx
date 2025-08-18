@@ -43,8 +43,11 @@ const MentorProfileCreate = lazy(() => import("./MentorProfilefiles/MentorProfil
 const MentorStudentTests = lazy(() => import("./MentorProfilefiles/Mentor_StudentTests.jsx"));
 const MentorJAMTestDashboard = lazy(() => import("./MentorProfilefiles/MentorJAMTestDashboard.jsx"));
 const MentorPron_SDashboard = lazy(() => import("./MentorProfilefiles/MentorPron_SDashboard.jsx"));
+const MentorRole_Based_InterviewDashboard  = lazy(() => import("./MentorProfilefiles/MentorRole_Based_InterviewDashbord.jsx"));
 // const GenAI_Interviewer_Res = lazy(() => import("./GenAI_Folders/GenAI_Interviewer_Res.jsx"));
 // const PollyPlayer = lazy(() => import("./GenAI_Folders/PollyPlayer.jsx"));
+
+
 // Field selection components
 const TechList_page = lazy(() => import("./FieldSelectionFiles/TechList.jsx"));
 const Tech = lazy(() => import("./FieldSelectionFiles/Tech.jsx"));
@@ -217,6 +220,12 @@ function App() {
               <MentorPron_SDashboard />
             </AuthLayout>
           } />
+
+          <Route path="/mentor_student_tests_role_based_interview" element={
+            <AuthLayout>
+              <MentorRole_Based_InterviewDashboard/>
+            </AuthLayout>
+          }/>
 
 
           {/* Protected routes */}

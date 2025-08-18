@@ -1,0 +1,412 @@
+import React, { useEffect, useState } from 'react';
+import './MentorJAMTestDashboard.css';
+
+const MentorJAMTestDashboard = () => {
+    const [students, setStudents] = useState([]);
+    const [filteredStudents, setFilteredStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [selectedSession, setSelectedSession] = useState(null);
+    const [viewMode, setViewMode] = useState('list');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [yearFilter, setYearFilter] = useState('all');
+    const [sectionFilter, setSectionFilter] = useState('all');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch(
+                    'https://v6iq49ttb1.execute-api.ap-south-1.amazonaws.com/dev/get-role-based-interview-analysis',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    }
+                );
+                const text = await res.text();
+                const parsed = JSON.parse(JSON.parse(text).body);
+                const sortedStudents = parsed.sort((a, b) => a.rollNo.localeCompare(b.rollNo));
+                setStudents(sortedStudents);
+                setFilteredStudents(sortedStudents);
+            } catch (err) {
+                console.error('Error:', err);
+                setError('Failed to load data.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+
+    useEffect(() => {
+        let filtered = students.filter(student => {
+            const matchesSearch = searchTerm === '' || 
+                student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                student.rollNo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                student.branch?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                student.section?.toLowerCase().includes(searchTerm.toLowerCase());
+            
+            const matchesYear = yearFilter === 'all' || student.year_of_study === yearFilter;
+            const matchesSection = sectionFilter === 'all' || student.section === sectionFilter;
+            
+            return matchesSearch && matchesYear && matchesSection;
+        });
+
+        filtered.sort((a, b) => {
+            if (sortOrder === 'asc') {
+                return a.rollNo.localeCompare(b.rollNo);
+            } else {
+                return b.rollNo.localeCompare(a.rollNo);
+            }
+        });
+
+        setFilteredStudents(filtered);
+    }, [students, searchTerm, sortOrder, yearFilter, sectionFilter]);
+
+    const extractFeedback = (conversationHistory) => {
+        if (Array.isArray(conversationHistory)) {
+            for (const item of conversationHistory) {
+                if (item.agent && (item.agent.includes('Overall Interview Score:') || item.agent.includes('Communication Level:'))) {
+                    const scoreMatch = item.agent.match(/Overall Interview Score:\*\*\s*(\d+(?:\.\d+)?)/)
+                    
+                    return {
+                        score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A'
+                    }
+                }
+            }
+        } else {
+            for (const [user, agent] of Object.entries(conversationHistory)) {
+                if (agent && (agent.includes('Overall Interview Score:') || agent.includes('Communication Level:'))) {
+                    const scoreMatch = agent.match(/Overall Interview Score:\*\*\s*(\d+(?:\.\d+)?)/)
+                    
+                    return {
+                        score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A'
+                    }
+                }
+            }
+        }
+        return null
+    };
+
+    const getAverageScore = (student) => {
+        const scores = student.history?.map(session => {
+            const feedback = extractFeedback(session.conversation);
+            return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : 0;
+        }).filter(score => score > 0) || [];
+        
+        return scores.length > 0 ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10 : 0;
+    };
+
+    const extractRating = (session) => {
+        const feedback = extractFeedback(session.conversation);
+        return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : null;
+    };
+
+    const getScoreCategory = (score) => {
+        if (score >= 8) {
+            return { text: 'Excellent', color: '#4caf50' };
+        } else if (score >= 6) {
+            return { text: 'Good', color: '#ff9800' };
+        } else if (score >= 4) {
+            return { text: 'Average', color: '#2196f3' };
+        } else if (score > 0) {
+            return { text: 'Needs Improvement', color: '#f44336' };
+        } else {
+            return { text: 'No Score', color: '#9e9e9e' };
+        }
+    };
+
+    const handleStudentClick = (student) => {
+        setSelectedStudent(student);
+        setSelectedSession(null);
+        setViewMode('history');
+    };
+
+    const handleBackToList = () => {
+        setViewMode('list');
+        setSelectedStudent(null);
+        setSelectedSession(null);
+    };
+
+    if (loading) {
+        return (
+            <div className="mentor-jam-dashboard">
+                <div className="loading-spinner">
+                    <div className="spinner"></div>
+                    <p>Loading student data...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="mentor-jam-dashboard">
+                <div className="error-display">
+                    <div className="error-icon">⚠️</div>
+                    <p>{error}</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="mentor-jam-dashboard">
+            {/* Header */}
+            <div className="dashboard-header">
+                <div>
+                    <h1>🎯 Mentor Role-Based Interview Dashboard</h1>
+                    <p>Monitor student interview performance and track progress</p><br></br>
+                    {/* Back button to /mentor_student_tests*/}
+                    <button onClick={() => window.location.href = '/mentor_student_tests'} className="back-button">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <span>Back to Tests</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* Filters */}
+            {viewMode === 'list' && (
+                <div className="filters-section">
+                    <div className="filters-container">
+                        {/* Search */}
+                        <div className="search-container">
+                            <input
+                                type="text"
+                                placeholder="Search by name, roll number, branch, section..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="search-input"
+                            />
+                            <svg className="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+
+                        {/* Sort Order */}
+                        <div className="filter-group">
+                            <label className="filter-label">Sort:</label>
+                            <select
+                                value={sortOrder}
+                                onChange={(e) => setSortOrder(e.target.value)}
+                                className="filter-select"
+                            >
+                                <option value="asc">Roll No. A-Z</option>
+                                <option value="desc">Roll No. Z-A</option>
+                            </select>
+                        </div>
+
+                        {/* Year Filter */}
+                        <div className="filter-group">
+                            <label className="filter-label">Year:</label>
+                            <select
+                                value={yearFilter}
+                                onChange={(e) => setYearFilter(e.target.value)}
+                                className="filter-select"
+                            >
+                                <option value="all">All Years</option>
+                                <option value="1st">1st Year</option>
+                                <option value="2nd">2nd Year</option>
+                                <option value="3rd">3rd Year</option>
+                                <option value="4th">4th Year</option>
+                            </select>
+                        </div>
+
+                        {/* Section Filter */}
+                        <div className="filter-group">
+                            <label className="filter-label">Section:</label>
+                            <select
+                                value={sectionFilter}
+                                onChange={(e) => setSectionFilter(e.target.value)}
+                                className="filter-select"
+                            >
+                                <option value="all">All Sections</option>
+                                <option value="A">Section A</option>
+                                <option value="B">Section B</option>
+                                <option value="C">Section C</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {viewMode === 'list' ? (
+                /* Student List View */
+                <div className="students-container">
+                    <div className="students-header">
+                        <h2>👥 Students ({filteredStudents.length} of {students.length})</h2>
+                    </div>
+                    
+                    <div className="students-list">
+                        {filteredStudents.map((student, idx) => (
+                            <div
+                                key={idx}
+                                onClick={() => handleStudentClick(student)}
+                                className="student-item"
+                            >
+                                <div className="student-info">
+                                    <div className="student-avatar">
+                                        {student.name?.charAt(0) || student.rollNo?.charAt(0) || '?'}
+                                    </div>
+                                    <div className="student-details">
+                                        <h3>{student.name || 'Unknown'}</h3>
+                                        <p>{student.rollNo}</p>
+                                        
+                                        <div className="student-stats">
+                                            <div className="stat-item">
+                                                <div className="stat-label">Year</div>
+                                                <div className="stat-value">{student.year_of_study}</div>
+                                            </div>
+                                            <div className="stat-item">
+                                                <div className="stat-label">Branch</div>
+                                                <div className="stat-value">{student.branch}</div>
+                                            </div>
+                                            <div className="stat-item">
+                                                <div className="stat-label">Section</div>
+                                                <div className="stat-value">{student.section || 'N/A'}</div>
+                                            </div>
+                                            <div className="stat-item">
+                                                <div className="stat-label">Total Tests</div>
+                                                <div className="stat-value">{student.totalTests}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="rating-display">
+                                    <div className="rating-value">
+                                        {getAverageScore(student)}
+                                    </div>
+                                </div>
+                                
+                                <div className="arrow-icon">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                /* History View */
+                <div>
+                    {/* Back Button */}
+                    <button onClick={handleBackToList} className="back-button">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <span>Back to Students</span>
+                    </button>
+
+                    <div className="history-container">
+                        <div className="history-header">
+                            <h2>📚 {selectedStudent?.name} - Session History</h2>
+                            <p>{selectedStudent?.rollNo} • {selectedStudent?.totalTests} sessions</p>
+                        </div>
+
+                        <div className="split-layout">
+                            {/* Sessions Sidebar */}
+                            <div className="sessions-sidebar">
+                                <h3>📋 Sessions</h3>
+                                {selectedStudent?.history?.length > 0 ? (
+                                    <div>
+                                        {selectedStudent.history.map((session, idx) => (
+                                            <div
+                                                // add heading to each session as Id
+                                                aria-labelledby={`session-${session.sessionId}`}
+                                                key={idx}
+                                                onClick={() => setSelectedSession(selectedSession?.sessionId === session.sessionId ? null : session)}
+                                                className={`session-item ${
+                                                    selectedSession?.sessionId === session.sessionId ? 'active' : ''
+                                                }`}
+                                            >
+                                                <div className="session-id">{session.sessionId}</div>
+                                                {/* Make date date-month-year */}
+                                                <div className="session-time">
+                                                    {new Date(session.sessionTime).toLocaleString('en-GB', {
+                                                        day: 'numeric',
+                                                        month: 'long',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                        second: '2-digit',
+                                                        hour12: false
+                                                    })}
+                                                </div>
+                                                <div className="session-rating" style={{ color: getScoreCategory(extractRating(session) || 0).color }}>
+                                                    Rating: {extractRating(session) || 'N/A'} - {getScoreCategory(extractRating(session) || 0).text}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p>No sessions available</p>
+                                )}
+                            </div>
+
+                            {/* Conversation Display */}
+                            <div className="conversation-display">
+                                {selectedSession ? (
+                                    <div>
+                                        <h3>💬 Conversation Details</h3>
+                                        <div className="conversation-content">
+                                            {Array.isArray(selectedSession.conversation) ? (
+                                                selectedSession.conversation.map((exchange, idx) => (
+                                                <div key={idx} className="message-pair">
+                                                    <div className="user-message">
+                                                        <div className="message-label">
+                                                            <span>👨‍🎓</span>Student:
+                                                        </div>
+                                                        <div className="message-content">{exchange.user}</div>
+                                                    </div>
+                                                    <div className="agent-message">
+                                                        <div className="message-label">
+                                                            <span>🤖</span>Interview Agent:
+                                                        </div>
+                                                        <div className="message-content">{exchange.agent}</div>
+                                                    </div>
+                                                </div>
+                                                ))
+                                            ) : (
+                                                Object.entries(selectedSession.conversation || {}).map(([user, agent], idx) => (
+                                                    <div key={idx} className="message-pair">
+                                                        <div className="user-message">
+                                                            <div className="message-label">
+                                                                <span>👨🎓</span>Student:
+                                                            </div>
+                                                            <div className="message-content">{user}</div>
+                                                        </div>
+                                                        <div className="agent-message">
+                                                            <div className="message-label">
+                                                                <span>🤖</span>Interview Agent:
+                                                            </div>
+                                                            <div className="message-content">{agent}</div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="empty-conversation">
+                                        <div className="empty-conversation-icon">💬</div>
+                                        <p>Select a session to view conversation</p>
+                                        <p>Click on any session from the left panel</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+export default MentorJAMTestDashboard;
+

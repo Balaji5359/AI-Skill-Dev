@@ -18,7 +18,6 @@ function JAMTestData() {
             fetchHistory();
         }
     }, [activeTab]);
-
     const fetchHistory = async () => {
         setLoading(true);
         const email = localStorage.getItem('email');
@@ -132,18 +131,6 @@ function JAMTestData() {
                             >
                                 🎤 JAM Session Test - Click here to take test
                             </button>
-                            {/* <button 
-                                onClick={() => window.location.href = '/jam-test-data'}
-                                className="test-activity-btn communication"
-                            >
-                                💬 Communication Skills Test - Click here to take test
-                            </button>
-                            <button 
-                                onClick={() => window.location.href = '/jam-test-data'}
-                                className="test-activity-btn interview"
-                            >
-                                👔 Mock Interview Test - Click here to take test
-                            </button> */}
                         </div>
                     </div>
                 )}

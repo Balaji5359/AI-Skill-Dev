@@ -8,7 +8,6 @@ function Role_BasedInterviewData() {
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('start');
     const [animateProgress, setAnimateProgress] = useState(false);
-
     useEffect(() => {
         setAnimateProgress(true);
     }, []);
@@ -23,7 +22,7 @@ function Role_BasedInterviewData() {
         setLoading(true);
         const email = localStorage.getItem('email');
         try {
-            const response = await fetch('#', {
+            const response = await fetch('https://4b5jtqs0eb.execute-api.ap-south-1.amazonaws.com/dev/role-based-interview-history', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
@@ -157,7 +156,7 @@ function Role_BasedInterviewData() {
                                                 <div className="session-info">
                                                     <span className="session-time">Session Time: {session.time ? new Date(session.time).toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'}) : 'N/A'}</span>
                                                     <br />
-                                                    <span className="session-id">JAMSessionId: {session.sessionId}</span>
+                                                    <span className="session-id">InterviewSessionId: {session.sessionId}</span>
                                                 </div>
                                             </button>
                                         ))}
@@ -178,7 +177,7 @@ function Role_BasedInterviewData() {
                                                                 <div className="message-content">{item.user}</div>
                                                             </div>
                                                             <div className="agent-message">
-                                                                <span className="message-label">JAM Agent:</span>
+                                                                <span className="message-label">Interview Agent:</span>
                                                                 <div className="message-content">{item.agent}</div>
                                                             </div>
                                                         </div>
@@ -192,7 +191,7 @@ function Role_BasedInterviewData() {
                                                                 <div className="message-content">{user}</div>
                                                             </div>
                                                             <div className="agent-message">
-                                                                <span className="message-label">JAM Agent:</span>
+                                                                <span className="message-label">Interview Agent:</span>
                                                                 <div className="message-content">{agent}</div>
                                                             </div>
                                                         </div>
@@ -211,7 +210,7 @@ function Role_BasedInterviewData() {
                         ) : (
                             <div className="empty-state">
                                 <h3>No history available</h3>
-                                <p>Complete some JAM sessions to see your history</p>
+                                <p>Complete some interview sessions to see your history</p>
                             </div>
                         )}
                     </div>
@@ -240,7 +239,7 @@ function Role_BasedInterviewData() {
                                                     <div className="session-info">
                                                         <span className="session-time">Session Time: {session.time ? new Date(session.time).toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'}) : 'N/A'}</span>
                                                         <br />
-                                                        <span className="session-id">JAMSessionId: {session.sessionId}</span>
+                                                        <span className="session-id">InterviewSessionId: {session.sessionId}</span>
                                                         <span className="score-badge">Score: {feedback.score}</span>
                                                     </div>
                                                 </button>
@@ -289,7 +288,7 @@ function Role_BasedInterviewData() {
                         ) : (
                             <div className="empty-state">
                                 <h3>No analytics available</h3>
-                                <p>Complete some JAM sessions to see your analytics</p>
+                                <p>Complete some interview sessions to see your analytics</p>
                             </div>
                         )}
                     </div>
@@ -303,18 +302,16 @@ function extractFeedback(conversationHistory) {
     if (Array.isArray(conversationHistory)) {
         // Handle array format
         for (const item of conversationHistory) {
-            if (item.agent && (item.agent.includes('JAM Score:') || item.agent.includes('Overall Rating:'))) {
-                // Look for JAM Score format first, then fallback to Overall Rating
-                const jamScoreMatch = item.agent.match(/JAM Score:\s*(\d+(?:\.\d+)?)\/10/)
-                const overallRatingMatch = item.agent.match(/Overall Rating:\*\*\s*(\d+(?:\.\d+)?)\/10/)
-                const scoreMatch = jamScoreMatch || overallRatingMatch
+            if (item.agent && (item.agent.includes('Overall Interview Score:') || item.agent.includes('Communication Level:') || item.agent.includes('Content of Answers:'))) {
+                // Look for Overall Interview Score
+                const scoreMatch = item.agent.match(/Overall Interview Score:\*\*\s*(\d+(?:\.\d+)?)/)
                 
-                // Extract feedback lines
+                // Extract feedback sections
                 const feedbackLines = item.agent.split('\n')
-                    .filter(line => line.includes(':') && (line.includes('Grammar') || line.includes('Vocabulary') || line.includes('Content') || line.includes('Flow') || line.includes('Time')))
+                    .filter(line => line.includes(':') && (line.includes('Communication Level') || line.includes('Content of Answers') || line.includes('Subject Knowledge') || line.includes('Experience Sharing')))
                     .map(line => line.replace(/\*\*/g, '').trim())
                 
-                const tipMatch = item.agent.match(/(?:Tip|Remember):\s*(.+?)(?:\n|$)/s)
+                const tipMatch = item.agent.match(/(?:Suggestions for Improvement|Strengths):\s*(.+?)(?:\n\n|$)/s)
                 
                 return {
                     score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A',
@@ -326,16 +323,14 @@ function extractFeedback(conversationHistory) {
     } else {
         // Handle object format
         for (const [user, agent] of Object.entries(conversationHistory)) {
-            if (agent && (agent.includes('JAM Score:') || agent.includes('Overall Rating:'))) {
-                const jamScoreMatch = agent.match(/JAM Score:\s*(\d+(?:\.\d+)?)\/10/)
-                const overallRatingMatch = agent.match(/Overall Rating:\*\*\s*(\d+(?:\.\d+)?)\/10/)
-                const scoreMatch = jamScoreMatch || overallRatingMatch
+            if (agent && (agent.includes('Overall Interview Score:') || agent.includes('Communication Level:') || agent.includes('Content of Answers:'))) {
+                const scoreMatch = agent.match(/Overall Interview Score:\*\*\s*(\d+(?:\.\d+)?)/)
                 
                 const feedbackLines = agent.split('\n')
-                    .filter(line => line.includes(':') && (line.includes('Grammar') || line.includes('Vocabulary') || line.includes('Content') || line.includes('Flow') || line.includes('Time')))
+                    .filter(line => line.includes(':') && (line.includes('Communication Level') || line.includes('Content of Answers') || line.includes('Subject Knowledge') || line.includes('Experience Sharing')))
                     .map(line => line.replace(/\*\*/g, '').trim())
                 
-                const tipMatch = agent.match(/(?:Tip|Remember):\s*(.+?)(?:\n|$)/s)
+                const tipMatch = agent.match(/(?:Suggestions for Improvement|Strengths):\s*(.+?)(?:\n\n|$)/s)
                 
                 return {
                     score: scoreMatch ? scoreMatch[1] + '/10' : 'N/A',
