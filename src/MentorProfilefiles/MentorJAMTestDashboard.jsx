@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './MentorJAMTestDashboard.css';
-
 const MentorJAMTestDashboard = () => {
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
@@ -106,6 +105,13 @@ const MentorJAMTestDashboard = () => {
     const extractRating = (session) => {
         const feedback = extractFeedback(session.conversation);
         return feedback && feedback.score !== 'N/A' ? parseFloat(feedback.score.split('/')[0]) : null;
+    };
+
+    const getScoreCategory = (score) => {
+        if (score >= 8) return { text: 'Excellent', color: '#22c55e' };
+        if (score >= 6) return { text: 'Good', color: '#3b82f6' };
+        if (score >= 4) return { text: 'Average', color: '#f59e0b' };
+        return { text: 'Needs Improvement', color: '#ef4444' };
     };
 
 

@@ -79,6 +79,13 @@ const MentorJAMTestDashboard = () => {
         return ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : 'N/A';
     };
 
+    const getScoreCategory = (score) => {
+        if (score >= 8) return { text: 'Excellent', color: '#22c55e' };
+        if (score >= 6) return { text: 'Good', color: '#3b82f6' };
+        if (score >= 4) return { text: 'Average', color: '#f59e0b' };
+        return { text: 'Needs Improvement', color: '#ef4444' };
+    };
+
 
 
     const handleStudentClick = (student) => {
