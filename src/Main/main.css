@@ -908,6 +908,12 @@ nav.scrolled {
     color: white;
 }
 
+.modern-card-content {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--card-bg);
+}
+
 @media (max-width: 768px) {
     .zigzag-step {
         width: 90%;
@@ -935,6 +941,14 @@ nav.scrolled {
     
     .footer-row {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .about-section {
+      grid-template-columns: 1fr;
+    }
+
+    .about-image-container {
+      order: -1;
     }
 }
 

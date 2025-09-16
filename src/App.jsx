@@ -23,6 +23,7 @@ const ResourceSection = lazy(() => import("./Main/ResourceSection.jsx"));
 const ContactSection = lazy(() => import("./Main/ContactSection.jsx"));
 const MapSection = lazy(() => import("./Main/MapSection.jsx")); // Updated map section with fixed iframe
 const Footer = lazy(() => import("./Main/Footer.jsx"));
+const AI_Skill_Dev = lazy(() => import("./Main/AI_Skill_Dev.jsx"));
 // const Services = lazy(() => import("./Main/Services.jsx"));
 
 // Auth components
@@ -71,10 +72,13 @@ const Role_BasedInterview_Instructions = lazy(() => import('./GenAI_Folders/Test
 const GenAI_Guidance = lazy(() => import('./GenAI_Folders/GenAI_Guidence.jsx'));
 const GenAI_Prev_Q_Interviewer = lazy(() => import('./GenAI_Folders/GenAI_Prev_Q_Interviewer.jsx'));
 const GenAI_Personality_Test = lazy(() => import('./GenAI_Folders/GenAI_Personality_Test.jsx'));
-const GenAI_Test_Tech = lazy(() => import('./GenAI_Folders/GenAI_Test_Tech.jsx'));
+const GenAI_Test_Tech = lazy(() => import('./GenAI_Folders/AI_InterviewToolsFolder/GenAI_QueryHandler.jsx'));
 // Layout components
 
 
+
+//Query Handler
+const GenAI_QueryHandler = lazy(() => import("./GenAI_Folders/AI_InterviewToolsFolder/GenAI_QueryHandler.jsx"));
 
 const MainLayout = ({ children }) => (
   <>
@@ -136,17 +140,7 @@ function App() {
           <Route path="/" element={
             <MainLayout>
               <>
-                <Navbar/>
-                <WelcomeSection />
-                <AboutSection />
-                <WebsiteUseRoute />
-                <HighlightsSection />
-                <SelfAssessment />
-                <MotivationSection />
-                <ResourceSection />
-                <ContactSection />
-                <MapSection />
-                <Footer />
+                <AI_Skill_Dev />
               </>
             </MainLayout>
           } />
@@ -159,7 +153,11 @@ function App() {
               <Footer />
             </MainLayout>
           } />
-          
+          <Route path="/query-handler" element={
+            <MainLayout>
+              <GenAI_QueryHandler />
+            </MainLayout>
+          } />          
           <Route path="/contact" element={
             <MainLayout>
               <ContactSection />

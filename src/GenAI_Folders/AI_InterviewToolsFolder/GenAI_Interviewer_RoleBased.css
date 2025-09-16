@@ -412,6 +412,146 @@
   }
 }
 
+/* Language Selection */
+.language-selection-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 500px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.language-header {
+  margin-bottom: 30px;
+}
+
+.language-header .bot-icon {
+  color: #3b82f6;
+  margin-bottom: 15px;
+}
+
+.language-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 10px 0;
+}
+
+.language-header p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.language-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.language-option {
+  padding: 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: white;
+}
+
+.language-option:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+}
+
+.language-option.selected {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.language-option .flag {
+  font-size: 2rem;
+}
+
+.language-option .lang-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.proceed-button {
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.proceed-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.proceed-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Language Selector in Chat */
+.lang-selector {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.lang-selector label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.lang-selector select {
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.lang-selector select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* Expanded Chatbot */
+.chatbot-card {
+  height: 700px;
+}
+
+.content-layout {
+  display: block;
+}
+
 /* Utility Classes */
 .mr-2 { margin-right: 0.5rem; }
 .mb-2 { margin-bottom: 0.5rem; }
