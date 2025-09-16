@@ -3,6 +3,7 @@ import { Mic, MicOff, Send, Bot } from 'lucide-react';
 import { speakWithPolly, stopSpeech } from '../PollyPlayer.jsx';
 import LanguageSelector from './LanguageSelector.jsx';
 import './GenAI_Interviewer_RoleBased.css';
+import './ModernChat.css';
 
 const GenAI_QueryHandler = () => {
     const [showLanguageSelector, setShowLanguageSelector] = useState(true);
@@ -14,6 +15,8 @@ const GenAI_QueryHandler = () => {
     const [sessionId, setSessionId] = useState('');
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const [selectedLang, setSelectedLang] = useState('en-US');
+    const [hasGreeted, setHasGreeted] = useState(false);
+    const [isProcessingVoice, setIsProcessingVoice] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Generate session ID
@@ -43,8 +46,6 @@ const GenAI_QueryHandler = () => {
             }
         };
     }, [mediaRecorder, isRecording]);
-
-
 
     const sendMessageToAI = async (textMessage) => {
         setIsLoading(true);
@@ -137,6 +138,11 @@ const GenAI_QueryHandler = () => {
     };
 
     const startRecording = () => {
+        // Prevent multiple recordings
+        if (isRecording || isProcessingVoice) {
+            return;
+        }
+
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
             alert('Speech recognition not supported in this browser');
             return;
@@ -145,12 +151,15 @@ const GenAI_QueryHandler = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
         
-        recognition.continuous = true;
+        recognition.continuous = false; // Changed to false to prevent multiple triggers
         recognition.interimResults = true;
-        recognition.lang = selectedLang; // use chosen language
+        recognition.lang = selectedLang;
+        recognition.maxAlternatives = 1;
 
         recognition.onstart = () => {
             setIsRecording(true);
+            setIsProcessingVoice(true);
+            setMessage(''); // Clear previous message
         };
 
         recognition.onresult = (event) => {
@@ -166,28 +175,28 @@ const GenAI_QueryHandler = () => {
                 }
             }
             
-            setMessage(prev => {
-                const baseText = prev.replace(/\s*\[.*?\]\s*$/, '');
-                return baseText + finalTranscript + (interimTranscript ? ` [${interimTranscript}]` : '');
-            });
+            const fullTranscript = finalTranscript || interimTranscript;
+            setMessage(fullTranscript);
         };
 
         recognition.onerror = (event) => {
             console.error('Speech recognition error:', event.error);
-            if (event.error !== 'no-speech') {
-                setIsRecording(false);
-            }
+            setIsRecording(false);
+            setIsProcessingVoice(false);
+            setMediaRecorder(null);
         };
 
         recognition.onend = () => {
             setIsRecording(false);
             setMediaRecorder(null);
-            // Auto-send message when recording stops
+            
+            // Auto-send message after a short delay if there's content
             setTimeout(() => {
-                if (message.trim()) {
+                if (message.trim() && !isLoading) {
                     handleSendMessage();
                 }
-            }, 500);
+                setIsProcessingVoice(false);
+            }, 1000);
         };
 
         recognition.start();
@@ -203,7 +212,7 @@ const GenAI_QueryHandler = () => {
     };
 
     const toggleRecording = () => {
-        if (isRecording) {
+        if (isRecording || isProcessingVoice) {
             stopRecording();
         } else {
             startRecording();
@@ -217,9 +226,38 @@ const GenAI_QueryHandler = () => {
         }
     };
 
+    // Welcome greetings in different languages
+    const getWelcomeMessage = (langCode) => {
+        const greetings = {
+            'en-US': "Welcome to MITS College AI Bot! 🎓\n\nHello! I'm your AI assistant here to help you with any questions about MITS College, courses, admissions, or general queries. How can I assist you today?",
+            'te-IN': "MITS కాలేజ్ AI బాట్కు స్వాగతం! 🎓\n\nనమస్కారం! నేను మీ AI సహాయకుడిని. MITS కాలేజ్, కోర్సులు, అడ్మిషన్లు లేదా ఇతర ప్రశ్నలతో మీకు సహాయం చేయడానికి ఇక్కడ ఉన్నాను. ఈరోజు మీకు ఎలా సహాయం చేయగలను?",
+            'hi-IN': "MITS कॉलेज AI बॉट में आपका स्वागत है! 🎓\n\nनमस्ते! मैं आपका AI सहायक हूं। MITS कॉलेज, कोर्स, एडमिशन या अन्य प्रश्नों में आपकी मदद करने के लिए यहां हूं। आज मैं आपकी कैसे सहायता कर सकता हूं?",
+            'kn-IN': "MITS ಕಾಲೇಜ್ AI ಬಾಟ್ಗೆ ಸ್ವಾಗತ! 🎓\n\nನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ AI ಸಹಾಯಕ. MITS ಕಾಲೇಜ್, ಕೋರ್ಸ್ಗಳು, ಪ್ರವೇಶಗಳು ಅಥವಾ ಇತರ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ಇಲ್ಲಿದ್ದೇನೆ. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?"
+        };
+        return greetings[langCode] || greetings['en-US'];
+    };
+
     const handleLanguageSelect = (langCode) => {
         setSelectedLang(langCode);
         setShowLanguageSelector(false);
+        
+        // Add welcome message immediately after language selection
+        setTimeout(() => {
+            const welcomeMessage = {
+                id: Date.now().toString(),
+                text: getWelcomeMessage(langCode).replace(/\n/g, '<br>'),
+                sender: 'ai',
+                timestamp: new Date()
+            };
+            setMessages([welcomeMessage]);
+            setHasGreeted(true);
+            
+            // Speak welcome message if not muted
+            if (!isMuted) {
+                const cleanWelcome = getWelcomeMessage(langCode).replace(/🎓/g, '').replace(/\n/g, ' ');
+                speakWithPolly(cleanWelcome, langCode);
+            }
+        }, 500);
     };
 
     if (showLanguageSelector) {
@@ -227,49 +265,59 @@ const GenAI_QueryHandler = () => {
     }
 
     return (
-        <div className="interview-container">
-            <div className="main-container"><br></br>
-                <div className="content-layout">
-                    {/* Chatbot Section */}
-                    <div className="chatbot-section">
-                        <div className="chatbot-card">
-                            <div className="chat-header">
-                                <h2 className="chat-title">
-                                    <Bot className="mr-2" size={34} />
-                                    AI Query Handler
-                                </h2>
-
-                                {/* Language Selector */}
-                                <div className="lang-selector">
-                                    <label className="mr-2">Language:</label>
+        <div className="modern-chat-container">
+            <div className="chat-wrapper">
+                <div className="chat-layout">
+                    <div className="chat-main">
+                        <div className="chat-card">
+                            <div className="chat-header-modern">
+                                <div className="header-content">
+                                    <div className="bot-avatar">
+                                        <Bot size={28} />
+                                    </div>
+                                    <div className="header-text">
+                                        <h2 className="chat-title-modern">🤖 MITS AI Assistant</h2>
+                                        <p className="chat-subtitle">మీ స్మార్ట్ సహాయకుడు</p>
+                                    </div>
+                                </div>
+                                <div className="header-controls">
                                     <select
                                         value={selectedLang}
                                         onChange={(e) => setSelectedLang(e.target.value)}
                                         disabled={isRecording}
+                                        className="lang-select-modern"
                                     >
-                                        <option value="en-US">English</option>
-                                        <option value="te-IN">Telugu</option>
-                                        <option value="hi-IN">Hindi</option>
-                                        <option value="kn-IN">Kannada</option>
+                                        <option value="en-US">🇺🇸 EN</option>
+                                        <option value="te-IN">🇮🇳 తె</option>
+                                        <option value="hi-IN">🇮🇳 हि</option>
+                                        <option value="kn-IN">🇮🇳 ಕನ</option>
                                     </select>
+                                    <button 
+                                        onClick={toggleMute} 
+                                        className={`control-btn ${isMuted ? 'muted' : ''}`}
+                                        title={isMuted ? 'Unmute AI' : 'Mute AI'}
+                                    >
+                                        {isMuted ? <MicOff size={18} /> : <Mic size={18} />}
+                                    </button>
                                 </div>
                             </div>
 
-                            {/* Messages Container */}
-                            <div className="messages-container">
+                            <div className="messages-area">
                                 {messages.length === 0 ? (
-                                    <div className="empty-state">
-                                        <Bot className="mb-2 text-gray-400" size={58} />
-                                        <p className="font-medium text-gray-500">
-                                            Start the conversation by typing or speaking...
-                                        </p>
+                                    <div className="welcome-state">
+                                        <div className="welcome-bot">
+                                            <Bot size={48} />
+                                        </div>
+                                        <h3>👋 Welcome to MITS AI!</h3>
+                                        <p>Type a message or use voice to start chatting</p>
+                                        <p className="telugu-welcome">మెసేజ్ రాయండి లేదా వాయ్స్ వాడండి</p>
                                     </div>
                                 ) : (
                                     messages.map((msg) => (
-                                        <div key={msg.id} className={`message ${msg.sender}`}>
-                                            <div className="message-content">
+                                        <div key={msg.id} className={`msg ${msg.sender}`}>
+                                            <div className="msg-content">
                                                 <div dangerouslySetInnerHTML={{ __html: msg.text }} />
-                                                <span className="message-time">
+                                                <span className="msg-time">
                                                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
                                             </div>
@@ -278,66 +326,56 @@ const GenAI_QueryHandler = () => {
                                 )}
                                 
                                 {isLoading && (
-                                    <div className="loading-message">
-                                        AI is thinking
-                                        <div className="loading-dots">
-                                            <div className="loading-dot"></div>
-                                            <div className="loading-dot"></div>
-                                            <div className="loading-dot"></div>
+                                    <div className="typing-indicator">
+                                        <div className="typing-dots">
+                                            <span></span><span></span><span></span>
                                         </div>
+                                        <p>AI is typing...</p>
                                     </div>
                                 )}
                                 
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            {/* Input Section */}
-                            <div className="input-section">
-                                <div className="input-container">
-                                    <textarea
-                                        value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
-                                        onKeyPress={handleKeyPress}
-                                        placeholder="Type your message or use voice..."
-                                        disabled={isRecording}
-                                        className="message-input"
-                                        rows={4}
-                                    />
-                                    <button
-                                        onClick={handleSendMessage}
-                                        disabled={!message.trim() || isLoading}
-                                        className="send-button"
-                                    >
-                                        <Send size={20} />
-                                    </button>
+                            <div className="input-area">
+                                <div className="input-wrapper">
+                                    <div className="input-field">
+                                        <textarea
+                                            value={message}
+                                            onChange={(e) => setMessage(e.target.value)}
+                                            onKeyPress={handleKeyPress}
+                                            placeholder={selectedLang === 'te-IN' ? 'మెసేజ్ రాయండి...' : 'Type your message...'}
+                                            disabled={isRecording}
+                                            className="modern-input"
+                                            rows={2}
+                                        />
+                                        <div className="input-actions">
+                                            <button 
+                                                onClick={toggleRecording} 
+                                                className={`voice-btn ${isRecording ? 'recording' : ''} ${isProcessingVoice ? 'processing' : ''}`}
+                                                disabled={isLoading}
+                                                title={isRecording ? 'Stop Recording' : 'Voice Input'}
+                                            >
+                                                <Mic size={20} />
+                                                {isRecording && <div className="recording-pulse"></div>}
+                                            </button>
+                                            <button
+                                                onClick={handleSendMessage}
+                                                disabled={!message.trim() || isLoading}
+                                                className="send-btn"
+                                                title="Send Message"
+                                            >
+                                                <Send size={20} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Controls Section */}
-                <div className="controls-section">
-                    <button 
-                        onClick={toggleMute} 
-                        className={`control-button mute-button ${isMuted ? 'muted' : ''}`}
-                    >
-                        {isMuted ? <MicOff className="mr-2" size={20} /> : <Mic className="mr-2" size={20} />}
-                        {isMuted ? 'Unmute AI' : 'Mute AI'}
-                    </button>
-                    
-                    <button 
-                        onClick={toggleRecording} 
-                        className={`control-button record-button ${isRecording ? 'recording' : ''}`}
-                        disabled={isLoading}
-                    >
-                        <Mic className="mr-2" size={20} />
-                        {isRecording ? 'Stop & Send' : 'Speak with AI'}
-                    </button>
-                </div>
             </div>
         </div>
-
     );
 };
 
