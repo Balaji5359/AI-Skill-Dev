@@ -79,6 +79,7 @@ const GenAI_Test_Tech = lazy(() => import('./GenAI_Folders/AI_InterviewToolsFold
 
 //Query Handler
 const GenAI_QueryHandler = lazy(() => import("./GenAI_Folders/AI_InterviewToolsFolder/GenAI_QueryHandler.jsx"));
+const GenAI_CarrerGuide = lazy(() => import("./GenAI_Folders/AI_InterviewToolsFolder/GenAI_CarrerGuide.jsx"));
 
 const MainLayout = ({ children }) => (
   <>
@@ -157,7 +158,13 @@ function App() {
             <MainLayout>
               <GenAI_QueryHandler />
             </MainLayout>
-          } />          
+          } />   
+          <Route path="/carrer-guide" element={
+            <MainLayout>
+              <GenAI_CarrerGuide />
+            </MainLayout>
+          } />
+        
           <Route path="/contact" element={
             <MainLayout>
               <ContactSection />
