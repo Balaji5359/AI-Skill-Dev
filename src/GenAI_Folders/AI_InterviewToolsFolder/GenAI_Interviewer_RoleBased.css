@@ -516,17 +516,50 @@
   cursor: not-allowed;
 }
 
+/* Header Controls */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.new-conversation-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-conversation-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.new-conversation-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Language Selector in Chat */
 .lang-selector {
   display: flex;
   align-items: center;
-  margin-top: 15px;
   gap: 10px;
 }
 
 .lang-selector label {
   font-weight: 600;
   color: #374151;
+  font-size: 0.9rem;
 }
 
 .lang-selector select {
@@ -541,6 +574,12 @@
 .lang-selector select:focus {
   outline: none;
   border-color: #3b82f6;
+}
+
+/* Speaking Indicator */
+.speaking-indicator {
+  margin-left: 8px;
+  animation: pulse 1.5s infinite;
 }
 
 /* Expanded Chatbot */

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Send, Bot } from 'lucide-react';
+import { Mic, MicOff, Send, Bot, RotateCcw } from 'lucide-react';
 import { speakWithPolly, stopSpeech } from '../PollyPlayer.jsx';
 import LanguageSelector from './LanguageSelector.jsx';
 import './GenAI_Interviewer_RoleBased.css';
@@ -12,18 +12,38 @@ const GenAI_CarrerGuide = () => {
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [sessionId, setSessionId] = useState('');
-    const [mediaRecorder, setMediaRecorder] = useState(null);
+    const [recognition, setRecognition] = useState(null);
     const [selectedLang, setSelectedLang] = useState('en-US');
+    const [isSpeaking, setIsSpeaking] = useState(false);
     const messagesEndRef = useRef(null);
 
-    // Generate session ID
-    const sessionIdget = () => {
+    // Generate new session ID
+    const generateNewSessionId = () => {
+        return 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    };
+
+    // Get or create session ID
+    const getSessionId = () => {
         if (!sessionId) {
-            const newSessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            const newSessionId = generateNewSessionId();
             setSessionId(newSessionId);
             return newSessionId;
         }
         return sessionId;
+    };
+
+    // Start new conversation
+    const startNewConversation = () => {
+        setMessages([]);
+        setMessage('');
+        setSessionId(generateNewSessionId());
+        if (isSpeaking) {
+            stopSpeech();
+            setIsSpeaking(false);
+        }
+        if (isRecording) {
+            stopRecording();
+        }
     };
 
     const scrollToBottom = () => {
@@ -38,11 +58,11 @@ const GenAI_CarrerGuide = () => {
     useEffect(() => {
         return () => {
             stopSpeech();
-            if (mediaRecorder && isRecording) {
-                mediaRecorder.stop();
+            if (recognition && isRecording) {
+                recognition.stop();
             }
         };
-    }, [mediaRecorder, isRecording]);
+    }, [recognition, isRecording]);
 
 
 
@@ -58,8 +78,8 @@ const GenAI_CarrerGuide = () => {
                 body: JSON.stringify({
                     "body": JSON.stringify({
                         message: textMessage,
-                        sessionId: sessionIdget(),
-                        lang: selectedLang, // send chosen language
+                        sessionId: getSessionId(),
+                        lang: selectedLang,
                         email: localStorage.getItem('email') || ''
                     })
                 })
@@ -94,9 +114,11 @@ const GenAI_CarrerGuide = () => {
             setMessages(prev => [...prev, aiMessage]);
             
             if (!isMuted) {
-                // Clean the response text and speak in selected language
+                setIsSpeaking(true);
                 const cleanResponse = responseBody.response.replace(/<[^>]*>/g, '').replace(/\*\*/g, '').trim();
-                speakWithPolly(cleanResponse, selectedLang);
+                speakWithPolly(cleanResponse, selectedLang)
+                    .then(() => setIsSpeaking(false))
+                    .catch(() => setIsSpeaking(false));
             }
             
         } catch (error) {
@@ -142,19 +164,28 @@ const GenAI_CarrerGuide = () => {
             return;
         }
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = selectedLang; // use chosen language
+        // Stop any ongoing speech
+        if (isSpeaking) {
+            stopSpeech();
+            setIsSpeaking(false);
+        }
 
-        recognition.onstart = () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const newRecognition = new SpeechRecognition();
+        
+        newRecognition.continuous = false;
+        newRecognition.interimResults = true;
+        newRecognition.lang = selectedLang;
+        newRecognition.maxAlternatives = 1;
+
+        let finalTranscript = '';
+
+        newRecognition.onstart = () => {
             setIsRecording(true);
+            setMessage('');
         };
 
-        recognition.onresult = (event) => {
-            let finalTranscript = '';
+        newRecognition.onresult = (event) => {
             let interimTranscript = '';
             
             for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -166,39 +197,44 @@ const GenAI_CarrerGuide = () => {
                 }
             }
             
-            setMessage(prev => {
-                const baseText = prev.replace(/\s*\[.*?\]\s*$/, '');
-                return baseText + finalTranscript + (interimTranscript ? ` [${interimTranscript}]` : '');
-            });
+            setMessage(finalTranscript + (interimTranscript ? ` [${interimTranscript}]` : ''));
         };
 
-        recognition.onerror = (event) => {
+        newRecognition.onerror = (event) => {
             console.error('Speech recognition error:', event.error);
-            if (event.error !== 'no-speech') {
-                setIsRecording(false);
+            setIsRecording(false);
+            setRecognition(null);
+        };
+
+        newRecognition.onend = () => {
+            setIsRecording(false);
+            setRecognition(null);
+            
+            // Clean up the message and auto-send if there's content
+            if (finalTranscript.trim()) {
+                setMessage(finalTranscript.trim());
+                setTimeout(() => {
+                    const userMessage = {
+                        id: Date.now().toString(),
+                        text: finalTranscript.trim(),
+                        sender: 'user',
+                        timestamp: new Date()
+                    };
+                    
+                    setMessages(prev => [...prev, userMessage]);
+                    setMessage('');
+                    sendMessageToAI(finalTranscript.trim());
+                }, 100);
             }
         };
 
-        recognition.onend = () => {
-            setIsRecording(false);
-            setMediaRecorder(null);
-            // Auto-send message when recording stops
-            setTimeout(() => {
-                if (message.trim()) {
-                    handleSendMessage();
-                }
-            }, 500);
-        };
-
-        recognition.start();
-        setMediaRecorder(recognition);
+        newRecognition.start();
+        setRecognition(newRecognition);
     };
 
     const stopRecording = () => {
-        if (mediaRecorder && isRecording) {
-            mediaRecorder.stop();
-            setIsRecording(false);
-            setMediaRecorder(null);
+        if (recognition && isRecording) {
+            recognition.stop();
         }
     };
 
@@ -211,9 +247,12 @@ const GenAI_CarrerGuide = () => {
     };
 
     const toggleMute = () => {
-        setIsMuted(!isMuted);
-        if (!isMuted) {
+        const newMutedState = !isMuted;
+        setIsMuted(newMutedState);
+        
+        if (newMutedState && isSpeaking) {
             stopSpeech();
+            setIsSpeaking(false);
         }
     };
 
@@ -236,22 +275,35 @@ const GenAI_CarrerGuide = () => {
                             <div className="chat-header">
                                 <h2 className="chat-title">
                                     <Bot className="mr-2" size={34} />
-                                    AI Query Handler
+                                    AI Career Guide
                                 </h2>
 
-                                {/* Language Selector */}
-                                <div className="lang-selector">
-                                    <label className="mr-2">Language:</label>
-                                    <select
-                                        value={selectedLang}
-                                        onChange={(e) => setSelectedLang(e.target.value)}
-                                        disabled={isRecording}
+                                <div className="header-controls">
+                                    {/* New Conversation Button */}
+                                    <button 
+                                        onClick={startNewConversation}
+                                        className="new-conversation-btn"
+                                        disabled={isRecording || isLoading}
+                                        title="Start new conversation"
                                     >
-                                        <option value="en-US">English</option>
-                                        <option value="te-IN">Telugu</option>
-                                        <option value="hi-IN">Hindi</option>
-                                        <option value="kn-IN">Kannada</option>
-                                    </select>
+                                        <RotateCcw size={16} />
+                                        New Chat
+                                    </button>
+
+                                    {/* Language Selector */}
+                                    <div className="lang-selector">
+                                        <label className="mr-2">Language:</label>
+                                        <select
+                                            value={selectedLang}
+                                            onChange={(e) => setSelectedLang(e.target.value)}
+                                            disabled={isRecording}
+                                        >
+                                            <option value="en-US">English</option>
+                                            <option value="te-IN">Telugu</option>
+                                            <option value="hi-IN">Hindi</option>
+                                            <option value="kn-IN">Kannada</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
@@ -321,9 +373,11 @@ const GenAI_CarrerGuide = () => {
                     <button 
                         onClick={toggleMute} 
                         className={`control-button mute-button ${isMuted ? 'muted' : ''}`}
+                        title={isMuted ? 'Enable AI voice' : 'Disable AI voice'}
                     >
                         {isMuted ? <MicOff className="mr-2" size={20} /> : <Mic className="mr-2" size={20} />}
                         {isMuted ? 'Unmute AI' : 'Mute AI'}
+                        {isSpeaking && !isMuted && <span className="speaking-indicator">🔊</span>}
                     </button>
                     
                     <button 
