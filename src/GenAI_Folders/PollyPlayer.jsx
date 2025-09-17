@@ -24,36 +24,8 @@ export const speakWithPolly = async (text, langCode = "en-US") => {
     const cleanText = text.replace(/<[^>]*>/g, '').replace(/\*\*/g, '').trim();
     if (!cleanText) return;
 
-    try {
-        const { voiceId, engine } = voiceMap[langCode] || voiceMap["en-US"];
-
-        const command = new SynthesizeSpeechCommand({
-            OutputFormat: "mp3",
-            Text: cleanText,
-            VoiceId: voiceId,
-            Engine: engine,
-            LanguageCode: langCode
-        });
-
-        const data = await polly.send(command);
-
-        if (data && data.AudioStream) {
-            const audioBytes = await data.AudioStream.transformToByteArray();
-            const blob = new Blob([audioBytes], { type: "audio/mp3" });
-            const audioUrl = URL.createObjectURL(blob);
-            currentAudio = new Audio(audioUrl);
-
-            await currentAudio.play();
-
-            currentAudio.onended = () => {
-                URL.revokeObjectURL(audioUrl);
-                currentAudio = null;
-            };
-        }
-    } catch (error) {
-        console.error("Polly synthesis error:", error);
-        fallbackToSpeechSynthesis(cleanText, langCode);
-    }
+    // Always use fallback speech synthesis for now
+    fallbackToSpeechSynthesis(cleanText, langCode);
 };
 
 export const stopSpeech = () => {
