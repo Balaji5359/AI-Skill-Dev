@@ -3,7 +3,7 @@ import { Mic, MicOff, Send, Bot, RotateCcw } from 'lucide-react';
 import { speakWithPolly, stopSpeech } from '../PollyPlayer.jsx';
 import LanguageSelector from './LanguageSelector.jsx';
 import './GenAI_Interviewer_RoleBased.css';
-
+// hello
 const GenAI_CarrerGuide = () => {
     const [showLanguageSelector, setShowLanguageSelector] = useState(true);
     const [isMuted, setIsMuted] = useState(false);
