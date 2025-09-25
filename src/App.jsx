@@ -146,6 +146,22 @@ function App() {
             </MainLayout>
           } />
           
+          <Route path="/skill-route" element={
+            <MainLayout>
+              <>
+                <Navbar />
+                <WelcomeSection/>
+                <AboutSection />
+                <HighlightsSection />
+                <SelfAssessment />
+                <MotivationSection />
+                <ResourceSection />
+                <ContactSection />
+                <MapSection />
+              </>
+            </MainLayout>
+          }/>
+
           <Route path="/about" element={
             <MainLayout>
               <AboutSection />
