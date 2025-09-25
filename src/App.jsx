@@ -24,6 +24,9 @@ const ContactSection = lazy(() => import("./Main/ContactSection.jsx"));
 const MapSection = lazy(() => import("./Main/MapSection.jsx")); // Updated map section with fixed iframe
 const Footer = lazy(() => import("./Main/Footer.jsx"));
 const AI_Skill_Dev = lazy(() => import("./Main/AI_Skill_Dev.jsx"));
+const Skill_Guide = lazy(() => import("./Main/Skill_Guide.jsx"));
+const Skill_Dev = lazy(() => import("./Main/Skill_Dev.jsx"));
+const Skill_Route = lazy(() => import("./Main/Skill_Route.jsx"))
 // const Services = lazy(() => import("./Main/Services.jsx"));
 
 // Auth components
@@ -146,18 +149,24 @@ function App() {
             </MainLayout>
           } />
           
+
+
+          <Route path="/skill-guide" element={
+            <MainLayout>
+              <Skill_Guide />
+            </MainLayout>
+          }/>
+
+          <Route path="/skill-dev" element={
+            <MainLayout>
+              <Skill_Dev />
+            </MainLayout>
+          }/>
+          
           <Route path="/skill-route" element={
             <MainLayout>
               <>
-                <Navbar />
-                <WelcomeSection/>
-                <AboutSection />
-                <HighlightsSection />
-                <SelfAssessment />
-                <MotivationSection />
-                <ResourceSection />
-                <ContactSection />
-                <MapSection />
+              <Skill_Route />
               </>
             </MainLayout>
           }/>

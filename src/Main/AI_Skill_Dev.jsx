@@ -253,6 +253,12 @@ function AI_Skill_Dev() {
                                         if (product.title === "Skill-Route") {
                                             window.open("/skill-route", "_blank");
                                         }
+                                        if (product.title === "Skill-Guide") {
+                                            window.open("/skill-guide", "_blank");
+                                        }
+                                        if (product.title === "Skill-Dev") {
+                                            window.open("/skill-dev", "_blank");
+                                        }
                                     }}
                             >
                                 <div style={{
