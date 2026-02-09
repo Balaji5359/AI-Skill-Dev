@@ -15,6 +15,8 @@ function Test() {
     const [streakData, setStreakData] = useState({ current_streak: 0 });
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [showLevelModal, setShowLevelModal] = useState(false);
+    const [showPremiumModal, setShowPremiumModal] = useState(false);
+    const [showPremiumLockModal, setShowPremiumLockModal] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -235,6 +237,18 @@ const testInstructions = {
     };
 
     const handleStartChallenge = (id) => {
+        const activity = activities.find(a => a.id === id);
+        if (activity?.count === 0) {
+            if (userType !== 'premium') {
+                setShowPremiumLockModal(true);
+            }
+            return;
+        }
+        if (userType !== 'premium' && activity?.count > 0) {
+            setActiveChallenge(id);
+            setShowPremiumModal(true);
+            return;
+        }
         setActiveChallenge(id);
         setShowLevelModal(true);
     };
@@ -257,6 +271,13 @@ const testInstructions = {
             });
         }
     };
+
+    // disable background scroll when modals are open
+    useEffect(() => {
+        if (showPremiumModal || showPremiumLockModal) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = '';
+        return () => { document.body.style.overflow = ''; };
+    }, [showPremiumModal, showPremiumLockModal]);
 
     if (loading) {
         return (
@@ -308,11 +329,11 @@ const testInstructions = {
                                             </button>
                                         ) : (
                                             <button 
-                                                onClick={() => activity.count > 0 ? handleStartChallenge(activity.id) : null}
-                                                className={activity.count > 0 ? "test-level-button" : "app-btn-disabled"}
-                                                disabled={activity.count === 0}
+                                                onClick={() => handleStartChallenge(activity.id)}
+                                                className="test-level-button"
+                                                style={activity.count === 0 ? { background: '#9ca3af', cursor: 'pointer' } : {}}
                                             >
-                                                Start Test
+                                                {activity.count === 0 ? (userType === 'premium' ? '⏰ Come Back Tomorrow' : '🔒 Locked - Buy Premium') : 'Start Test'}
                                             </button>
                                         )}
                                     </div>
@@ -364,6 +385,66 @@ const testInstructions = {
                                         {level}
                                     </button>
                                 ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPremiumLockModal && (
+                <div className="test-modal-overlay" onClick={() => setShowPremiumLockModal(false)}>
+                    <div className="test-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
+                        <div className="test-modal-header">
+                            <h3 className="test-modal-title">🔒 Premium Required</h3>
+                            <button
+                                onClick={() => setShowPremiumLockModal(false)}
+                                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="test-modal-content">
+                            <p style={{ fontSize: '0.95rem', marginBottom: '16px', textAlign: 'center' }}>
+                                You've used all your free test attempts. Upgrade to Premium to unlock unlimited tests and advanced features!
+                            </p>
+                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                                <button className="test-level-button" onClick={() => setShowPremiumLockModal(false)}>
+                                    Cancel
+                                </button>
+                                <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
+                                    Buy Premium
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPremiumModal && (
+                <div className="test-modal-overlay" onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}>
+                    <div className="test-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
+                        <div className="test-modal-header">
+                            <h3 className="test-modal-title">Upgrade to Premium</h3>
+                            <button
+                                onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}
+                                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="test-modal-content">
+                            <p style={{ fontSize: '0.95rem', marginBottom: '12px' }}>
+                                You're on the Free plan. Upgrade to Premium to unlock more features, advanced analytics, and unlimited attempts.
+                            </p>
+                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                                <button className="test-level-button" onClick={() => { setShowPremiumModal(false); setShowLevelModal(true); }}>
+                                    Continue (Use free attempt)
+                                </button>
+                                <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
+                                    Buy Premium
+                                </button>
                             </div>
                         </div>
                     </div>

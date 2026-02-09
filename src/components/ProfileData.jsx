@@ -110,6 +110,18 @@ function ProfileData() {
         fetchData();
     }, []);
 
+    // Disable background scrolling when modals are open
+    useEffect(() => {
+        const modalOpen = showPricingModal || showPaymentModal;
+        if (modalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => { document.body.style.overflow = ''; };
+    }, [showPricingModal, showPaymentModal]);
+
     const isPremium = profileData?.user_type === 'premium' && profileData?.premium_status === 'active';
 
     if (loading) {
@@ -259,8 +271,7 @@ const FreeVsPremiumCard = ({ onUpgrade }) => (
         
         <center>
         <button className="profile-upgrade-btn" onClick={onUpgrade}>
-                <span>Upgrade to Premium</span>
-            <span className="profile-btn-arrow">→</span>
+                <center><span className="profile-btn-text">Buy Premium</span></center>
         </button>
         </center>
     </div>
@@ -467,7 +478,7 @@ const PricingModal = ({ onClose, onSelectPlan }) => {
     return (
         <div className="app-modal-overlay" onClick={onClose}>
             <div className="profile-pricing-modal" onClick={(e) => e.stopPropagation()}>
-                <button className="app-modal-close" onClick={onClose}>×</button>
+                <center><button className="app-modal-close" onClick={onClose}>×</button></center>
                 <h2>Choose Your Premium Plan</h2>
                 <div className="profile-pricing-plans">
                     {plans.map((plan, idx) => (

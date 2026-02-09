@@ -338,6 +338,7 @@
 
 .profile-upgrade-btn {
     width: 100%;
+    max-width: 400px;
     background: linear-gradient(135deg, #3B9797, #2c7a7a);
     color: white;
     border: none;
@@ -347,6 +348,19 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.profile-btn-text {
+    white-space: nowrap;
+}
+
+.profile-btn-arrow {
+    font-size: 1.2em;
+    flex-shrink: 0;
 }
 
 .profile-upgrade-btn:hover {
@@ -581,6 +595,7 @@
 
 /* Profile modal styles */
 .profile-pricing-modal {
+    top:50px;
     background: white;
     border-radius: 20px;
     padding: 30px;
@@ -589,6 +604,18 @@
     width: 95%;
     position: relative;
     overflow-y: auto;
+}
+.app-modal-close{
+    margin-top:-10px;
+    font-size: 30px;
+    color: black;
+    background: #6cbfa5;
+    border-radius: 50%;
+    width: 40px;
+}
+.app-modal-close:hover{
+    background: #d62d0f;
+    color: white;
 }
 
 .profile-pricing-modal h2 {
@@ -683,6 +710,7 @@
 }
 
 .profile-payment-modal {
+    top: 46px;
     background: white;
     border-radius: 20px;
     padding: 30px;
@@ -994,9 +1022,16 @@
 
     .profile-upgrade-btn {
         width: 100%;
+        max-width: 100%;
         padding: 12px 16px;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         border-radius: 10px;
+        flex-direction: row;
+        white-space: nowrap;
+    }
+
+    .profile-btn-text {
+        font-size: 0.9rem;
     }
 
     /* Streak Stats */
@@ -1133,9 +1168,46 @@
         gap: 12px;
     }
 
+    /* Mobile: allow horizontal scrolling of plan cards with snap behavior */
+    .profile-pricing-plans {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 16px;
+        padding: 8px 4px 16px 4px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: thin;
+        scrollbar-color: #3B9797 #e5e7eb;
+    }
+
+    .profile-pricing-plans::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .profile-pricing-plans::-webkit-scrollbar-track {
+        background: #e5e7eb;
+        border-radius: 10px;
+    }
+
+    .profile-pricing-plans::-webkit-scrollbar-thumb {
+        background: #3B9797;
+        border-radius: 10px;
+    }
+
     .profile-pricing-plan {
+        min-width: 280px;
+        max-width: 280px;
+        flex: 0 0 auto;
+        scroll-snap-align: center;
         padding: 16px;
         border-radius: 12px;
+    }
+
+    .profile-select-plan-btn {
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 0.9rem;
     }
 
     .profile-payment-modal {
@@ -1269,9 +1341,44 @@
     }
 
     .profile-upgrade-btn {
+        width: 100%;
+        max-width: 100%;
         padding: 10px 12px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         border-radius: 8px;
+        flex-direction: row;
+        gap: 6px;
+    }
+
+    .profile-btn-text {
+        font-size: 0.8rem;
+    }
+
+    .profile-btn-arrow {
+        font-size: 1em;
+    }
+
+    .profile-pricing-plans {
+        gap: 12px;
+        padding: 8px 2px 12px 2px;
+    }
+
+    .profile-pricing-plan {
+        min-width: 260px;
+        max-width: 260px;
+    }
+
+    .profile-plan-price {
+        font-size: 2rem;
+    }
+
+    .profile-plan-title {
+        font-size: 1rem;
+    }
+
+    .profile-plan-features li {
+        font-size: 0.8rem;
+        padding: 6px 0;
     }
 
     /* Calendar */

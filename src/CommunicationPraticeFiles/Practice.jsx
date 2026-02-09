@@ -15,6 +15,8 @@ function Practice() {
     const [streakData, setStreakData] = useState({ current_streak: 0 });
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [showLevelModal, setShowLevelModal] = useState(false);
+    const [showPremiumModal, setShowPremiumModal] = useState(false);
+    const [showPremiumLockModal, setShowPremiumLockModal] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -192,6 +194,18 @@ function Practice() {
     };
 
     const handleStartChallenge = (id) => {
+        const activity = activities.find(a => a.id === id);
+        if (activity?.count === 0) {
+            if (userType !== 'premium') {
+                setShowPremiumLockModal(true);
+            }
+            return;
+        }
+        if (userType !== 'premium' && activity?.count > 0) {
+            setActiveChallenge(id);
+            setShowPremiumModal(true);
+            return;
+        }
         setActiveChallenge(id);
         setShowLevelModal(true);
     };
@@ -222,6 +236,13 @@ function Practice() {
             });
         }
     };
+
+    // disable background scroll when modals are open
+    useEffect(() => {
+        if (showPremiumModal || showPremiumLockModal) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = '';
+        return () => { document.body.style.overflow = ''; };
+    }, [showPremiumModal, showPremiumLockModal]);
 
     if (loading) {
         return (
@@ -273,11 +294,11 @@ function Practice() {
                                             </button>
                                         ) : (
                                             <button 
-                                                onClick={() => activity.count > 0 ? handleStartChallenge(activity.id) : null}
-                                                className={activity.count > 0 ? "practice-level-button" : "app-btn-disabled"}
-                                                disabled={activity.count === 0}
+                                                onClick={() => handleStartChallenge(activity.id)}
+                                                className="practice-level-button"
+                                                style={activity.count === 0 ? { background: '#9ca3af', cursor: 'pointer' } : {}}
                                             >
-                                                Start Practice
+                                                {activity.count === 0 ? (userType === 'premium' ? '⏰ Come Back Tomorrow' : '🔒 Locked - Buy Premium') : 'Start Practice'}
                                             </button>
                                         )}
                                     </div>
@@ -319,6 +340,66 @@ function Practice() {
                                         {level}
                                     </button>
                                 ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPremiumLockModal && (
+                <div className="practice-modal-overlay" onClick={() => setShowPremiumLockModal(false)}>
+                    <div className="practice-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
+                        <div className="practice-modal-header">
+                            <h3 className="practice-modal-title">🔒 Premium Required</h3>
+                            <button
+                                onClick={() => setShowPremiumLockModal(false)}
+                                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="practice-modal-content">
+                            <p style={{ fontSize: '0.95rem', marginBottom: '16px', textAlign: 'center' }}>
+                                You've used all your free practice attempts. Upgrade to Premium to unlock unlimited practice sessions and advanced features!
+                            </p>
+                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                                <button className="practice-level-button" onClick={() => setShowPremiumLockModal(false)}>
+                                    Cancel
+                                </button>
+                                <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
+                                    Buy Premium
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPremiumModal && (
+                <div className="practice-modal-overlay" onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}>
+                    <div className="practice-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
+                        <div className="practice-modal-header">
+                            <h3 className="practice-modal-title">Upgrade to Premium</h3>
+                            <button
+                                onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}
+                                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="practice-modal-content">
+                            <p style={{ fontSize: '0.95rem', marginBottom: '12px' }}>
+                                You're on the Free plan. Upgrade to Premium to unlock more features, advanced analytics, and unlimited practice sessions.
+                            </p>
+                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                                <button className="practice-level-button" onClick={() => { setShowPremiumModal(false); setShowLevelModal(true); }}>
+                                    Continue (Use free attempt)
+                                </button>
+                                <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
+                                    Buy Premium
+                                </button>
                             </div>
                         </div>
                     </div>
