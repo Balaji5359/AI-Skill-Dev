@@ -47,10 +47,14 @@ function InterviewTest() {
     const [selectedTitle, setSelectedTitle] = useState("");
     const [instructionIndex, setInstructionIndex] = useState(0);
     const [showPremiumModal, setShowPremiumModal] = useState(false);
+    const [showPremiumLockModal, setShowPremiumLockModal] = useState(false);
     const [premiumModalMessage, setPremiumModalMessage] = useState("");
     const [showLevelModal, setShowLevelModal] = useState(false);
+    const [userType, setUserType] = useState("free");
+    const [streakData, setStreakData] = useState({ current_streak: 0 });
+    const [email, setEmail] = useState("");
     const navigate = useNavigate();
-    const { userType, streakData, email, isPremium } = useInterviewUserInfo();
+    const { isPremium } = useInterviewUserInfo();
     const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     useEffect(() => {
@@ -59,18 +63,38 @@ function InterviewTest() {
             setLoading(false);
             return;
         }
+        setEmail(storedEmail);
 
-        fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ college_email: storedEmail }),
-        })
-            .then(async (profileResponse) => {
+        Promise.all([
+            fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ college_email: storedEmail }),
+            }),
+            fetch(import.meta.env.VITE_UPDATE_USER_STREAK_API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    body: JSON.stringify({
+                        college_email: storedEmail,
+                        get_streak_data: true
+                    })
+                })
+            })
+        ])
+            .then(async ([profileResponse, streakResponse]) => {
                 const profileData = await profileResponse.json();
+                const streakDataResult = await streakResponse.json();
 
                 if (profileData?.body) {
                     const parsedProfileData = typeof profileData.body === "string" ? JSON.parse(profileData.body) : profileData.body;
-                    setInterviews(parsedProfileData.interviews || {});
+                    setInterviews(parsedProfileData.basic_interviews_tests || {});
+                    setUserType(parsedProfileData.user_type === 'premium' && parsedProfileData.premium_status === 'active' ? 'premium' : 'free');
+                }
+
+                if (streakDataResult?.body) {
+                    const parsedStreakData = typeof streakDataResult.body === "string" ? JSON.parse(streakDataResult.body) : streakDataResult.body;
+                    setStreakData(parsedStreakData);
                 }
 
                 setLoading(false);
@@ -79,36 +103,53 @@ function InterviewTest() {
     }, []);
 
     const basicInterviews = [
-        { id: 1, title: "Self Introduction", count: interviews.self_intro || 3 },
-        { id: 2, title: "Programming Knowledge", count: interviews.programming || 3 },
-        { id: 3, title: "Worked Domain", count: interviews.domain || 3 },
-        { id: 4, title: "Project Discussion", count: interviews.project || 3 },
-        { id: 5, title: "Future Career Planning", count: interviews.career || 3 },
-        { id: 6, title: "Hobbies & Interests", count: interviews.hobbies || 3 },
-        { id: 7, title: "Certifications Exploration", count: interviews.certifications || 3 },
-        { id: 8, title: "Project Reviews", count: interviews.project_reviews || 3}
+        { id: 1, title: "Self Introduction", count: interviews.self_introduction_test || 0 },
+        { id: 2, title: "Programming Knowledge", count: interviews.programming_knowledge_test || 0 },
+        { id: 3, title: "Worked Domain", count: interviews.worked_domain_test || 0 },
+        { id: 4, title: "Project Discussion", count: interviews.project_discussion_test || 0 },
+        { id: 5, title: "Future Career Planning", count: interviews.future_career_planning_test || 0 },
+        { id: 6, title: "Hobbies & Interests", count: interviews.hobbies_interests_test || 0 },
+        { id: 7, title: "Certifications Exploration", count: interviews.certifications_exploration_test || 0 },
+        { id: 8, title: "Project Reviews", count: interviews.project_reviews_test || 0}
     ];
 
     const advancedInterviews = [
-        { id: 8, title: "Role-Based Interview", count: interviews.role_based || 3 },
-        { id: 9, title: "Resume-Based Interview", count: interviews.resume_based || 3 },
-        { id: 10, title: "Technical Interview", count: interviews.technical || 3 },
-        { id: 11, title: "Follow-Up Questioning", count: interviews.follow_up || 3 },
-        { id: 12, title: "Stress/Pressure Questions", count: interviews.stress || 3 },
-        { id: 13, title: "Logical Puzzles", count: interviews.puzzles || 3 },
+        { id: 8, title: "Role-Based Interview", count: interviews.role_based || 0 },
+        { id: 9, title: "Resume-Based Interview", count: interviews.resume_based || 0 },
+        { id: 10, title: "Technical Interview", count: interviews.technical || 0 },
+        { id: 11, title: "Follow-Up Questioning", count: interviews.follow_up || 0 },
+        { id: 12, title: "Stress/Pressure Questions", count: interviews.stress || 0 },
+        { id: 13, title: "Logical Puzzles", count: interviews.puzzles || 0 },
     ];
 
     const instructions = buildInstructions();
 
     const handleLevelSelect = (interviewId, title) => {
         const remainingCount = interviews[getInterviewKey(interviewId)] || 0;
-        if (remainingCount === 0 && !isPremium) {
-            openPremiumModal("No remaining test sessions. Upgrade to Premium to get more interview tests.");
+
+        // If there are no remaining sessions, show appropriate modal and do not
+        // set activeChallenge, so the instructions modal does not open.
+        if (remainingCount === 0) {
+            if (userType === 'premium') {
+                setShowPremiumLockModal(true);
+            } else {
+                setPremiumModalMessage("You've used all your free test attempts for today. Upgrade to Premium to unlock unlimited practice!");
+                setShowPremiumModal(true);
+            }
             return;
         }
-        setActiveChallenge(interviewId);
+
+        // There are remaining sessions — set active challenge and show level modal.
         setSelectedTitle(title);
-        setShowLevelModal(true);
+        setActiveChallenge(interviewId);
+
+        if (userType !== 'premium' && remainingCount < 3) {
+            setPremiumModalMessage("You're on the Free plan with limited daily attempts. Upgrade to Premium for unlimited sessions!");
+            setShowPremiumModal(true);
+            setShowLevelModal(true);
+        } else {
+            setShowLevelModal(true);
+        }
     };
 
     const handleLevelChoice = (level) => {
@@ -119,8 +160,14 @@ function InterviewTest() {
 
     const getInterviewKey = (id) => {
         const keyMap = {
-            1: "self_intro", 2: "programming", 3: "domain", 4: "project",
-            5: "career", 6: "hobbies", 7: "certifications", 8: "project_reviews"
+            1: "self_introduction_test",
+            2: "programming_knowledge_test",
+            3: "worked_domain_test",
+            4: "project_discussion_test",
+            5: "future_career_planning_test",
+            6: "hobbies_interests_test",
+            7: "certifications_exploration_test",
+            8: "project_reviews_test"
         };
         return keyMap[id];
     };
@@ -226,6 +273,7 @@ function InterviewTest() {
                                 locked={false}
                                 lockedLabel="BUY PREMIUM"
                                 onLevelSelect={handleLevelSelect}
+                                isPremium={userType === 'premium'}
                             />
                         ))}
                     </div>
@@ -245,6 +293,7 @@ function InterviewTest() {
                                 variant="test"
                                 comingSoon={true}
                                 onStart={() => {}}
+                                isPremium={userType === 'premium'}
                             />
                         ))}
                     </div>
@@ -324,6 +373,33 @@ function InterviewTest() {
                                 className="px-4 py-2 rounded-lg bg-accent text-accent-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
                             >
                                 Buy Premium
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPremiumLockModal && (
+                <div className="interview-modal-overlay" onClick={() => setShowPremiumLockModal(false)}>
+                    <div className="interview-modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="interview-modal-header">
+                            <span>Tests Unavailable</span>
+                            <button
+                                onClick={() => setShowPremiumLockModal(false)}
+                                className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                X
+                            </button>
+                        </div>
+                        <div className="interview-modal-body">
+                            <p className="text-sm text-muted-foreground">You've used all your test sessions for today. Come back tomorrow to continue practicing! ☀️</p>
+                        </div>
+                        <div className="interview-modal-actions">
+                            <button
+                                onClick={() => setShowPremiumLockModal(false)}
+                                className="px-4 py-2 rounded-lg bg-accent text-accent-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+                            >
+                                Got it!
                             </button>
                         </div>
                     </div>

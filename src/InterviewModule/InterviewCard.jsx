@@ -11,9 +11,13 @@ const InterviewCard = ({
     locked = false,
     lockedLabel = "BUY PREMIUM",
     onLevelSelect,
+    isPremium = false,
 }) => {
     const isTest = variant === "test";
-    const isDisabled = comingSoon || (!locked && count === 0);
+    // Disabled for premium users when they've exhausted today's sessions;
+    // free users with 0 sessions should see the Buy Premium action instead.
+    const isDisabled = comingSoon || (isPremium && count === 0) || locked;
+
     const buttonLabel = comingSoon
         ? "COMING SOON"
         : locked
@@ -22,7 +26,9 @@ const InterviewCard = ({
         ? isTest
             ? "START TEST"
             : "PRACTICE"
-        : "NO SESSIONS";
+        : isPremium
+        ? "NO SESSIONS"
+        : "BUY PREMIUM";
 
     return (
         <div className="group" style={{ animationDelay: `${index * 60}ms` }}>
@@ -55,6 +61,10 @@ const InterviewCard = ({
                         className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed ${
                             locked
                                 ? "bg-muted text-muted-foreground hover:opacity-90"
+                                : count === 0
+                                ? isPremium
+                                    ? "bg-muted text-muted-foreground"
+                                    : "bg-amber-500/10 text-amber-600 hover:bg-amber-500/20"
                                 : isTest
                                 ? "bg-accent text-accent-foreground hover:opacity-90"
                                 : "bg-primary text-primary-foreground hover:opacity-90"
