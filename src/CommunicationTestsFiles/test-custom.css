@@ -43,10 +43,16 @@
 
 .test-activity-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .test-activity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .test-activity-card {
@@ -221,4 +227,73 @@
     width: 100%;
     flex-direction: column;
   }
+}
+
+/* Shared controls for Communication test session UI */
+.comm-theme-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 1px solid hsl(var(--border));
+  background:
+    linear-gradient(45deg, transparent 50%, hsl(var(--muted-foreground)) 50%) calc(100% - 14px) calc(50% - 1px) / 6px 6px no-repeat,
+    linear-gradient(135deg, hsl(var(--muted-foreground)) 50%, transparent 50%) calc(100% - 9px) calc(50% - 1px) / 6px 6px no-repeat,
+    hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-radius: 0.75rem;
+  padding: 0.5rem 2.1rem 0.5rem 0.8rem;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  font-weight: 600;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.comm-theme-select:hover {
+  border-color: hsl(var(--ring));
+}
+
+.comm-theme-select:focus {
+  outline: none;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.16);
+}
+
+.comm-theme-select option {
+  color: hsl(var(--foreground));
+  background: hsl(var(--card));
+}
+
+/* Communication test navbar/theme fixes when using interview-theme wrapper */
+.interview-theme .glass {
+  background: hsl(var(--card) / 0.82);
+  border-color: hsl(var(--border));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.interview-theme .interview-badge {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+.interview-theme .interview-badge.primary {
+  background: hsl(var(--primary) / 0.16);
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary) / 0.35);
+}
+
+.interview-theme .interview-badge.accent {
+  background: hsl(var(--accent) / 0.16);
+  color: hsl(var(--accent));
+  border-color: hsl(var(--accent) / 0.35);
+}
+
+.interview-theme .comm-theme-select {
+  background:
+    linear-gradient(45deg, transparent 50%, hsl(var(--muted-foreground)) 50%) calc(100% - 14px) calc(50% - 1px) / 6px 6px no-repeat,
+    linear-gradient(135deg, hsl(var(--muted-foreground)) 50%, transparent 50%) calc(100% - 9px) calc(50% - 1px) / 6px 6px no-repeat,
+    hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
 }

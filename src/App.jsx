@@ -168,14 +168,41 @@ function App() {
             <Route path="practice" element={<Practice />} />
             <Route path="test" element={<Test />} />
             <Route path="student-dashboard" element={<Dashboard />} />
-            <Route path="student-dashboard/jam" element={<JAMDashboard />} />
-            <Route path="student-dashboard/situationspeak" element={<SituationSpeakDashboard />} />
-            <Route path="student-dashboard/listening" element={<ListeningDashboard />} />
-            <Route path="student-dashboard/pronunciation" element={<PronunciationDashboard />} />
+            
             <Route path="student-leaderboard" element={<Leaderboard />} />
           </Route>
 
           {/* Communication test routes without header */}
+          {/* 
+          <Route path="student-dashboard/jam" element={<JAMDashboard />} />
+            <Route path="student-dashboard/situationspeak" element={<SituationSpeakDashboard />} />
+            <Route path="student-dashboard/listening" element={<ListeningDashboard />} />
+            <Route path="student-dashboard/pronunciation" element={<PronunciationDashboard />} /> */}
+          
+          <Route path="student-dashboard/jam" element={
+            <ProtectedRoute>
+              <JAMDashboard />
+            </ProtectedRoute>
+          } />
+
+          <Route path="student-dashboard/situationspeak" element={
+            <ProtectedRoute>
+              <SituationSpeakDashboard />
+            </ProtectedRoute>
+          } />
+
+          <Route path="student-dashboard/listening" element={
+            <ProtectedRoute>
+              <ListeningDashboard />
+            </ProtectedRoute>
+          }/>
+
+          <Route path="student-dashboard/pronunciation" element={
+            <ProtectedRoute>
+              <PronunciationDashboard />
+            </ProtectedRoute>
+          }/>
+
           <Route path="test/jam" element={
             <ProtectedRoute>
               <JAM1 />

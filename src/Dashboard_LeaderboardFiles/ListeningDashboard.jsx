@@ -1,6 +1,10 @@
 import React from 'react';
 import BaseDashboard from './BaseDashboard';
 
+const ListeningContent = () => {
+  return <div />;
+};
+
 function ListeningDashboard() {
   return (
     <BaseDashboard
@@ -9,7 +13,7 @@ function ListeningDashboard() {
       testDescription="Enhance your listening comprehension skills"
       apiTestType="LISTENING"
     >
-      <div></div>
+      <ListeningContent />
     </BaseDashboard>
   );
 }

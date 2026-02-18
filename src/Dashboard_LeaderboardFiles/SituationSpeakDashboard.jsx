@@ -1,6 +1,10 @@
 import React from 'react';
 import BaseDashboard from './BaseDashboard';
 
+const SituationSpeakContent = () => {
+  return <div />;
+};
+
 function SituationSpeakDashboard() {
   return (
     <BaseDashboard
@@ -9,7 +13,7 @@ function SituationSpeakDashboard() {
       testDescription="Practice speaking in different scenarios"
       apiTestType="SITUATIONSPEAK"
     >
-      <div></div>
+      <SituationSpeakContent />
     </BaseDashboard>
   );
 }

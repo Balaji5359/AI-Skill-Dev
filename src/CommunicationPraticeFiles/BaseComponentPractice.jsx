@@ -1,197 +1,217 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import PracticeDashboard from './PracticeDashboard';
-import './theme-dropdown-styles.css';
-import './practice-component-styles.css';
+﻿import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import PracticeDashboard from "./PracticeDashboard";
+import PracticeModal from "./components/PracticeModal";
+import PracticeNavBar from "./components/PracticeNavBar";
+import PracticeSessionPopup from "./components/PracticeSessionPopup";
+import PracticeStartCard from "./components/PracticeStartCard";
+import "../InterviewModule/interview-clone-theme.css";
+import "../CommunicationTestsFiles/test-custom.css";
 
-const BaseComponentPractice = ({
-    practiceType,
-    practiceTitle,
-    practiceDescription,
-    practiceLevel = 'basic'
-}) => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const { remainingPractices: initialRemainingPractices = 0, practiceLevel: passedPracticeLevel = 'basic' } = location.state || {};
+const getThemeVars = (theme) => {
+  if (theme === "dark") {
+    return {
+      "--background": "222 47% 11%",
+      "--foreground": "210 40% 96%",
+      "--card": "222 47% 14%",
+      "--card-foreground": "210 40% 96%",
+      "--popover": "222 47% 14%",
+      "--popover-foreground": "210 40% 96%",
+      "--secondary": "217 33% 20%",
+      "--secondary-foreground": "210 40% 96%",
+      "--muted": "217 33% 20%",
+      "--muted-foreground": "215 20% 72%",
+      "--border": "217 33% 24%",
+      "--input": "217 33% 24%",
+      "--ring": "172 66% 42%",
+      "--primary": "172 66% 42%",
+      "--primary-foreground": "0 0% 100%",
+      "--accent": "37 92% 58%",
+      "--accent-foreground": "0 0% 100%",
+    };
+  }
 
-    const actualPracticeLevel = passedPracticeLevel !== 'basic' ? passedPracticeLevel : practiceLevel;
+  if (theme === "custom") {
+    return {
+      "--background": "40 40% 97%",
+      "--foreground": "30 20% 15%",
+      "--card": "0 0% 100%",
+      "--card-foreground": "30 20% 15%",
+      "--popover": "0 0% 100%",
+      "--popover-foreground": "30 20% 15%",
+      "--primary": "20 75% 48%",
+      "--primary-foreground": "0 0% 100%",
+      "--secondary": "38 45% 92%",
+      "--secondary-foreground": "30 20% 20%",
+      "--muted": "38 45% 92%",
+      "--muted-foreground": "30 12% 40%",
+      "--accent": "172 66% 32%",
+      "--accent-foreground": "0 0% 100%",
+      "--border": "35 24% 86%",
+      "--input": "35 24% 86%",
+      "--ring": "20 75% 48%",
+    };
+  }
 
-    const sessionIdRef = useRef(null);
-    if (!sessionIdRef.current) {
-        sessionIdRef.current = `${practiceType}-${actualPracticeLevel}-${Math.floor(1000000 + Math.random() * 9000000)}`;
-    }
-    const sessionId = sessionIdRef.current;
+  return {
+    "--background": "210 20% 98%",
+    "--foreground": "215 28% 17%",
+    "--card": "0 0% 100%",
+    "--card-foreground": "215 28% 17%",
+    "--popover": "0 0% 100%",
+    "--popover-foreground": "215 28% 17%",
+    "--primary": "172 66% 32%",
+    "--primary-foreground": "0 0% 100%",
+    "--secondary": "210 20% 95%",
+    "--secondary-foreground": "215 28% 17%",
+    "--muted": "210 16% 93%",
+    "--muted-foreground": "215 14% 46%",
+    "--accent": "37 92% 55%",
+    "--accent-foreground": "0 0% 100%",
+    "--border": "214 20% 90%",
+    "--input": "214 20% 90%",
+    "--ring": "172 66% 32%",
+  };
+};
 
-    const [userEmail] = useState(localStorage.getItem("email"));
-    const [chatMessages, setChatMessages] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [recording, setRecording] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(10);
-    const [showPracticePopup, setShowPracticePopup] = useState(false);
-    const [showStartConfirm, setShowStartConfirm] = useState(false);
-    const [theme, setTheme] = useState('light');
-    const [userType, setUserType] = useState('free');
-    const [streakData, setStreakData] = useState({ current_streak: 0 });
-    const [profileData, setProfileData] = useState(null);
-    const [recordingState, setRecordingState] = useState('idle');
-    const [showEndConfirm, setShowEndConfirm] = useState(false);
-    const [showCongrats, setShowCongrats] = useState(false);
-    const [hasRecorded, setHasRecorded] = useState(false);
-    const [remainingPractices, setRemainingPractices] = useState(initialRemainingPractices);
-    const [clickedButtons, setClickedButtons] = useState(new Set());
-    const [playCounts, setPlayCounts] = useState({});
-    const [practiceCompleted, setPracticeCompleted] = useState(false);
-    const [finalReport, setFinalReport] = useState(null);
+const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescription, practiceLevel = "basic" }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { remainingPractices: initialRemainingPractices = 0, practiceLevel: passedPracticeLevel = "basic" } =
+    location.state || {};
 
-    // Dashboard state
-    const [showDashboard, setShowDashboard] = useState(true);
+  const actualPracticeLevel = passedPracticeLevel !== "basic" ? passedPracticeLevel : practiceLevel;
+  const sessionIdRef = useRef(null);
+  if (!sessionIdRef.current) {
+    sessionIdRef.current = `${practiceType}-${actualPracticeLevel}-${Math.floor(1000000 + Math.random() * 9000000)}`;
+  }
+  const sessionId = sessionIdRef.current;
 
-    const chatRef = useRef(null);
-    const timerRef = useRef(null);
-    const mediaRecorderRef = useRef(null);
-    const audioChunksRef = useRef([]);
-    const streamRef = useRef(null);
+  const [userEmail] = useState(localStorage.getItem("email"));
+  const [chatMessages, setChatMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(10);
+  const [showPracticePopup, setShowPracticePopup] = useState(false);
+  const [showStartConfirm, setShowStartConfirm] = useState(false);
+  const [theme, setTheme] = useState("light");
+  const [userType, setUserType] = useState("free");
+  const [streakData, setStreakData] = useState({ current_streak: 0 });
+  const [recordingState, setRecordingState] = useState("idle");
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
+  const [showCongrats, setShowCongrats] = useState(false);
+  const [hasRecorded, setHasRecorded] = useState(false);
+  const [remainingPractices, setRemainingPractices] = useState(initialRemainingPractices);
+  const [clickedButtons, setClickedButtons] = useState(new Set());
+  const [playCounts, setPlayCounts] = useState({});
+  const [showDashboard, setShowDashboard] = useState(true);
 
-    useEffect(() => {
+  const chatRef = useRef(null);
+  const timerRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const streamRef = useRef(null);
+
+  const themeVars = useMemo(() => getThemeVars(theme), [theme]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
-    }, []);
+  }, []);
 
-    useEffect(() => {
-        if (chatRef.current) {
-            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  useEffect(() => {
+    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  }, [chatMessages]);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const localUserEmail = localStorage.getItem("email") || localStorage.getItem("userEmail");
+        const [profileResponse, streakResponse] = await Promise.all([
+          fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ college_email: localUserEmail }),
+          }),
+          fetch(import.meta.env.VITE_UPDATE_USER_STREAK_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              body: JSON.stringify({ college_email: localUserEmail, get_streak_data: true }),
+            }),
+          }),
+        ]);
+
+        if (profileResponse.ok) {
+          const pData = await profileResponse.json();
+          const parsedProfile = typeof pData.body === "string" ? JSON.parse(pData.body) : pData.body;
+          if (parsedProfile) setUserType(parsedProfile.user_type || "free");
         }
-    }, [chatMessages]);
 
-    // Fetch profile data on component mount
-    useEffect(() => {
-        const fetchProfileData = async () => {
-            try {
-                const userEmail = localStorage.getItem('email') || localStorage.getItem('userEmail');
-
-                const [profileResponse, streakResponse] = await Promise.all([
-                    fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ college_email: userEmail })
-                    }),
-                    fetch(import.meta.env.VITE_UPDATE_USER_STREAK_API, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            body: JSON.stringify({
-                                college_email: userEmail,
-                                get_streak_data: true
-                            })
-                        })
-                    })
-                ]);
-
-                if (profileResponse.ok) {
-                    const pData = await profileResponse.json();
-                    const parsedProfile = typeof pData.body === 'string' ? JSON.parse(pData.body) : pData.body;
-                    setProfileData(parsedProfile);
-
-                    // Update user type from profile
-                    if (parsedProfile) {
-                        setUserType(parsedProfile.user_type || 'free');
-                    }
-                }
-
-                if (streakResponse.ok) {
-                    const sData = await streakResponse.json();
-                    const parsedStreak = typeof sData.body === 'string' ? JSON.parse(sData.body) : sData.body;
-                    if (parsedStreak) {
-                        setStreakData({
-                            current_streak: parsedStreak.current_streak || 0,
-                            best_streak: parsedStreak.longest_streak || 0
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching profile data:', error);
-            }
-        };
-
-        fetchProfileData();
-    }, [practiceType]);
-
-    useEffect(() => {
-        const root = document.documentElement;
-        // Apply theme class to body
-        document.body.className = `theme-${theme}`;
-        
-        if (theme === 'light') {
-            root.style.setProperty('--bg', 'linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%)');
-            root.style.setProperty('--card-bg', 'rgba(19,21,27,0.04)');
-            root.style.setProperty('--accent', '#0ea5a4');
-            root.style.setProperty('--muted', '#374151');
-            root.style.setProperty('--text-color', '#0b1220');
-        } else if (theme === 'premium') {
-            root.style.setProperty('--bg', 'linear-gradient(135deg, #7dd3d3 75%, #9ee8e8 100%)');
-            root.style.setProperty('--card-bg', 'rgba(255,255,255,0.1)');
-            root.style.setProperty('--accent', '#0ea5a4');
-            root.style.setProperty('--muted', '#374151');
-            root.style.setProperty('--text-color', '#0b1220');
-        } else {
-            root.style.setProperty('--bg', 'linear-gradient(180deg,#0f172a 0%,#071129 100%)');
-            root.style.setProperty('--card-bg', 'rgba(255,255,255,0.04)');
-            root.style.setProperty('--accent', '#3B9797');
-            root.style.setProperty('--muted', 'rgba(255,255,255,0.75)');
-            root.style.setProperty('--text-color', '#e6eef8');
-        }
-    }, [theme]);
-
-    const decrementPracticeCount = async () => {
-        try {
-            const email = localStorage.getItem('email');
-            console.log(practiceType)
-            const response = await fetch(import.meta.env.VITE_TEST_DECREMENT_API, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    college_email: email,
-                    type: 'practice',
-                    key: practiceType
-                })
+        if (streakResponse.ok) {
+          const sData = await streakResponse.json();
+          const parsedStreak = typeof sData.body === "string" ? JSON.parse(sData.body) : sData.body;
+          if (parsedStreak) {
+            setStreakData({
+              current_streak: parsedStreak.current_streak || 0,
+              best_streak: parsedStreak.longest_streak || 0,
             });
-            console.log('Decrement response:', response);
-            const data = await response.json();
-            if (data.statusCode === 200) {
-                setRemainingPractices(prev => Math.max(0, prev - 1));
-            }
-        } catch (error) {
-            console.error('Error decrementing practice count:', error);
+          }
         }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
     };
 
-    const formatMessageText = (text) => {
+    fetchProfileData();
+  }, [practiceType]);
+
+  useEffect(() => {
+    document.body.className = `theme-${theme}`;
+  }, [theme]);
+
+  const decrementPracticeCount = async () => {
+    try {
+      const email = localStorage.getItem("email");
+      const response = await fetch(import.meta.env.VITE_TEST_DECREMENT_API, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ college_email: email, type: "practice", key: practiceType }),
+      });
+      const data = await response.json();
+      if (data.statusCode === 200) setRemainingPractices((prev) => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error("Error decrementing practice count:", error);
+    }
+  };
+
+      const formatMessageText = (text) => {
         return text
             // Listening Assessment headers and formatting
-            .replace(/LISTENING COMPREHENSION ANALYSIS/g, '<div style="background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); color: white; padding: 16px 20px; border-radius: 12px; font-weight: 700; font-size: 18px; margin: 15px 0; text-align: center; font-family: Inter, sans-serif; box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);">🎧 LISTENING COMPREHENSION ANALYSIS</div>')
-            .replace(/SENTENCE \((\d+)\/(\d+)\):/g, '<div style="background: linear-gradient(135deg, #34d399 0%, #10b981 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #34d399;">📝 SENTENCE ($1/$2):</div>')
-            .replace(/YOUR REPETITION:/g, '<div style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #f97316;">🗣️ YOUR REPETITION:</div>')
-            .replace(/COMPREHENSION ANALYSIS:/g, '<div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #ef4444;">📊 COMPREHENSION ANALYSIS:</div>')
-            .replace(/LISTENING PERFORMANCE:/g, '<div style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #a855f7;">📈 LISTENING PERFORMANCE:</div>')
-            .replace(/LISTENING FOCUS:/g, '<div style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #3b82f6;">🎯 LISTENING FOCUS:</div>')
-            .replace(/(⭐ SENTENCE SCORE:)\s*(\d+\.\d+)\s*\/\s*(\d+\.\d+)/g, '<div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; padding: 12px 20px; border-radius: 20px; display: inline-block; font-weight: 700; margin: 10px 0; font-family: Inter, sans-serif; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);">⭐ SENTENCE SCORE: $2/$3</div>')
-            .replace(/• Words Heard Correctly:/g, '<div style="color: #10b981; font-weight: 600; margin: 8px 0;">✓ WORDS HEARD CORRECTLY:</div>')
-            .replace(/• Missing Words:/g, '<div style="color: #ef4444; font-weight: 600; margin: 8px 0;">✗ MISSING WORDS:</div>')
-            .replace(/• Incorrect Words:/g, '<div style="color: #f59e0b; font-weight: 600; margin: 8px 0;">⚠ INCORRECT WORDS:</div>')
-            .replace(/• Extra Words Added:/g, '<div style="color: #8b5cf6; font-weight: 600; margin: 8px 0;">➕ EXTRA WORDS ADDED:</div>')
-            .replace(/• Sequence Errors:/g, '<div style="color: #06b6d4; font-weight: 600; margin: 8px 0;">🔄 SEQUENCE ERRORS:</div>')
-            .replace(/• Comprehension Accuracy:/g, '<div style="color: #10b981; font-weight: 600; margin: 8px 0;">🎩 COMPREHENSION ACCURACY:</div>')
-            .replace(/• Listening Quality:/g, '<div style="color: #3b82f6; font-weight: 600; margin: 8px 0;">🎧 LISTENING QUALITY:</div>')
-            .replace(/• Repetition Completeness:/g, '<div style="color: #8b5cf6; font-weight: 600; margin: 8px 0;">📝 REPETITION COMPLETENESS:</div>')
-            .replace(/• Audio Processing:/g, '<div style="color: #06b6d4; font-weight: 600; margin: 8px 0;">🔊 AUDIO PROCESSING:</div>')
+            .replace(/LISTENING COMPREHENSION ANALYSIS/g, '<div style="background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); color: white; padding: 16px 20px; border-radius: 12px; font-weight: 700; font-size: 18px; margin: 15px 0; text-align: center; font-family: Inter, sans-serif; box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);">?? LISTENING COMPREHENSION ANALYSIS</div>')
+            .replace(/SENTENCE \((\d+)\/(\d+)\):/g, '<div style="background: linear-gradient(135deg, #34d399 0%, #10b981 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #34d399;">?? SENTENCE ($1/$2):</div>')
+            .replace(/YOUR REPETITION:/g, '<div style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #f97316;">??? YOUR REPETITION:</div>')
+            .replace(/COMPREHENSION ANALYSIS:/g, '<div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #ef4444;">?? COMPREHENSION ANALYSIS:</div>')
+            .replace(/LISTENING PERFORMANCE:/g, '<div style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #a855f7;">?? LISTENING PERFORMANCE:</div>')
+            .replace(/LISTENING FOCUS:/g, '<div style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #3b82f6;">?? LISTENING FOCUS:</div>')
+            .replace(/SENTENCE SCORE:\s*(\d+\.\d+)\s*\/\s*(\d+\.\d+)/g, '<div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; padding: 12px 20px; border-radius: 20px; display: inline-block; font-weight: 700; margin: 10px 0; font-family: Inter, sans-serif; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);">SENTENCE SCORE: $1/$2</div>')
+            .replace(/• Words Heard Correctly:/g, '<div style="color: #10b981; font-weight: 600; margin: 8px 0;">? WORDS HEARD CORRECTLY:</div>')
+            .replace(/• Missing Words:/g, '<div style="color: #ef4444; font-weight: 600; margin: 8px 0;">? MISSING WORDS:</div>')
+            .replace(/• Incorrect Words:/g, '<div style="color: #f59e0b; font-weight: 600; margin: 8px 0;">? INCORRECT WORDS:</div>')
+            .replace(/• Extra Words Added:/g, '<div style="color: #8b5cf6; font-weight: 600; margin: 8px 0;">? EXTRA WORDS ADDED:</div>')
+            .replace(/• Sequence Errors:/g, '<div style="color: #06b6d4; font-weight: 600; margin: 8px 0;">?? SEQUENCE ERRORS:</div>')
+            .replace(/• Comprehension Accuracy:/g, '<div style="color: #10b981; font-weight: 600; margin: 8px 0;">?? COMPREHENSION ACCURACY:</div>')
+            .replace(/• Listening Quality:/g, '<div style="color: #3b82f6; font-weight: 600; margin: 8px 0;">?? LISTENING QUALITY:</div>')
+            .replace(/• Repetition Completeness:/g, '<div style="color: #8b5cf6; font-weight: 600; margin: 8px 0;">?? REPETITION COMPLETENESS:</div>')
+            .replace(/• Audio Processing:/g, '<div style="color: #06b6d4; font-weight: 600; margin: 8px 0;">?? AUDIO PROCESSING:</div>')
             
             // Final Assessment headers
-            .replace(/FINAL SPEAKING/g, '<div style="background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 16px 20px; border-radius: 12px; font-weight: 700; font-size: 20px; margin: 15px 0; text-align: center; font-family: Inter, sans-serif; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">🎤 FINAL SPEAKING</div>')
-            .replace(/OVERALL/g, '<div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 14px 18px; border-radius: 10px; font-weight: 700; font-size: 16px; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #059669;">📊 OVERALL</div>')
-            .replace(/COMPREHENSIVE SCORES:/g, '<div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #dc2626;">📋 COMPREHENSIVE SCORES:</div>')
-            .replace(/DETAILED ANALYSIS:/g, '<div style="background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #7c2d12;">🔍 DETAILED ANALYSIS:</div>')
-            .replace(/STRENGTHS IDENTIFIED:/g, '<div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #16a34a;">💪 STRENGTHS IDENTIFIED:</div>')
-            .replace(/PROFESSIONAL RECOMMENDATIONS:/g, '<div style="background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #1d4ed8;">🎯 PROFESSIONAL RECOMMENDATIONS:</div>')
-            .replace(/(Final Speaking Score:)\s*(\d+\.\d+)\s*\/\s*(\d+\.\d+)/g, '<div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 10px 16px; border-radius: 20px; display: inline-block; font-weight: 700; margin: 8px 0; font-family: Inter, sans-serif; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);">🏆 $1 $2/$3</div>')
+            .replace(/FINAL SPEAKING/g, '<div style="background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 16px 20px; border-radius: 12px; font-weight: 700; font-size: 20px; margin: 15px 0; text-align: center; font-family: Inter, sans-serif; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">?? FINAL SPEAKING</div>')
+            .replace(/OVERALL/g, '<div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 14px 18px; border-radius: 10px; font-weight: 700; font-size: 16px; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #059669;">?? OVERALL</div>')
+            .replace(/COMPREHENSIVE SCORES:/g, '<div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #dc2626;">?? COMPREHENSIVE SCORES:</div>')
+            .replace(/DETAILED ANALYSIS:/g, '<div style="background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #7c2d12;">?? DETAILED ANALYSIS:</div>')
+            .replace(/STRENGTHS IDENTIFIED:/g, '<div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #16a34a;">?? STRENGTHS IDENTIFIED:</div>')
+            .replace(/PROFESSIONAL RECOMMENDATIONS:/g, '<div style="background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0; font-family: Inter, sans-serif; border-left: 4px solid #1d4ed8;">?? PROFESSIONAL RECOMMENDATIONS:</div>')
+            .replace(/(Final Speaking Score:)\s*(\d+\.\d+)\s*\/\s*(\d+\.\d+)/g, '<div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 10px 16px; border-radius: 20px; display: inline-block; font-weight: 700; margin: 8px 0; font-family: Inter, sans-serif; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);">?? $1 $2/$3</div>')
             
             // Better paragraph spacing
             .replace(/\n\n/g, '<br/><br/>')
@@ -235,7 +255,7 @@ const BaseComponentPractice = ({
                         fontFamily: 'Inter, sans-serif',
                         boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)'
                     }}>
-                        🎧 LISTENING ASSESSMENT – SENTENCE ({current}/{total})
+                        ?? LISTENING ASSESSMENT – SENTENCE ({current}/{total})
                     </div>
                     <div style={{
                         display: 'flex',
@@ -264,7 +284,7 @@ const BaseComponentPractice = ({
                             onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
                             onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
                         >
-                            🔊 {playCount > 0 ? `Play Again (${playCount})` : 'Play Audio'}
+                            ?? {playCount > 0 ? `Play Again (${playCount})` : 'Play Audio'}
                         </button>
                         <div style={{
                             fontSize: '14px',
@@ -494,479 +514,236 @@ const BaseComponentPractice = ({
         return <div dangerouslySetInnerHTML={{ __html: formatMessageText(content) }} />;
     };
 
+
     const initializeAIAgent = async () => {
-        try {
-            setIsLoading(true);
-            await decrementPracticeCount();
-            setChatMessages([]);
+    try {
+      setIsLoading(true);
+      await decrementPracticeCount();
+      setChatMessages([]);
+      const response = await fetch(import.meta.env.VITE_PRACTICE_AI_AGENT_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          body: { testType: practiceType, level: actualPracticeLevel, sessionId, email: userEmail, message: "hi" },
+        }),
+      });
+      const data = await response.json();
+      const bodyData = JSON.parse(data.body);
+      if (bodyData.aiResponse) {
+        setChatMessages([{ type: "ai", content: bodyData.aiResponse, timestamp: Date.now() }]);
+      }
+    } catch (error) {
+      console.error("Error initializing AI agent:", error);
+      setChatMessages([{ type: "ai", content: "Error connecting to AI agent. Please try again.", timestamp: Date.now() }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-            const response = await fetch(import.meta.env.VITE_PRACTICE_AI_AGENT_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    body: {
-                        testType: practiceType,
-                        level: actualPracticeLevel,
-                        sessionId: sessionId,
-                        email: userEmail,
-                        message: 'hi'
-                    }
-                })
-            });
+  const startRecording = async () => {
+    try {
+      setRecordingState("preparing");
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
 
-            const data = await response.json();
-            const bodyData = JSON.parse(data.body);
+      mediaRecorder.ondataavailable = (event) => audioChunksRef.current.push(event.data);
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        await sendAudioToTranscript(audioBlob);
+      };
 
-            if (bodyData.aiResponse) {
-                setChatMessages([{
-                    type: 'ai',
-                    content: bodyData.aiResponse,
-                    timestamp: Date.now()
-                }]);
-            }
-        } catch (error) {
-            console.error('Error initializing AI agent:', error);
-            setChatMessages([{
-                type: 'ai',
-                content: 'Error connecting to AI agent. Please try again.',
-                timestamp: Date.now()
-            }]);
-        } finally {
-            setIsLoading(false);
+      mediaRecorder.start();
+      setRecording(true);
+      setRecordingState("recording");
+      setHasRecorded(true);
+      setTimeLeft(10);
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            stopRecording();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+      setChatMessages((prev) => [...prev, { type: "ai", content: "Unable to access microphone. Please check permissions.", timestamp: Date.now() }]);
+      setRecordingState("idle");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && recording) {
+      mediaRecorderRef.current.stop();
+      setRecording(false);
+      setRecordingState("processing");
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (streamRef.current) streamRef.current.getTracks().forEach((track) => track.stop());
+    }
+  };
+
+  const sendAudioToTranscript = async (audioBlob) => {
+    try {
+      setIsLoading(true);
+      const reader = new FileReader();
+      reader.readAsDataURL(audioBlob);
+      reader.onloadend = async () => {
+        const base64Audio = reader.result.split(",")[1];
+        const response = await fetch("https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/audiototranscript-api", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ body: JSON.stringify({ data: base64Audio }), isBase64Encoded: false }),
+        });
+
+        const data = await response.json();
+        const transcript = JSON.parse(data.body).transcript;
+        if (transcript) {
+          await sendMessage(transcript.trim());
+        } else {
+          setChatMessages((prev) => [...prev, { type: "ai", content: "Could not process audio. Please try again.", timestamp: Date.now() }]);
         }
-    };
+        setIsLoading(false);
+        setRecordingState("idle");
+      };
+    } catch (error) {
+      console.error("Error transcribing audio:", error);
+      setChatMessages((prev) => [...prev, { type: "ai", content: "Error processing audio. Please try again.", timestamp: Date.now() }]);
+      setIsLoading(false);
+      setRecordingState("idle");
+    }
+  };
 
-    const startRecording = async () => {
-        try {
-            setRecordingState('preparing');
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            streamRef.current = stream;
+  const sendMessage = async (userMessage) => {
+    setChatMessages((prev) => [...prev, { type: "user", content: userMessage, timestamp: Date.now() }]);
+    try {
+      setIsLoading(true);
+      const response = await fetch("https://piw6c7f4sf.execute-api.ap-south-1.amazonaws.com/dev/comm-practice-ai-agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          body: { testType: practiceType, level: actualPracticeLevel, sessionId, email: userEmail, message: userMessage },
+        }),
+      });
+      const data = await response.json();
+      const bodyData = JSON.parse(data.body);
+      if (bodyData.aiResponse) {
+        setChatMessages((prev) => [...prev, { type: "ai", content: bodyData.aiResponse, timestamp: Date.now() }]);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setChatMessages((prev) => [...prev, { type: "ai", content: "Error communicating with AI. Please try again.", timestamp: Date.now() }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-            mediaRecorderRef.current = mediaRecorder;
-            audioChunksRef.current = [];
+  const handleStartPractice = () => setShowStartConfirm(true);
+  const confirmStartPractice = () => {
+    setShowStartConfirm(false);
+    setShowDashboard(false);
+    setShowPracticePopup(true);
+    initializeAIAgent();
+  };
+  const handleEndPractice = () => setShowEndConfirm(true);
+  const confirmEndPractice = (shouldRefresh) => {
+    setShowEndConfirm(false);
+    if (shouldRefresh) {
+      setShowCongrats(true);
+      setTimeout(() => {
+        setShowCongrats(false);
+        window.location.reload();
+      }, 2000);
+    }
+  };
 
-            mediaRecorder.ondataavailable = (event) => {
-                audioChunksRef.current.push(event.data);
-            };
+  return (
+    <div className="practice-theme min-h-screen bg-background" style={themeVars}>
+      <PracticeNavBar
+        practiceTitle={practiceTitle}
+        actualPracticeLevel={actualPracticeLevel}
+        streakData={streakData}
+        userType={userType}
+        theme={theme}
+        setTheme={setTheme}
+        onBack={() => navigate(-1)}
+      />
 
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-                await sendAudioToTranscript(audioBlob);
-            };
+      <div className="container max-w-6xl mx-auto px-4 py-8 md:py-10">
+        {!showPracticePopup &&
+          (showDashboard ? (
+            <PracticeDashboard
+              streakData={streakData}
+              practiceType={practiceType}
+              practiceTitle={practiceTitle}
+              practiceLevel={actualPracticeLevel}
+              remainingPractices={remainingPractices}
+              onNavigateToPractice={handleStartPractice}
+            />
+          ) : (
+            <PracticeStartCard
+              practiceTitle={practiceTitle}
+              practiceDescription={practiceDescription}
+              actualPracticeLevel={actualPracticeLevel}
+              remainingPractices={remainingPractices}
+              onStart={handleStartPractice}
+            />
+          ))}
+      </div>
 
-            mediaRecorder.start();
-            setRecording(true);
-            setRecordingState('recording');
-            setHasRecorded(true);
-            setTimeLeft(10);
+      <PracticeSessionPopup
+        open={showPracticePopup}
+        practiceTitle={practiceTitle}
+        actualPracticeLevel={actualPracticeLevel}
+        chatRef={chatRef}
+        chatMessages={chatMessages}
+        isLoading={isLoading}
+        formatAIMessage={formatAIMessage}
+        recordingState={recordingState}
+        recording={recording}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
+        hasRecorded={hasRecorded}
+        practiceType={practiceType}
+        onEndPractice={handleEndPractice}
+        timeLeft={timeLeft}
+      />
 
-            timerRef.current = setInterval(() => {
-                setTimeLeft(prev => {
-                    if (prev <= 1) {
-                        stopRecording();
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        } catch (error) {
-            console.error('Error accessing microphone:', error);
-            setChatMessages(prev => [...prev, {
-                type: 'ai',
-                content: 'Unable to access microphone. Please check permissions.',
-                timestamp: Date.now()
-            }]);
-            setRecordingState('idle');
-        }
-    };
+      <PracticeModal
+        open={showStartConfirm}
+        title="Ready to Start?"
+        message={`Are you ready to start the ${practiceTitle} practice session at ${actualPracticeLevel} level?`}
+        cancelText="Cancel"
+        confirmText="Start Practice"
+        onCancel={() => setShowStartConfirm(false)}
+        onConfirm={confirmStartPractice}
+      />
 
-    const stopRecording = () => {
-        if (mediaRecorderRef.current && recording) {
-            mediaRecorderRef.current.stop();
-            setRecording(false);
-            setRecordingState('processing');
+      <PracticeModal
+        open={showEndConfirm}
+        title="End Practice?"
+        message="Are you sure you want to end this practice session?"
+        cancelText="Continue"
+        confirmText="End Practice"
+        onCancel={() => confirmEndPractice(false)}
+        onConfirm={() => confirmEndPractice(true)}
+      />
 
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-                timerRef.current = null;
-            }
-
-            if (streamRef.current) {
-                streamRef.current.getTracks().forEach(track => track.stop());
-            }
-        }
-    };
-
-    const sendAudioToTranscript = async (audioBlob) => {
-        try {
-            setIsLoading(true);
-            const reader = new FileReader();
-            reader.readAsDataURL(audioBlob);
-
-            reader.onloadend = async () => {
-                const base64Audio = reader.result.split(',')[1];
-
-                const response = await fetch('https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/audiototranscript-api', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        body: JSON.stringify({ data: base64Audio }),
-                        isBase64Encoded: false
-                    })
-                });
-
-                const data = await response.json();
-                const bodyData = JSON.parse(data.body);
-                const transcript = bodyData.transcript;
-
-                if (transcript) {
-                    await sendMessage(transcript.trim());
-                } else {
-                    setChatMessages(prev => [...prev, {
-                        type: 'ai',
-                        content: 'Could not process audio. Please try again.',
-                        timestamp: Date.now()
-                    }]);
-                }
-                setIsLoading(false);
-                setRecordingState('idle');
-            };
-        } catch (error) {
-            console.error('Error transcribing audio:', error);
-            setChatMessages(prev => [...prev, {
-                type: 'ai',
-                content: 'Error processing audio. Please try again.',
-                timestamp: Date.now()
-            }]);
-            setIsLoading(false);
-            setRecordingState('idle');
-        }
-    };
-
-    const sendMessage = async (userMessage) => {
-        setChatMessages(prev => [...prev, {
-            type: 'user',
-            content: userMessage,
-            timestamp: Date.now()
-        }]);
-
-        try {
-            setIsLoading(true);
-
-            const response = await fetch('https://piw6c7f4sf.execute-api.ap-south-1.amazonaws.com/dev/comm-practice-ai-agent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    body: {
-                        testType: practiceType,
-                        level: actualPracticeLevel,
-                        sessionId: sessionId,
-                        email: userEmail,
-                        message: userMessage
-                    }
-                })
-            });
-
-            const data = await response.json();
-            const bodyData = JSON.parse(data.body);
-
-            if (bodyData.aiResponse) {
-                setChatMessages(prev => [...prev, {
-                    type: 'ai',
-                    content: bodyData.aiResponse,
-                    timestamp: Date.now()
-                }]);
-
-                if (bodyData.aiResponse.toLowerCase().includes('assessment report') ||
-                    bodyData.aiResponse.toLowerCase().includes('final') ||
-                    bodyData.aiResponse.toLowerCase().includes('score:')) {
-                    setPracticeCompleted(true);
-                    setFinalReport(bodyData.aiResponse);
-                }
-            }
-        } catch (error) {
-            console.error('Error sending message:', error);
-            setChatMessages(prev => [...prev, {
-                type: 'ai',
-                content: 'Error communicating with AI. Please try again.',
-                timestamp: Date.now()
-            }]);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleEndPractice = () => {
-        setShowEndConfirm(true);
-    };
-
-    const confirmEndPractice = (shouldRefresh) => {
-        setShowEndConfirm(false);
-        if (shouldRefresh) {
-            setShowCongrats(true);
-            setTimeout(() => {
-                setShowCongrats(false);
-                window.location.reload();
-            }, 2000);
-        }
-    };
-
-    const handleStartPractice = () => {
-        setShowStartConfirm(true);
-    };
-
-    const confirmStartPractice = () => {
-        setShowStartConfirm(false);
-        setShowDashboard(false);
-        setShowPracticePopup(true);
-        initializeAIAgent();
-    };
-
-    const getLevelBadgeClass = () => {
-        return `practice-level-${actualPracticeLevel}`;
-    };
-
-    return (
-        <div className="practice-root">
-            <div className="practice-topnav">
-                <div className="left">
-                    <button 
-                        className="practice-back-btn"
-                        onClick={() => navigate(-1)}
-                        title="Go back"
-                        text="Back"
-                    >
-                        ←
-                    </button>
-                        
-                    <h1 style={{ fontSize: '20px' }}>{practiceTitle}</h1>
-                    <button 
-                        className={`theme-level-button ${theme}`}
-                    >
-                        {/* level */}
-                        {actualPracticeLevel}
-                    </button>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span style={{ 
-                        marginRight: '15px', 
-                        fontWeight: '600',
-                        background: 'linear-gradient(135deg, #3B9797, #2c7a7a)',
-                        color: 'white',
-                        padding: '8px 16px',
-                        borderRadius: '20px',
-                        fontSize: '0.9rem'
-                    }}>
-                        🔥 {streakData.current_streak || 0}
-                    </span>
-                    <span style={{ 
-                        marginRight: '15px', 
-                        fontWeight: '600',
-                        background: userType === 'premium' ? 'linear-gradient(135deg, #f59e0b, #d97706)' : '#f8f9fa',
-                        color: userType === 'premium' ? 'white' : '#6b7280',
-                        padding: '8px 16px',
-                        borderRadius: '20px',
-                        border: userType === 'premium' ? '2px solid #f59e0b' : '2px solid #e5e7eb',
-                        fontSize: '0.9rem'
-                    }}>
-                        {userType === 'premium' ? '👑 Premium' : '🆓 Free'}
-                    </span>
-                    <div className="theme-dropdown-wrapper">
-                        <label style={{ color: 'var(--muted)',fontSize: '15px' }}>Select Theme - </label>
-                        <select 
-                            value={theme} 
-                            onChange={(e) => setTheme(e.target.value)}
-                            className={`theme-dropdown-select theme-dropdown-${theme}`}
-                        >
-                            <option value="dark">🌙 Dark</option>
-                            <option value="light">☀️ Light</option>
-                            {userType === 'premium' && <option value="premium">✨ Premium</option>}
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            {/* Dashboard Section */}
-            {showDashboard && !showPracticePopup && (
-                <div style={{ padding: '20px' }}>
-                    <PracticeDashboard
-                        streakData={streakData}
-                        practiceType={practiceType}
-                        practiceTitle={practiceTitle}
-                        practiceLevel={actualPracticeLevel}
-                        remainingPractices={remainingPractices}
-                        onNavigateToPractice={() => {
-                            handleStartPractice();
-                        }}
-                    />
-                </div>
-            )}
-
-            {!showPracticePopup && !showDashboard && (
-                <div style={{ textAlign: 'center', padding: 60, width: '100%' }}>
-                    <div style={{ fontWeight: 700, fontSize: 32, marginBottom: 20, color: 'var(--accent)' }}>
-                        {practiceTitle}
-                    </div>
-                    <h2 style={{ color: 'var(--muted)', fontSize: '18px', marginTop: '10px', textTransform: 'capitalize' }}>
-                        {actualPracticeLevel} Level
-                    </h2>
-                    <div style={{ fontSize: 18, color: 'var(--muted)', marginBottom: 20 }}>
-                        {practiceDescription}
-                    </div>
-                    <div style={{ fontSize: 16, color: 'var(--accent)', marginBottom: 40, fontWeight: 600 }}>
-                        Remaining Practices: {remainingPractices}
-                    </div>
-                    <button 
-                        className="practice-start-btn" 
-                        onClick={handleStartPractice}
-                        disabled={remainingPractices <= 0}
-                    >
-                        {remainingPractices <= 0 ? 'No Practices Remaining' : `Start ${practiceTitle}`}
-                    </button>
-                </div>
-            )}
-
-            {showPracticePopup && (
-                <div className="practice-popup-overlay">
-                    <div className="practice-popup-content">
-                        <div>
-                            <div className="practice-chat-section">
-                                <h2 style={{ color: 'var(--accent)' }}>
-                                    {practiceTitle}
-                                </h2>
-                                <h2 style={{ color: 'var(--muted)', fontSize: '18px', marginTop: '10px', textTransform: 'capitalize' }}>
-                                    {actualPracticeLevel} Level
-                                </h2>
-                                
-                                <div className="practice-chat-container" ref={chatRef}>
-                                    {chatMessages.map((msg, index) => (
-                                        <div key={index} className={`practice-chat-message ${msg.type}`}>
-                                            <div className={`practice-message-bubble ${msg.type}`}>
-                                                {msg.type === 'ai' ? formatAIMessage(msg.content, index) : (
-                                                    <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                    {isLoading && (
-                                        <div className="practice-chat-message ai">
-                                            <div className="practice-message-bubble ai">
-                                                <span className="practice-loading-dots">Thinking</span>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div style={{ flex: 1 }}>
-                                <div className="practice-mic-area">
-                                    <h3 style={{ color: 'var(--text-color)', marginBottom: 20 }}>
-                                        🎙️ Voice Recording
-                                    </h3>
-                                    
-                                    {recordingState === 'preparing' && (
-                                        <div className="practice-recording-status practice-status-preparing">
-                                            🎤 Preparing to record... Get ready!
-                                        </div>
-                                    )}
-                                    
-                                    {recordingState === 'recording' && (
-                                        <div className="practice-recording-status practice-status-recording">
-                                            🔴 Recording
-                                        </div>
-                                    )}
-                                    
-                                    {recordingState === 'processing' && (
-                                        <div className="practice-recording-status practice-status-processing">
-                                            ⚡ Processing your audio...
-                                        </div>
-                                    )}
-
-                                    <button
-                                        className={`practice-mic-btn ${recording ? 'recording' : ''}`}
-                                        onClick={recordingState === 'recording' ? stopRecording : startRecording}
-                                        disabled={isLoading || recordingState === 'preparing' || recordingState === 'processing'}
-                                        style={{
-                                            cursor: isLoading || recordingState === 'preparing' || recordingState === 'processing' ? 'not-allowed' : 'pointer',
-                                            opacity: isLoading || recordingState === 'preparing' || recordingState === 'processing' ? 0.6 : 1
-                                        }}
-                                    >
-                                        {recording ? '⏹️' : '🎙️'}
-                                    </button>
-
-                                    <button
-                                        onClick={handleEndPractice}
-                                        className="modern-btn btn-danger"
-                                        style={{ marginTop: 30, width: '50%' }}
-                                    >
-                                        End Practice
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showEndConfirm && (
-                <div className="confirmation-modal">
-                    <div className="confirmation-content">
-                        <h3 style={{ color: '#333', marginBottom: 20, fontSize: 22 }}>End Practice?</h3>
-                        <p style={{ color: '#666', marginBottom: 30, fontSize: 16 }}>Are you sure you want to end this practice session?</p>
-                        <div style={{ display: 'flex', gap: 15, justifyContent: 'center' }}>
-                            <button 
-                                onClick={() => confirmEndPractice(false)}
-                                className="modern-btn btn-secondary"
-                            >
-                                No, Continue
-                            </button>
-                            <button 
-                                onClick={() => confirmEndPractice(true)}
-                                className="modern-btn btn-danger"
-                            >
-                                Yes, End
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showStartConfirm && (
-                <div className="confirmation-modal">
-                    <div className="confirmation-content">
-                        <h3>Ready to Start?</h3>
-                        <p>Are you ready to start the {practiceTitle} practice session at {actualPracticeLevel} level?</p>
-                        <div className="confirmation-buttons">
-                            <button 
-                                onClick={() => setShowStartConfirm(false)}
-                                className="modern-btn btn-secondary"
-                            >
-                                Cancel
-                            </button>
-                            <button 
-                                onClick={confirmStartPractice}
-                                className="modern-btn btn-primary"
-                            >
-                                Start Practice
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showCongrats && (
-                <div className="congrats-modal">
-                    <div className="congrats-content">
-                        <div style={{ fontSize: 60, marginBottom: 20 }}>🎉</div>
-                        <h2 style={{ color: '#333', marginBottom: 15, fontSize: 28, fontWeight: 700 }}>Congratulations!</h2>
-                        <p style={{ color: '#666', fontSize: 18, marginBottom: 20 }}>You have successfully completed the <br/>{practiceTitle} - {actualPracticeLevel} Level</p>
-                        <div style={{ color: '#3B9797', fontSize: 16, fontWeight: 600 }}>Refreshing...</div>
-                    </div>
-                </div>
-            )}
+      {showCongrats && (
+        <div className="fixed inset-0 z-[80] bg-foreground/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-2xl bg-card border border-border shadow-lg p-6 text-center">
+            <h2 className="font-heading text-2xl font-bold text-foreground mb-2">Practice Completed</h2>
+            <p className="text-sm text-muted-foreground">{`${practiceTitle} - ${actualPracticeLevel}`}</p>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default BaseComponentPractice;
+
+

@@ -203,6 +203,10 @@
   padding-top: var(--header-height);
 }
 
+.main-content.no-header {
+  padding-top: 0;
+}
+
 /* Shared background styles */
 .app-bg-free {
   background: #f8fafc;

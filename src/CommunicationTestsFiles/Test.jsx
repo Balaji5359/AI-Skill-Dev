@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Target, Menu, X } from "lucide-react";
 import "./test-custom.css";
-import '../RegisterFiles/login.css';
 
 function Test() {
     const [tests, setTests] = useState({});
@@ -12,8 +10,6 @@ function Test() {
     const [instructionIndex, setInstructionIndex] = useState(0);
     const [apiData, setApiData] = useState({});
     const [userType, setUserType] = useState('free');
-    const [streakData, setStreakData] = useState({ current_streak: 0 });
-    const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [showLevelModal, setShowLevelModal] = useState(false);
     const [showPremiumModal, setShowPremiumModal] = useState(false);
     const [showPremiumLockModal, setShowPremiumLockModal] = useState(false);
@@ -32,36 +28,20 @@ function Test() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ college_email: storedEmail }),
             }),
-            fetch(import.meta.env.VITE_UPDATE_USER_STREAK_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    body: JSON.stringify({
-                        college_email: storedEmail,
-                        get_streak_data: true
-                    })
-                })
-            }),
             fetch(import.meta.env.VITE_TEST_RESULTS_API, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ college_email: storedEmail })
             })
         ])
-        .then(async ([profileResponse, streakResponse, dashboardResponse]) => {
+        .then(async ([profileResponse, dashboardResponse]) => {
             const profileData = await profileResponse.json();
-            const streakDataResult = await streakResponse.json();
             const dashboardData = await dashboardResponse.json();
             
             if (profileData?.body) {
                 const parsedProfileData = typeof profileData.body === "string" ? JSON.parse(profileData.body) : profileData.body;
                 setTests(parsedProfileData.tests || {});
                 setUserType(parsedProfileData.user_type === 'premium' && parsedProfileData.premium_status === 'active' ? 'premium' : 'free');
-            }
-            
-            if (streakDataResult?.body) {
-                const parsedStreakData = typeof streakDataResult.body === "string" ? JSON.parse(streakDataResult.body) : streakDataResult.body;
-                setStreakData(parsedStreakData);
             }
             
             if (dashboardData?.body) {
@@ -290,18 +270,7 @@ const testInstructions = {
 
     return (
         <div className="test-theme min-h-screen bg-background">
-            <div className="sticky top-0 z-40 glass border-b border-border">
-                {showMobileMenu && (
-                    <div className="sm:hidden border-t" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--card))' }}>
-                        <div className="px-4 py-3 flex flex-col gap-2">
-                            <div className="border-t pt-2 mt-2 space-y-1" style={{ borderColor: 'hsl(var(--border))' }}>
-                                <div className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>Streak: {streakData.current_streak || 0}</div>
-                                <div className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>{userType === "premium" ? "Premium" : "Free"}</div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
+            <div className="sticky top-0 z-40 glass border-b border-border" />
 
             <div className="container max-w-6xl mx-auto px-4 py-8">
                 <div className="text-center mb-10">
@@ -315,7 +284,6 @@ const testInstructions = {
 
                 <div className="test-activity-grid">
                     {activities.map((activity) => {
-                        const stats = getTestStats(activity.id);
                         return (
                             <div key={activity.id} className="test-activity-card">
                                 <h3 className="test-activity-title">{activity.title}</h3>

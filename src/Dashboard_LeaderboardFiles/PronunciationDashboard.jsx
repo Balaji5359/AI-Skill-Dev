@@ -1,6 +1,10 @@
 import React from 'react';
 import BaseDashboard from './BaseDashboard';
 
+const PronunciationContent = () => {
+  return <div />;
+};
+
 function PronunciationDashboard() {
   return (
     <BaseDashboard
@@ -9,7 +13,7 @@ function PronunciationDashboard() {
       testDescription="Perfect your pronunciation with AI-powered feedback"
       apiTestType="PRONUNCIATION"
     >
-      <div></div>
+      <PronunciationContent />
     </BaseDashboard>
   );
 }
