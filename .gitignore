@@ -37,3 +37,6 @@ dist-ssr
 .claude
 .codex
 .kiro/specs/communication-test-refactor
+# local backend export and payment test artifacts
+SkillRouteAI-Backend-Repo/
+

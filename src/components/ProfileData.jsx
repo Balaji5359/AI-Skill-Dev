@@ -164,6 +164,50 @@ function ProfileData() {
     );
 }
 
+const parsePaymentApiResponse = async (response) => {
+    const responseText = await response.text();
+    let parsed;
+
+    try {
+        parsed = JSON.parse(responseText);
+    } catch (parseError) {
+        console.error('Payment JSON Parse Error:', parseError);
+        console.error('Payment Response:', responseText.substring(0, 200));
+        throw new Error('Invalid JSON response from payment API');
+    }
+
+    if (typeof parsed?.statusCode === 'number' && parsed.statusCode >= 400) {
+        let errorMessage = 'Payment API request failed';
+
+        if (typeof parsed.body === 'string') {
+            try {
+                const errorBody = JSON.parse(parsed.body);
+                errorMessage = errorBody?.message || errorMessage;
+            } catch {
+                errorMessage = parsed.body || errorMessage;
+            }
+        } else if (parsed?.message) {
+            errorMessage = parsed.message;
+        }
+
+        throw new Error(errorMessage);
+    }
+
+    if (parsed?.body && typeof parsed.body === 'string') {
+        try {
+            return JSON.parse(parsed.body);
+        } catch (parseError) {
+            console.error('Payment Nested JSON Parse Error:', parseError);
+            console.error('Payment Nested Response:', parsed.body.substring(0, 200));
+            throw new Error('Invalid nested JSON response from payment API');
+        }
+    }
+
+    return parsed;
+};
+
+const createPaymentPayload = (payload) => JSON.stringify(payload);
+
 
 
 const GreetingCard = ({ greeting, name, quote }) => (
@@ -494,12 +538,10 @@ const PaymentModal = ({ plan, onClose, profileData }) => {
             const response = await fetch(import.meta.env.VITE_PAYMENT_API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    body: JSON.stringify({
-                        action: "create_order",
-                        college_email: email,
-                        plan_type: plan.type
-                    })
+                body: createPaymentPayload({
+                    action: "create_order",
+                    college_email: email,
+                    plan_type: plan.type
                 })
             });
 
@@ -507,16 +549,7 @@ const PaymentModal = ({ plan, onClose, profileData }) => {
                 throw new Error(`Payment API failed: ${response.status}`);
             }
 
-            const responseText = await response.text();
-            let result;
-            try {
-                result = JSON.parse(responseText);
-            } catch (parseError) {
-                console.error('Payment JSON Parse Error:', parseError);
-                console.error('Payment Response:', responseText.substring(0, 200));
-                throw new Error('Invalid JSON response from payment API');
-            }
-            const orderData = JSON.parse(result.body);
+            const orderData = await parsePaymentApiResponse(response);
 
             const options = {
                 key: orderData.razorpay_key,
@@ -552,15 +585,13 @@ const PaymentModal = ({ plan, onClose, profileData }) => {
             const response = await fetch(import.meta.env.VITE_PAYMENT_API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    body: JSON.stringify({
-                        action: "verify_payment",
-                        college_email: email,
-                        razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                        razorpay_order_id: paymentResponse.razorpay_order_id,
-                        razorpay_signature: paymentResponse.razorpay_signature,
-                        plan_type: planType
-                    })
+                body: createPaymentPayload({
+                    action: "verify_payment",
+                    college_email: email,
+                    razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                    razorpay_order_id: paymentResponse.razorpay_order_id,
+                    razorpay_signature: paymentResponse.razorpay_signature,
+                    plan_type: planType
                 })
             });
             
@@ -568,14 +599,12 @@ const PaymentModal = ({ plan, onClose, profileData }) => {
                 throw new Error(`Payment verification failed: ${response.status}`);
             }
 
-            const responseText = await response.text();
             try {
-                const result = JSON.parse(responseText);
+                await parsePaymentApiResponse(response);
                 alert('Payment successful! Premium activated.');
                 window.location.reload();
             } catch (parseError) {
                 console.error('Verification JSON Parse Error:', parseError);
-                console.error('Verification Response:', responseText.substring(0, 200));
                 alert('Payment verification failed. Please contact support.');
             }
         } catch (error) {
