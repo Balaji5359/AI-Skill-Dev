@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { profileAPI, resultsAPI } from "../services/api";
 import "./test-custom.css";
 
 function Test() {
@@ -23,30 +24,17 @@ function Test() {
         }  
         
         Promise.all([
-            fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ college_email: storedEmail }),
-            }),
-            fetch(import.meta.env.VITE_TEST_RESULTS_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ college_email: storedEmail })
-            })
+            profileAPI.get(storedEmail),
+            resultsAPI.getTest(storedEmail)
         ])
-        .then(async ([profileResponse, dashboardResponse]) => {
-            const profileData = await profileResponse.json();
-            const dashboardData = await dashboardResponse.json();
-            
-            if (profileData?.body) {
-                const parsedProfileData = typeof profileData.body === "string" ? JSON.parse(profileData.body) : profileData.body;
-                setTests(parsedProfileData.tests || {});
-                setUserType(parsedProfileData.user_type === 'premium' && parsedProfileData.premium_status === 'active' ? 'premium' : 'free');
+        .then(async ([profile, dashboard]) => {
+            if (profile?.statusCode === 200) {
+                setTests(profile.tests || {});
+                setUserType(profile.user_type === 'premium' && profile.premium_status === 'active' ? 'premium' : 'free');
             }
             
-            if (dashboardData?.body) {
-                const parsedDashboardData = JSON.parse(dashboardData.body).dashboard;
-                setApiData(parsedDashboardData);
+            if (dashboard?.statusCode === 200) {
+                setApiData(dashboard.dashboard || {});
             }
             
             setLoading(false);

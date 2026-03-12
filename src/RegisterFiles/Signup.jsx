@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./login.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
+import { authAPI } from "../services/api";
 
 function SignUp() {
     const location = useLocation();
@@ -100,46 +101,20 @@ function SignUp() {
                 return;
             }
 
-            // Login API call
-            const url = import.meta.env.VITE_STUDENT_LOGIN_API;
-            const userdata = {
-                college_email: formData.email,
-                password: formData.password,
-                college_name: formData.collegeName
-            };
-            const headers = {
-                "Content-Type": "application/json",
-            };
-
+            // Login API call using consolidated endpoint
             try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: headers,
-                    body: JSON.stringify(userdata),
-                });
-                const data = await response.json();
+                const data = await authAPI.login(
+                    formData.email,
+                    formData.password,
+                    formData.collegeName
+                );
                 
-                // Extract message from Lambda response
-                let errorMsg = "";
-                if (typeof data.body === 'string') {
-                    try {
-                        const parsed = JSON.parse(data.body);
-                        errorMsg = parsed.message || data.body;
-                    } catch (e) {
-                        errorMsg = data.body;
-                    }
-                } else if (data.body?.message) {
-                    errorMsg = data.body.message;
-                } else {
-                    errorMsg = data.message || "Login failed";
-                }
-
+                const errorMsg = data.message || "Login failed";
                 setStatusCode(data.statusCode);
                 setApiMessage(errorMsg);
 
                 if (data.statusCode === 200) {
                     localStorage.setItem("email", formData.email);
-                    // Show success message briefly before navigation
                     setShowErrorCard(false);
                     setApiMessage(errorMsg || "Logged in successfully! Redirecting...");
                     setTimeout(() => {
@@ -204,49 +179,22 @@ function SignUp() {
                 return;
             }
 
-            // Signup API call
-            const userData = {
-                college_email: formData.email,
-                full_name: formData.name,
-                password: formData.password,
-                college_name: formData.collegeName
-            };
-            
-            const url = import.meta.env.VITE_STUDENT_SIGNUP_API;
-            const headers = {
-                'Content-Type': 'application/json'
-            };
-
+            // Signup API call using consolidated endpoint
             try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: headers,
-                    body: JSON.stringify(userData),
-                });
-                const data = await response.json();
+                const data = await authAPI.signup(
+                    formData.email,
+                    formData.name,
+                    formData.password,
+                    formData.collegeName
+                );
                 
-                // Extract message from Lambda response
-                let errorMsg = "";
-                if (typeof data.body === 'string') {
-                    try {
-                        const parsed = JSON.parse(data.body);
-                        errorMsg = parsed.message || data.body;
-                    } catch (e) {
-                        errorMsg = data.body;
-                    }
-                } else if (data.body?.message) {
-                    errorMsg = data.body.message;
-                } else {
-                    errorMsg = data.message || "Signup failed";
-                }
-
+                const errorMsg = data.message || "Signup failed";
                 setStatusCode(data.statusCode);
                 setApiMessage(errorMsg);
                 
                 if (data.statusCode === 200) {
                     localStorage.setItem("email", formData.email);
                     localStorage.setItem("fullName", formData.name);
-                    // Show success message briefly before navigation
                     setShowErrorCard(false);
                     setApiMessage(errorMsg || "Account created successfully! Redirecting...");
                     setTimeout(() => {

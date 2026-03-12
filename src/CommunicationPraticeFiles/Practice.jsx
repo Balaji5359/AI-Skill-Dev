@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { profileAPI } from "../services/api";
 import "./practice-custom.css";
 
 function Practice() {
@@ -21,20 +22,11 @@ function Practice() {
             return;
         }  
         
-        Promise.all([
-            fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ college_email: storedEmail }),
-            }),
-        ])
-        .then(async ([profileResponse]) => {
-            const profileData = await profileResponse.json();
-            
-            if (profileData?.body) {
-                const parsedProfileData = typeof profileData.body === "string" ? JSON.parse(profileData.body) : profileData.body;
-                setPractices(parsedProfileData.practices || {});
-                setUserType(parsedProfileData.user_type === 'premium' && parsedProfileData.premium_status === 'active' ? 'premium' : 'free');
+        profileAPI.get(storedEmail)
+        .then(async (profile) => {
+            if (profile?.statusCode === 200) {
+                setPractices(profile.practices || {});
+                setUserType(profile.user_type === 'premium' && profile.premium_status === 'active' ? 'premium' : 'free');
             }
             
             setLoading(false);

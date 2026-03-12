@@ -9,7 +9,7 @@ export default function JAM() {
             testDescription="JAM speaking sessions to improve spontaneous communication"
             testLevel="basic"
             testDuration={600}
-            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/jamagent-test"
+            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-ai-agent"
             recordingMode="long"
             autoStartMessage="hi"
         />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, Menu, X } from "lucide-react";
+import { profileAPI } from "../services/api";
 import InterviewCard from "./InterviewCard";
 import InstructionModal from "./InstructionModal";
 import "./interview-clone-theme.css";
@@ -50,11 +51,8 @@ function InterviewPractice() {
     const [showPremiumLockModal, setShowPremiumLockModal] = useState(false);
     const [premiumModalMessage, setPremiumModalMessage] = useState("");
     const [showLevelModal, setShowLevelModal] = useState(false);
-    const [userType, setUserType] = useState("free");
-    const [streakData, setStreakData] = useState({ current_streak: 0 });
-    const [email, setEmail] = useState("");
     const navigate = useNavigate();
-    const { isPremium } = useInterviewUserInfo();
+    const { isPremium, userType, streakData, email } = useInterviewUserInfo();
     const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     useEffect(() => {
@@ -63,40 +61,12 @@ function InterviewPractice() {
             setLoading(false);
             return;
         }
-        setEmail(storedEmail);
 
-        Promise.all([
-            fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ college_email: storedEmail }),
-            }),
-            fetch(import.meta.env.VITE_UPDATE_USER_STREAK_API, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    body: JSON.stringify({
-                        college_email: storedEmail,
-                        get_streak_data: true
-                    })
-                })
-            })
-        ])
-            .then(async ([profileResponse, streakResponse]) => {
-                const profileData = await profileResponse.json();
-                const streakDataResult = await streakResponse.json();
-
-                if (profileData?.body) {
-                    const parsedProfileData = typeof profileData.body === "string" ? JSON.parse(profileData.body) : profileData.body;
-                    setInterviews(parsedProfileData.basic_interviews_practices || {});
-                    setUserType(parsedProfileData.user_type === 'premium' && parsedProfileData.premium_status === 'active' ? 'premium' : 'free');
+        profileAPI.get(storedEmail)
+            .then((profile) => {
+                if (profile?.statusCode === 200) {
+                    setInterviews(profile.basic_interviews_practices || {});
                 }
-
-                if (streakDataResult?.body) {
-                    const parsedStreakData = typeof streakDataResult.body === "string" ? JSON.parse(streakDataResult.body) : streakDataResult.body;
-                    setStreakData(parsedStreakData);
-                }
-
                 setLoading(false);
             })
             .catch(() => setLoading(false));
@@ -109,17 +79,17 @@ function InterviewPractice() {
         { id: 4, title: "Project Discussion", count: interviews.project_discussion_practice || 0 },
         { id: 5, title: "Future Career Planning", count: interviews.future_career_planning_practice || 0 },
         { id: 6, title: "Hobbies & Interests", count: interviews.hobbies_interests_practice || 0 },
-        { id: 7, title: "Certifications Exploration", count: interviews.certifications_exploration_practice || 0 },
-        { id: 8, title: "Project Reviews", count: interviews.project_reviews_practice || 0 }
+        { id: 7, title: "Certifications Exploration", count: interviews.certifications_exploration_practice || 0 }
     ];
 
     const advancedInterviews = [
-        { id: 8, title: "Role-Based Interview", count: interviews.role_based || 0 },
-        { id: 9, title: "Resume-Based Interview", count: interviews.resume_based || 0 },
-        { id: 10, title: "Technical Interview", count: interviews.technical || 0 },
-        { id: 11, title: "Follow-Up Questioning", count: interviews.follow_up || 0 },
-        { id: 12, title: "Stress/Pressure Questions", count: interviews.stress || 0 },
-        { id: 13, title: "Logical Puzzles", count: interviews.puzzles || 0 },
+        { id: 8, title: "Project Reviews", count: interviews.project_reviews_practice || 0 },
+        { id: 9, title: "Role-Based Interview", count: interviews.role_based_practice || 0 },
+        { id: 10, title: "Resume-Based Interview", count: interviews.resume_based_practice || 0 },
+        { id: 11, title: "Technical Interview", count: interviews.technical_practice || 0 },
+        { id: 12, title: "Follow-Up Questioning", count: interviews.followup_practice || 0 },
+        { id: 13, title: "Stress/Pressure Questions", count: interviews.stress_practice || 0 },
+        { id: 14, title: "Logical Puzzles", count: interviews.logical_practice || 0 },
     ];
 
     const instructions = buildInstructions();

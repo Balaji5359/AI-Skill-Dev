@@ -5,18 +5,11 @@ import TestResultModal from "./components/TestResultModal";
 import TestSessionPopup from "./components/TestSessionPopup";
 import TestStartCard from "./components/TestStartCard";
 import { getTestKey } from "./testUtils";
+import { profileAPI, platformAPI, testAPI } from "../services/api";
 import "../InterviewModule/interview-clone-theme.css";
 import "./test-custom.css";
 
-const profileUrl =
-  "https://ntjkr8rnd6.execute-api.ap-south-1.amazonaws.com/dev/student_profilecreate/student_profile_senddata";
-const streakUrl = "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/update-user-streak";
-const decrementUrl = "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-decrement";
-const transcribeUrl = "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/audiototranscript-api";
-const longRecordUrl =
-  "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/studentcommunicationtests_recordingapi";
-const longPollUrl =
-  "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/studentcommunicationtests_transcribeapi";
+const TEST_AGENT_URL = "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-ai-agent";
 
 const isLongRecordingTest = (testType) => testType === "jam" || testType === "situation";
 
@@ -207,32 +200,21 @@ export default function CommunicationTestBase({
       const storedEmail = localStorage.getItem("email");
       if (!storedEmail) return;
 
-      const [profileResponse, streakResponse] = await Promise.all([
-        fetch(profileUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ college_email: storedEmail }),
-        }),
-        fetch(streakUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            body: JSON.stringify({ college_email: storedEmail, get_streak_data: true }),
-          }),
-        }),
+      const [profile, streak] = await Promise.all([
+        profileAPI.get(storedEmail),
+        platformAPI.updateStreak(storedEmail, true),
       ]);
 
-      const profile = await profileResponse.json();
-      const streak = await streakResponse.json();
-
-      if (profile?.body) {
-        const userData = JSON.parse(profile.body);
-        const isPremium = userData?.user_type === "premium" && userData?.premium_status === "active";
+      if (profile?.statusCode === 200) {
+        const isPremium = profile.user_type === "premium" && profile.premium_status === "active";
         setUserType(isPremium ? "premium" : "free");
       }
 
-      if (streak?.body) {
-        setStreakData(JSON.parse(streak.body));
+      if (streak?.statusCode === 200) {
+        setStreakData({
+          current_streak: streak.current_streak || 0,
+          best_streak: streak.longest_streak || 0,
+        });
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -244,15 +226,9 @@ export default function CommunicationTestBase({
     if (!email) return;
 
     try {
-      const response = await fetch(profileUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ college_email: email }),
-      });
-      const data = await response.json();
-      const parsedData = typeof data.body === "string" ? JSON.parse(data.body) : data.body;
+      const data = await profileAPI.get(email);
       const testKey = getTestKey(testType);
-      setRemainingTests(parsedData.tests?.[testKey] || 0);
+      setRemainingTests(data?.tests?.[testKey] || 0);
     } catch (error) {
       console.error("Error fetching test count:", error);
     }
@@ -261,18 +237,8 @@ export default function CommunicationTestBase({
   const decrementTestCount = useCallback(async () => {
     try {
       const email = localStorage.getItem("email");
-      const response = await fetch(decrementUrl, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          college_email: email,
-          type: "test",
-          key: getTestKey(testType),
-        }),
-      });
-
-      const data = await response.json();
-      if (data.statusCode === 200) {
+      const resp = await testAPI.decrement(email, "test", getTestKey(testType));
+      if (resp.statusCode === 200) {
         setRemainingTests((prev) => Math.max(0, prev - 1));
         return true;
       }
@@ -283,11 +249,28 @@ export default function CommunicationTestBase({
     return false;
   }, [testType]);
 
+  const pollTranscript = async (sessionId, attempts = 0) => {
+    try {
+      const resp = await testAPI.getTranscript(sessionId);
+      if (resp.statusCode === 200 && resp.transcript) {
+        await sendMessage(resp.transcript.trim());
+        return true;
+      }
+      if (resp.statusCode === 404 || attempts >= 12) return false;
+      await new Promise((r) => setTimeout(r, 2000));
+      return pollTranscript(sessionId, attempts + 1);
+    } catch (error) {
+      if (attempts >= 12) return false;
+      await new Promise((r) => setTimeout(r, 2000));
+      return pollTranscript(sessionId, attempts + 1);
+    }
+  };
+
   const sendMessage = async (message) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(apiEndpoint, {
+      const response = await fetch(TEST_AGENT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -296,13 +279,14 @@ export default function CommunicationTestBase({
             sessionId,
             email: localStorage.getItem("email"),
             level: actualTestLevel,
+            testType,
           },
         }),
       });
 
       if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
-      const decoded = JSON.parse(data.body).response;
+      const decoded = JSON.parse(data.body).aiResponse;
       const textarea = document.createElement("textarea");
       textarea.innerHTML = decoded;
 
@@ -329,20 +313,9 @@ export default function CommunicationTestBase({
       reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
         const base64Audio = reader.result.split(",")[1];
-        const response = await fetch(transcribeUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            body: JSON.stringify({ data: base64Audio }),
-            isBase64Encoded: false,
-          }),
-        });
-
-        const data = await response.json();
-        const transcript = JSON.parse(data.body).transcript;
-        if (transcript) {
-          await sendMessage(transcript.trim());
-        } else {
+        await testAPI.uploadRecording({ data: base64Audio, sessionId });
+        const success = await pollTranscript(sessionId);
+        if (!success) {
           setChatMessages((prev) => [
             ...prev,
             { type: "ai", content: "Could not process audio. Please try again.", timestamp: Date.now() },
@@ -363,53 +336,15 @@ export default function CommunicationTestBase({
       reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
         const base64Audio = reader.result.split(",")[1];
-        await fetch(longRecordUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            body: JSON.stringify({
-              data: base64Audio,
-              sessionId,
-              testType,
-              testLevel: actualTestLevel,
-            }),
-          }),
-        });
-
-        let attempts = 0;
-        const pollTranscript = async () => {
-          try {
-            const response = await fetch(longPollUrl, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ body: { sessionId } }),
-            });
-            const data = await response.json();
-            const payload = data.body ? JSON.parse(data.body) : data;
-            if (payload.status === "completed" && payload.transcript) {
-              await sendMessage(payload.transcript.trim());
-              return;
-            }
-            if (attempts < 12 && (payload.status === "processing" || payload.error)) {
-              attempts += 1;
-              setTimeout(pollTranscript, 2000);
-              return;
-            }
-            setChatMessages((prev) => [
-              ...prev,
-              { type: "ai", content: "Audio processing timeout. Please try again.", timestamp: Date.now() },
-            ]);
-            setIsLoading(false);
-          } catch {
-            if (attempts < 12) {
-              attempts += 1;
-              setTimeout(pollTranscript, 2000);
-            } else {
-              setIsLoading(false);
-            }
-          }
-        };
-        setTimeout(pollTranscript, 3000);
+        await testAPI.uploadRecording({ data: base64Audio, sessionId });
+        const success = await pollTranscript(sessionId);
+        if (!success) {
+          setChatMessages((prev) => [
+            ...prev,
+            { type: "ai", content: "Audio processing timeout. Please try again.", timestamp: Date.now() },
+          ]);
+          setIsLoading(false);
+        }
       };
     } catch (error) {
       console.error("Long recording processing failed:", error);

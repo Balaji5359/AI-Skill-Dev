@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import { profileAPI, platformAPI } from '../services/api';
 import './profile.css';
 import './profile-payment.css';
 
@@ -29,59 +30,20 @@ function ProfileData() {
             try {
                 const storedEmail = localStorage.getItem("email");
                 
-                // Update daily test count
-                await fetch(import.meta.env.VITE_DAILY_TEST_COUNT_UPDATE_API, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        body: {
-                            college_email: storedEmail
-                        }
-                    })
-                });
-                
-                const [profileResponse, streakResponse] = await Promise.all([
-                    fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ college_email: storedEmail })
-                    }),
-                    fetch(import.meta.env.VITE_UPDATE_USER_STREAK_API, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            body: JSON.stringify({
-                                college_email: storedEmail,
-                                get_streak_data: true
-                            })
-                        })
-                    })
+                const [profile, streak] = await Promise.all([
+                    profileAPI.get(storedEmail),
+                    platformAPI.updateStreak(storedEmail, true)
                 ]);
 
-                // Check if responses are OK and contain JSON
-                if (!profileResponse.ok) {
-                    throw new Error(`Profile API failed: ${profileResponse.status}`);
+                if (profile.statusCode !== 200) {
+                    throw new Error(`Profile API failed: ${profile.statusCode}`);
                 }
-                if (!streakResponse.ok) {
-                    throw new Error(`Streak API failed: ${streakResponse.status}`);
-                }
-
-                const profileText = await profileResponse.text();
-                const streakText = await streakResponse.text();
-                
-                let profile, streak;
-                try {
-                    profile = JSON.parse(profileText);
-                    streak = JSON.parse(streakText);
-                } catch (parseError) {
-                    console.error('JSON Parse Error:', parseError);
-                    console.error('Profile Response:', profileText.substring(0, 200));
-                    console.error('Streak Response:', streakText.substring(0, 200));
-                    throw new Error('Invalid JSON response from API');
+                if (streak.statusCode !== 200) {
+                    throw new Error(`Streak API failed: ${streak.statusCode}`);
                 }
                 
-                setProfileData(JSON.parse(profile.body));
-                setStreakData(JSON.parse(streak.body));
+                setProfileData(profile);
+                setStreakData(streak);
 
                 const hour = new Date().getHours();
                 if (hour < 12) setGreeting("Good Morning");

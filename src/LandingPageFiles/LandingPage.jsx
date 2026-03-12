@@ -120,11 +120,11 @@ function LandingPage() {
     { topicId: 4, title: "Project Discussion", levels: ["Basic", "Intermediate", "Advanced"] },
     { topicId: 5, title: "Future Career Planning", levels: ["Basic", "Intermediate", "Advanced"] },
     { topicId: 6, title: "Hobbies & Interests", levels: ["Basic", "Intermediate", "Advanced"] },
-    { topicId: 7, title: "Certifications Exploration", levels: ["Basic", "Intermediate", "Advanced"] },
-    { topicId: 8, title: "Project Reviews", levels: ["Basic", "Intermediate", "Advanced"] }
+    { topicId: 7, title: "Certifications Exploration", levels: ["Basic", "Intermediate", "Advanced"] }
   ];
 
   const advancedTopics = [
+    { topicId: 8, title: "Project Reviews", levels: ["Basic", "Intermediate", "Advanced"] },
     { topicId: 9, title: "Role-Based Interview", levels: ["Basic", "Intermediate", "Advanced"] },
     { topicId: 10, title: "Resume-Based Interview", levels: ["Basic", "Intermediate", "Advanced"] },
     { topicId: 11, title: "Technical Interview", levels: ["Basic", "Intermediate", "Advanced"] },

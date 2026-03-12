@@ -9,7 +9,7 @@ export default function Listening() {
             testDescription="Test your listening skills by listen and speaking of 5 sentences"
             testLevel="basic"
             testDuration={600}
-            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/listenagent-test"
+            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-ai-agent"
             recordingMode="short"
             autoStartMessage="hi"
         />

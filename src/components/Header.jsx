@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import '../RegisterFiles/login.css';
+import { profileAPI, platformAPI } from '../services/api';
 
 function Header() {
     const navigate = useNavigate();
@@ -17,36 +18,18 @@ function Header() {
                 const storedEmail = localStorage.getItem('email');
                 if (!storedEmail) return;
 
-                const [profileResponse, streakResponse] = await Promise.all([
-                    fetch('https://ntjkr8rnd6.execute-api.ap-south-1.amazonaws.com/dev/student_profilecreate/student_profile_senddata', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ college_email: storedEmail })
-                    }),
-                    fetch('https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/update-user-streak', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            body: JSON.stringify({
-                                college_email: storedEmail,
-                                get_streak_data: true
-                            })
-                        })
-                    })
+                const [profile, streak] = await Promise.all([
+                    profileAPI.get(storedEmail),
+                    platformAPI.updateStreak(storedEmail, true)
                 ]);
 
-                const profile = await profileResponse.json();
-                const streak = await streakResponse.json();
-
-                if (profile?.body) {
-                    const userData = typeof profile.body === "string" ? JSON.parse(profile.body) : profile.body;
-                    setProfileData(userData);
-                    setUserType(userData?.user_type === 'premium' && userData?.premium_status === 'active' ? 'premium' : 'free');
+                if (profile?.statusCode === 200) {
+                    setProfileData(profile);
+                    setUserType(profile?.user_type === 'premium' && profile?.premium_status === 'active' ? 'premium' : 'free');
                 }
 
-                if (streak?.body) {
-                    const streakDataResult = typeof streak.body === "string" ? JSON.parse(streak.body) : streak.body;
-                    setStreakData(streakDataResult);
+                if (streak?.statusCode === 200) {
+                    setStreakData(streak);
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);

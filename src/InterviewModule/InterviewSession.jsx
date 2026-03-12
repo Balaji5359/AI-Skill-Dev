@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Mic, Square, Clock, MessageSquare, Bot, User, Loader2 } from "lucide-react";
+import { testAPI } from "../services/api";
 import "./interview-clone-theme.css";
 import useInterviewUserInfo from "./useInterviewUserInfo";
 
@@ -191,15 +192,7 @@ const InterviewSession = () => {
     const decrementInterviewCount = async () => {
         try {
             const email = localStorage.getItem("email");
-            await fetch(import.meta.env.VITE_TEST_DECREMENT_API, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    college_email: email,
-                    type: "interview",
-                    key: interviewType,
-                }),
-            });
+            await testAPI.decrement(email, "interview", interviewType);
         } catch (error) {
             console.error("Error decrementing interview count:", error);
         }

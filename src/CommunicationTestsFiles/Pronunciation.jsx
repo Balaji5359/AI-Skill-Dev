@@ -9,7 +9,7 @@ export default function Pronunciation() {
             testDescription="Test your pronunciation accuracy with 5 sentences"
             testLevel="basic"
             testDuration={600}
-            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/prounagent-test"
+            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-ai-agent"
             recordingMode="short"
             autoStartMessage="hi"
         />

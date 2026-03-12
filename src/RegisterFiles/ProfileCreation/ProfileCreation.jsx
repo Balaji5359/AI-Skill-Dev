@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProfileCreation.css';
+import { authAPI, profileAPI } from '../../services/api';
 
 const ProfileCreation = () => {
   const [formData, setFormData] = useState({
@@ -86,20 +87,10 @@ const ProfileCreation = () => {
     setUsernameAvailable(null);
     
     try {
-      const response = await fetch(import.meta.env.VITE_USERNAME_CHECK_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.trim() })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data.statusCode === 200) {
-          const result = JSON.parse(data.body);
-          setUsernameAvailable(result.available === true);
-        } else {
-          setUsernameAvailable(null);
-        }
+      const data = await authAPI.checkUsername(username.trim());
+      if (data.statusCode === 200) {
+        const result = typeof data.body === 'string' ? JSON.parse(data.body) : data.body;
+        setUsernameAvailable(result.available === true);
       } else {
         setUsernameAvailable(null);
       }
@@ -290,19 +281,8 @@ const ProfileCreation = () => {
         sem: formData.sem
       };
 
-      const response = await fetch(import.meta.env.VITE_STUDENT_PROFILE_CREATE_API, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profileData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create profile');
-      }
-
-      return await response.json();
+      const response = await profileAPI.create(profileData);
+      return response;
     } catch (error) {
       console.error('Profile creation error:', error);
       throw error;
@@ -321,19 +301,8 @@ const ProfileCreation = () => {
         Reason_Why_not_Speaking_English: formData.speakingFrequency === 'no' ? (formData.notSpeakingReasons.length > 0 ? formData.notSpeakingReasons.join(', ') : (formData.otherReasons || 'not specified')) : 'null'
       };
 
-      const response = await fetch(import.meta.env.VITE_STUDENT_SURVEY_API, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(surveyData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit survey');
-      }
-
-      return await response.json();
+      const response = await profileAPI.submitSurvey(surveyData);
+      return response;
     } catch (error) {
       console.error('Survey submission error:', error);
       throw error;

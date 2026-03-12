@@ -1,5 +1,6 @@
 ﻿import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { profileAPI, platformAPI, testAPI } from "../services/api";
 import PracticeDashboard from "./PracticeDashboard";
 import PracticeModal from "./components/PracticeModal";
 import PracticeNavBar from "./components/PracticeNavBar";
@@ -126,36 +127,20 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
     const fetchProfileData = async () => {
       try {
         const localUserEmail = localStorage.getItem("email") || localStorage.getItem("userEmail");
-        const [profileResponse, streakResponse] = await Promise.all([
-          fetch(import.meta.env.VITE_STUDENT_PROFILE_API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ college_email: localUserEmail }),
-          }),
-          fetch(import.meta.env.VITE_UPDATE_USER_STREAK_API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              body: JSON.stringify({ college_email: localUserEmail, get_streak_data: true }),
-            }),
-          }),
+        const [profile, streak] = await Promise.all([
+          profileAPI.get(localUserEmail),
+          platformAPI.updateStreak(localUserEmail, true)
         ]);
 
-        if (profileResponse.ok) {
-          const pData = await profileResponse.json();
-          const parsedProfile = typeof pData.body === "string" ? JSON.parse(pData.body) : pData.body;
-          if (parsedProfile) setUserType(parsedProfile.user_type || "free");
+        if (profile?.statusCode === 200) {
+          setUserType(profile.user_type || "free");
         }
 
-        if (streakResponse.ok) {
-          const sData = await streakResponse.json();
-          const parsedStreak = typeof sData.body === "string" ? JSON.parse(sData.body) : sData.body;
-          if (parsedStreak) {
-            setStreakData({
-              current_streak: parsedStreak.current_streak || 0,
-              best_streak: parsedStreak.longest_streak || 0,
-            });
-          }
+        if (streak?.statusCode === 200) {
+          setStreakData({
+            current_streak: streak.current_streak || 0,
+            best_streak: streak.longest_streak || 0,
+          });
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -172,13 +157,8 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
   const decrementPracticeCount = async () => {
     try {
       const email = localStorage.getItem("email");
-      const response = await fetch(import.meta.env.VITE_TEST_DECREMENT_API, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ college_email: email, type: "practice", key: practiceType }),
-      });
-      const data = await response.json();
-      if (data.statusCode === 200) setRemainingPractices((prev) => Math.max(0, prev - 1));
+      await testAPI.decrement(email, "practice", practiceType);
+      setRemainingPractices((prev) => Math.max(0, prev - 1));
     } catch (error) {
       console.error("Error decrementing practice count:", error);
     }
