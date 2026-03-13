@@ -6,6 +6,7 @@ import { formatTime } from "../testUtils";
 const formatMessageText = (content = "") => content.replace(/\n\n/g, "<br/><br/>").replace(/\n/g, "<br/>");
 
 const ALLOWED_ACTIONS = ["start", "next", "end", "done", "yes", "no", "1", "2"];
+const ACTION_HINT_PREFIX = "(?:click|press|choose|select|reply|respond(?:\\s+with)?|type)";
 
 const extractActionOptions = (content = "") => {
   const matched = new Set();
@@ -19,8 +20,19 @@ const extractActionOptions = (content = "") => {
   }
 
   ALLOWED_ACTIONS.forEach((token) => {
-    if (new RegExp(`\\b${token}\\b`, "i").test(content)) matched.add(token);
+    const directHintRegex = new RegExp(`${ACTION_HINT_PREFIX}[^\\n.]{0,30}\\b${token}\\b`, "i");
+    if (directHintRegex.test(content)) matched.add(token);
   });
+
+  if (new RegExp(`${ACTION_HINT_PREFIX}[^\\n.]{0,30}\\byes\\b[^\\n.]{0,20}\\bno\\b`, "i").test(content)) {
+    matched.add("yes");
+    matched.add("no");
+  }
+
+  if (new RegExp(`${ACTION_HINT_PREFIX}[^\\n.]{0,30}\\b1\\b[^\\n.]{0,20}\\b2\\b`, "i").test(content)) {
+    matched.add("1");
+    matched.add("2");
+  }
 
   return ALLOWED_ACTIONS.filter((token) => matched.has(token));
 };
@@ -41,7 +53,7 @@ const actionClass = (action) => {
   return "bg-primary text-primary-foreground hover:opacity-90";
 };
 
-const ListeningPrompt = ({ sentence, current, total, played, onPlay }) => (
+const ListeningPrompt = ({ current, total, played, onPlay }) => (
   <div className="space-y-3">
     <div className="text-sm font-semibold text-foreground">{`Listening Sentence (${current}/${total})`}</div>
     <button
@@ -53,7 +65,9 @@ const ListeningPrompt = ({ sentence, current, total, played, onPlay }) => (
     >
       {played ? "Audio Played" : "Play Audio"}
     </button>
-    <p className="text-xs text-muted-foreground">{sentence}</p>
+    <p className="text-xs text-muted-foreground">
+      Listen carefully and repeat exactly what you hear.
+    </p>
   </div>
 );
 

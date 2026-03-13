@@ -25,6 +25,7 @@ const JAM1 = lazy(() => import("./CommunicationTestsFiles/JAM.jsx"))
 const Pronunciation1 = lazy(() => import("./CommunicationTestsFiles/Pronunciation.jsx"));
 const Listening = lazy(() => import("./CommunicationTestsFiles/Listening.jsx"));
 const SituationSpeak = lazy(() => import("./CommunicationTestsFiles/SituationSpeak.jsx"));
+const TestFeedbackPage = lazy(() => import("./CommunicationTestsFiles/TestFeedbackPage.jsx"));
 
 // Interview Components
 const Interview = lazy(() => import("./InterviewModule/Interview.jsx"));
@@ -36,6 +37,7 @@ const InterviewFeedback = lazy(() => import("./InterviewModule/InterviewFeedback
 
 // Practice Components - Base
 const BaseComponentPractice = lazy(() => import("./CommunicationPraticeFiles/BaseComponentPractice.jsx"));
+const PracticeFeedbackPage = lazy(() => import("./CommunicationPraticeFiles/PracticeFeedbackPage.jsx"));
 
 // Student Dashboard and Leaderboard files
 const Dashboard = lazy(() => import("./Dashboard_LeaderboardFiles/Dashboard.jsx"));
@@ -223,6 +225,11 @@ function App() {
               <SituationSpeak />
             </ProtectedRoute>
           } />
+          <Route path="test/feedback" element={
+            <ProtectedRoute>
+              <TestFeedbackPage />
+            </ProtectedRoute>
+          } />
 
           {/* Communication practice routes */}
           <Route path="practice/jam" element={
@@ -268,6 +275,11 @@ function App() {
                 practiceTitle="Image-Based Speaking Practice"
                 practiceDescription="Describe images to enhance vocabulary and fluency"
               />
+            </ProtectedRoute>
+          } />
+          <Route path="practice/feedback" element={
+            <ProtectedRoute>
+              <PracticeFeedbackPage />
             </ProtectedRoute>
           } />
 

@@ -13,6 +13,11 @@ const InterviewFeedback = () => {
         interviewTitle = "Interview Session",
         interviewLevel = "Basic",
         report = "",
+        summary = "",
+        strengths = [],
+        improvements = [],
+        recommendations = [],
+        answers = [],
         terminated = false,
     } = location.state || {};
 
@@ -151,12 +156,17 @@ const InterviewFeedback = () => {
                     </div>
                 </div>
 
-                {report && (
+                {(summary || report) && (
                     <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-6 space-y-4">
                         <h4 className="font-heading text-lg font-semibold text-foreground flex items-center justify-center gap-2">
                             <TrendingUp className="w-5 h-5 text-primary" />
                             Assessment Report
                         </h4>
+                        {summary && (
+                            <div className="rounded-xl bg-primary/5 border border-primary/15 px-4 py-3 text-sm text-foreground">
+                                {summary}
+                            </div>
+                        )}
                         <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line text-left">
                             {sections.map((section, i) => (
                                 <div key={i} className={i > 0 ? "mt-4" : ""}>
@@ -172,6 +182,49 @@ const InterviewFeedback = () => {
                                     })}
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                )}
+
+                {!!answers.length && (
+                    <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-6 space-y-4">
+                        <h4 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
+                            <MessageSquare className="w-5 h-5 text-accent" />
+                            Interview Transcript
+                        </h4>
+                        <div className="space-y-4">
+                            {answers.map((item) => (
+                                <div key={item.sessionId || item.questionNumber} className="rounded-xl border border-border p-4">
+                                    <p className="text-xs font-semibold text-muted-foreground mb-2">
+                                        Question {item.questionNumber}
+                                    </p>
+                                    <p className="text-sm font-medium text-foreground mb-2">{item.question}</p>
+                                    <p className="text-sm text-muted-foreground whitespace-pre-line">{item.answer}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {!!(strengths.length || improvements.length || recommendations.length) && (
+                    <div className="max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="bg-card border border-border rounded-2xl p-5">
+                            <h4 className="font-heading text-base font-semibold text-foreground mb-3">Strengths</h4>
+                            <div className="space-y-2 text-sm text-muted-foreground">
+                                {strengths.length ? strengths.map((item, index) => <p key={index}>{item}</p>) : <p>No strengths captured.</p>}
+                            </div>
+                        </div>
+                        <div className="bg-card border border-border rounded-2xl p-5">
+                            <h4 className="font-heading text-base font-semibold text-foreground mb-3">Improvements</h4>
+                            <div className="space-y-2 text-sm text-muted-foreground">
+                                {improvements.length ? improvements.map((item, index) => <p key={index}>{item}</p>) : <p>No improvement notes captured.</p>}
+                            </div>
+                        </div>
+                        <div className="bg-card border border-border rounded-2xl p-5">
+                            <h4 className="font-heading text-base font-semibold text-foreground mb-3">Recommendations</h4>
+                            <div className="space-y-2 text-sm text-muted-foreground">
+                                {recommendations.length ? recommendations.map((item, index) => <p key={index}>{item}</p>) : <p>No recommendations captured.</p>}
+                            </div>
                         </div>
                     </div>
                 )}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Flame, LayoutDashboard } from "lucide-react";
 import AdvancedDashboard from "./AdvancedDashboard";
+import { platformAPI, profileAPI } from "../services/api";
 import "../InterviewModule/interview-clone-theme.css";
 import "../CommunicationTestsFiles/test-custom.css";
 
@@ -21,26 +22,20 @@ const BaseDashboard = ({ testTitle, apiTestType, children }) => {
       try {
         const storedEmail = localStorage.getItem("email");
         if (!storedEmail) return;
-        const [profileResponse, streakResponse] = await Promise.all([
-          fetch("https://ntjkr8rnd6.execute-api.ap-south-1.amazonaws.com/dev/student_profilecreate/student_profile_senddata", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ college_email: storedEmail }),
-          }),
-          fetch("https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/update-user-streak", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ body: JSON.stringify({ college_email: storedEmail, get_streak_data: true }) }),
-          }),
+        const [profile, streak] = await Promise.all([
+          profileAPI.get(storedEmail),
+          platformAPI.updateStreak(storedEmail, true),
         ]);
-        const profile = await profileResponse.json();
-        const streak = await streakResponse.json();
-        if (profile?.body) {
-          const userData = JSON.parse(profile.body);
-          const isPremium = userData?.user_type === "premium" && userData?.premium_status === "active";
+        if (profile?.statusCode === 200) {
+          const isPremium = profile.user_type === "premium" && profile.premium_status === "active";
           setUserType(isPremium ? "premium" : "free");
         }
-        if (streak?.body) setStreakData(JSON.parse(streak.body));
+        if (streak?.statusCode === 200) {
+          setStreakData({
+            current_streak: streak.current_streak || 0,
+            best_streak: streak.longest_streak || 0,
+          });
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

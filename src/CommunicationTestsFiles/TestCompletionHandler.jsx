@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { isCompletionResponse } from "./testUtils";
-
-const feedbackUrl = "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-feedback-update";
-const streakUrl = "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/update-user-streak";
+import { platformAPI, resultsAPI } from "../services/api";
 
 const testTypeMap = {
   jam: "jam_test",
@@ -40,32 +38,33 @@ export default function TestCompletionHandler({ aiResponse, sessionId, testType,
       setIsProcessing(true);
       try {
         const email = localStorage.getItem("email");
-        const response = await fetch(feedbackUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            college_email: email,
-            test_type: testTypeMap[testType],
-            test_level: testLevel,
-            test_id: sessionId,
-            final_score: extractScore(aiResponse),
-            ai_feedback: aiResponse,
-          }),
-        });
+        const payload = {
+          college_email: email,
+          test_type: testTypeMap[testType],
+          test_level: testLevel,
+          test_id: sessionId,
+          final_score: extractScore(aiResponse),
+          ai_feedback: aiResponse,
+        };
+        console.log("[test-completion:submit:start]", payload);
 
-        if (!response.ok) {
+        const response = await resultsAPI.submitTest(payload);
+        console.log("[test-completion:submit:response]", response);
+
+        if (response.statusCode !== 200) {
           processedRef.current = false;
-          throw new Error("Feedback API failed");
+          throw new Error(response.message || response.error || "Feedback API failed");
         }
 
-        await fetch(streakUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ body: JSON.stringify({ college_email: email }) }),
-        });
+        const streakResponse = await platformAPI.updateStreak(email);
+        console.log("[test-completion:streak:response]", streakResponse);
+
+        if (streakResponse.statusCode !== 200) {
+          console.warn("[test-completion:streak:nonfatal]", streakResponse);
+        }
 
         if (onComplete) {
-          await onComplete();
+          await onComplete(aiResponse);
         }
       } catch (error) {
         console.error("Error submitting test results:", error);

@@ -1,7 +1,18 @@
 import React from "react";
 import { CheckCircle2, AlertTriangle } from "lucide-react";
 
-export default function TestResultModal({ open, resultType, title, message, onClose }) {
+const formatPreview = (content = "") =>
+  content.replace(/\n\n/g, "\n\n").replace(/\n/g, "\n");
+
+export default function TestResultModal({
+  open,
+  resultType,
+  title,
+  message,
+  feedbackPreview = "",
+  onClose,
+  closeLabel = "Close",
+}) {
   if (!open) return null;
 
   const isSuccess = resultType === "success";
@@ -25,13 +36,24 @@ export default function TestResultModal({ open, resultType, title, message, onCl
           {isSuccess ? "Congratulations!" : "Test Not Taken Properly"}
         </h2>
         <p className="text-sm text-muted-foreground mb-3">{title}</p>
-        <p className="text-sm text-foreground mb-6">{message}</p>
+        <p className="text-sm text-foreground mb-4">{message}</p>
+
+        {isSuccess && feedbackPreview ? (
+          <div className="mb-6 rounded-xl border border-border bg-muted/50 p-4 text-left">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+              AI Feedback Preview
+            </p>
+            <p className="text-sm text-foreground whitespace-pre-wrap line-clamp-6">
+              {formatPreview(feedbackPreview)}
+            </p>
+          </div>
+        ) : null}
 
         <button
           className="px-5 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors"
           onClick={onClose}
         >
-          Close
+          {closeLabel}
         </button>
       </div>
     </div>

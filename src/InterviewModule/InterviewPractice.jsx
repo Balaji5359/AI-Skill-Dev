@@ -142,21 +142,18 @@ function InterviewPractice() {
     };
 
     const handleLaunch = () => {
+        const interviewKey = getInterviewKey(activeChallenge);
         navigate("/interview/session", {
             state: {
                 interviewId: activeChallenge,
+                interviewKey,
                 interviewTitle: selectedTitle,
                 interviewLevel: selectedLevel,
-                remainingTests: interviews[getInterviewKey(activeChallenge)] || 0,
+                remainingTests: interviews[interviewKey] || 0,
                 mode: "practice",
                 interviewType: "basic-interview",
             },
         });
-    };
-
-    const openPremiumModal = (message) => {
-        setPremiumModalMessage(message);
-        setShowPremiumModal(true);
     };
 
     if (loading) {

@@ -1,9 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Mic, Square, Clock, MessageSquare, Bot, User, Loader2 } from "lucide-react";
-import { testAPI } from "../services/api";
+import { interviewAPI, interviewResultsAPI, platformAPI, profileAPI, speechToTextAPI, testAPI } from "../services/api";
 import "./interview-clone-theme.css";
 import useInterviewUserInfo from "./useInterviewUserInfo";
+import { createWavRecorder } from "../CommunicationTestsFiles/wavRecorder";
+import { getInterviewModuleByKey } from "./interviewConfig";
+import { extractInterviewScore, isInterviewCompletionResponse } from "./interviewUtils";
+import FormattedInterviewMessage from "./FormattedInterviewMessage";
+
+const SHORT_TRANSCRIPT_MAX_ATTEMPTS = 45;
+const TRANSCRIPT_POLL_INTERVAL_MS = 2000;
+
+const logInterviewFlow = (stage, details) => {
+    console.log(`[interview:${stage}]`, details);
+};
 
 const InterviewSession = () => {
     const location = useLocation();
@@ -14,9 +25,11 @@ const InterviewSession = () => {
         mode = "practice",
         remainingTests = 0,
         interviewType = "basic-interview",
+        interviewKey,
     } = location.state || {};
 
     const isTestMode = mode === "test";
+    const interviewModule = useMemo(() => getInterviewModuleByKey(interviewKey), [interviewKey]);
     const totalQuestions = isTestMode ? 5 : 3;
 
     const [chatMessages, setChatMessages] = useState([]);
@@ -29,20 +42,28 @@ const InterviewSession = () => {
     const [interviewCompleted, setInterviewCompleted] = useState(false);
     const [showEndConfirm, setShowEndConfirm] = useState(false);
     const [showFullscreenAlert, setShowFullscreenAlert] = useState(false);
+    const [clickedButtons, setClickedButtons] = useState([]);
     const { userType, streakData, email, isPremium } = useInterviewUserInfo();
 
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [fullscreenWarnings, setFullscreenWarnings] = useState(0);
     const [tabSwitchWarnings, setTabSwitchWarnings] = useState(0);
+    const [answerHistory, setAnswerHistory] = useState([]);
+
+    const interviewTypeKey = interviewKey
+        ? interviewKey.replace(/_(practice|test)$/i, "")
+        : "self_introduction";
 
     const chatRef = useRef(null);
     const timerRef = useRef(null);
     const sessionTimerRef = useRef(null);
-    const mediaRecorderRef = useRef(null);
-    const audioChunksRef = useRef([]);
+    const wavRecorderRef = useRef(null);
     const streamRef = useRef(null);
     const fullscreenTimeoutRef = useRef(null);
     const visibilityTimeoutRef = useRef(null);
+    const interviewSessionIdRef = useRef(
+        `basicinterview-${(interviewTypeKey || "self_introduction").toLowerCase()}-${String(interviewLevel || "basic").toLowerCase()}-${Math.floor(1000000 + Math.random() * 9000000)}`
+    );
 
     useEffect(() => {
         return () => {
@@ -51,6 +72,7 @@ const InterviewSession = () => {
             if (streamRef.current) {
                 streamRef.current.getTracks().forEach((track) => track.stop());
             }
+            wavRecorderRef.current = null;
             clearTimeouts();
         };
     }, []);
@@ -192,9 +214,17 @@ const InterviewSession = () => {
     const decrementInterviewCount = async () => {
         try {
             const email = localStorage.getItem("email");
-            await testAPI.decrement(email, "interview", interviewType);
+            if (!interviewKey) {
+                console.warn("[interview:decrement:missing-key]", { interviewType, interviewTitle });
+                return;
+            }
+            const response = await profileAPI.decrementInterviewCount(email, mode, interviewKey);
+            if (response.statusCode !== 200) {
+                console.warn("[interview:decrement-count:warning]", { status: response.statusCode, error: response.error || response.message });
+            }
+            logInterviewFlow("decrement-count:success", response);
         } catch (error) {
-            console.error("Error decrementing interview count:", error);
+            console.error("[interview:decrement-count:error]", error.message);
         }
     };
 
@@ -216,6 +246,69 @@ const InterviewSession = () => {
         }
     };
 
+    const handleMessageButtonClick = async (buttonValue) => {
+        // Mark button as clicked
+        setClickedButtons(prev => [...prev, buttonValue]);
+
+        // Add user response to chat
+        setChatMessages(prev => [...prev, {
+            type: "user",
+            content: buttonValue,
+            timestamp: Date.now()
+        }]);
+
+        setIsLoading(true);
+
+        try {
+            // Send user response to AI
+            const response = await interviewAPI.sendMessage({
+                interviewType: interviewTypeKey,
+                level: interviewLevel.toLowerCase(),
+                mode,
+                sessionId: interviewSessionIdRef.current,
+                email: localStorage.getItem("email") || "",
+                message: buttonValue,
+            });
+
+            const aiResponse = response.aiResponse || response?.result?.aiResponse || response?.body?.aiResponse;
+            
+            if (response.statusCode === 200 && aiResponse) {
+                // Add AI response to chat
+                setChatMessages(prev => [...prev, {
+                    type: "ai",
+                    content: aiResponse,
+                    timestamp: Date.now(),
+                }]);
+
+                // Check if interview completed
+                if (isInterviewCompletionResponse(aiResponse)) {
+                    await completeInterview();
+                } else {
+                    // Move to next question if applicable
+                    if (buttonValue === 'next' && currentQuestion < totalQuestions) {
+                        setCurrentQuestion(prev => prev + 1);
+                    }
+                }
+            } else {
+                const errorMsg = response.message || response.error || "Failed to get response";
+                setChatMessages(prev => [...prev, {
+                    type: "ai",
+                    content: `Error: ${errorMsg}. Please try again.`,
+                    timestamp: Date.now(),
+                }]);
+            }
+        } catch (error) {
+            console.error("Error handling button click:", error);
+            setChatMessages(prev => [...prev, {
+                type: "ai",
+                content: "An error occurred. Please try again.",
+                timestamp: Date.now(),
+            }]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const startInterview = async () => {
         if (interviewStarted) return;
         await decrementInterviewCount();
@@ -230,29 +323,42 @@ const InterviewSession = () => {
     const initializeInterview = async () => {
         try {
             setIsLoading(true);
-            const welcomeMessage = getWelcomeMessage();
+            const response = await interviewAPI.sendMessage({
+                interviewType: interviewTypeKey,
+                level: interviewLevel.toLowerCase(),
+                mode,
+                sessionId: interviewSessionIdRef.current,
+                email: localStorage.getItem("email") || "",
+                message: "hi",
+            });
+
+            // Handle successful response
+            const aiResponse = response.aiResponse || response?.result?.aiResponse || response?.body?.aiResponse;
+            
+            if (response.statusCode !== 200 || !aiResponse) {
+                const errorMsg = response.message || response.error || response?.result?.error || "Failed to initialize interview";
+                console.error("Interview API Error:", { statusCode: response.statusCode, response });
+                throw new Error(errorMsg);
+            }
+
+            logInterviewFlow("question:initial", { interviewTitle, interviewLevel, response });
             setChatMessages([
                 {
                     type: "ai",
-                    content: welcomeMessage,
+                    content: aiResponse,
                     timestamp: Date.now(),
                 },
             ]);
-
-            setTimeout(() => {
-                const firstQuestion = getFirstQuestion();
-                setChatMessages((prev) => [
-                    ...prev,
-                    {
-                        type: "ai",
-                        content: firstQuestion,
-                        timestamp: Date.now(),
-                    },
-                ]);
-                setIsLoading(false);
-            }, 2000);
         } catch (error) {
-            console.error("Error initializing interview:", error);
+            console.error("Error initializing interview:", error.message);
+            setChatMessages([
+                {
+                    type: "ai",
+                    content: "Unable to start the interview right now. Please try again.",
+                    timestamp: Date.now(),
+                },
+            ]);
+        } finally {
             setIsLoading(false);
         }
     };
@@ -281,65 +387,45 @@ const InterviewSession = () => {
         return tips[interviewLevel] || tips.Basic;
     };
 
-    const getWelcomeMessage = () => {
-        const modeText = isTestMode ? "formal interview test" : "practice interview session";
-        return `Welcome to your ${modeText} for ${interviewTitle} at ${interviewLevel} level! I am TaraAI. We will cover ${totalQuestions} questions today. Are you ready to begin?`;
-    };
+    const buildQuestionSessionId = () =>
+        `${interviewSessionIdRef.current}-q${currentQuestion}-${Date.now()}`;
 
-    const getFirstQuestion = () => {
-        const questions = {
-            "hr-interview": [
-                "Tell me about yourself and why you are interested in this role.",
-                "Walk me through your background and what brings you here today.",
-                "Please introduce yourself professionally.",
-            ],
-            "technical-interview": [
-                "What programming languages are you most comfortable with?",
-                "Tell me about a challenging technical project you worked on recently.",
-                "How do you approach solving complex technical problems?",
-            ],
-            "managerial-interview": [
-                "Describe your leadership style and how you motivate team members.",
-                "Tell me about a time you made a difficult management decision.",
-                "How do you handle conflicts within your team?",
-            ],
-        };
-
-        const typeQuestions = questions[interviewType] || questions["hr-interview"];
-        return typeQuestions[Math.floor(Math.random() * typeQuestions.length)];
+    const pollTranscript = async (sessionId, attempts = 0) => {
+        try {
+            logInterviewFlow("poll-transcript:start", { sessionId, attempts });
+            const resp = await testAPI.getTranscript(sessionId);
+            logInterviewFlow("poll-transcript:response", { sessionId, attempts, resp });
+            if (resp.statusCode === 200 && resp.transcript) {
+                return resp.transcript.trim();
+            }
+            if (attempts >= SHORT_TRANSCRIPT_MAX_ATTEMPTS) {
+                return "";
+            }
+            await new Promise((resolve) => setTimeout(resolve, TRANSCRIPT_POLL_INTERVAL_MS));
+            return pollTranscript(sessionId, attempts + 1);
+        } catch (error) {
+            console.error("[interview:poll-transcript:error]", { sessionId, attempts, error });
+            if (attempts >= SHORT_TRANSCRIPT_MAX_ATTEMPTS) {
+                return "";
+            }
+            await new Promise((resolve) => setTimeout(resolve, TRANSCRIPT_POLL_INTERVAL_MS));
+            return pollTranscript(sessionId, attempts + 1);
+        }
     };
 
     const startRecording = async () => {
         try {
             setRecordingState("preparing");
+            logInterviewFlow("recording:prepare", { currentQuestion, interviewTitle, interviewLevel });
 
             setTimeout(async () => {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 streamRef.current = stream;
-                audioChunksRef.current = [];
-
-                const mediaRecorder = new MediaRecorder(stream);
-                mediaRecorderRef.current = mediaRecorder;
-
-                mediaRecorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        audioChunksRef.current.push(event.data);
-                    }
-                };
-
-                mediaRecorder.onstop = async () => {
-                    setRecordingState("processing");
-                    const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-
-                    setTimeout(async () => {
-                        await processAudioResponse(audioBlob);
-                        setRecordingState("idle");
-                    }, 2000);
-                };
-
-                mediaRecorder.start();
+                wavRecorderRef.current = await createWavRecorder(stream);
                 setRecordingState("recording");
-                setTimeLeft(isTestMode ? 120 : 180);
+                
+                // Set recording time to 90 seconds for all levels
+                setTimeLeft(90);
 
                 timerRef.current = setInterval(() => {
                     setTimeLeft((prev) => {
@@ -358,114 +444,246 @@ const InterviewSession = () => {
     };
 
     const stopRecording = () => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-            mediaRecorderRef.current.stop();
-        }
+        if (!wavRecorderRef.current) return;
         if (timerRef.current) clearInterval(timerRef.current);
-        if (streamRef.current) {
-            streamRef.current.getTracks().forEach((track) => track.stop());
-        }
+        const recorder = wavRecorderRef.current;
+        wavRecorderRef.current = null;
+        setRecordingState("processing");
+
+        void recorder.stop().then(async (audioBlob) => {
+            logInterviewFlow("recording:stop", { currentQuestion, blobSize: audioBlob.size });
+            await processAudioResponse(audioBlob);
+            setRecordingState("idle");
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach((track) => track.stop());
+                streamRef.current = null;
+            }
+        });
     };
 
-    const processAudioResponse = async () => {
+    const processAudioResponse = async (audioBlob) => {
         try {
-            const mockTranscript = "Thank you for the question. I believe my experience in this area makes me a strong candidate.";
+            const questionSessionId = buildQuestionSessionId();
+            const base64Audio = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    try {
+                        resolve(reader.result.split(",")[1]);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(audioBlob);
+            });
+
+            logInterviewFlow("audio-upload:start", {
+                questionSessionId,
+                currentQuestion,
+                size: audioBlob.size,
+                base64Length: base64Audio.length,
+            });
+
+            let transcript = "";
+            if (isTestMode) {
+                await testAPI.uploadRecording(base64Audio, questionSessionId);
+                transcript = await pollTranscript(questionSessionId);
+            } else {
+                const sttResponse = await speechToTextAPI.transcribeShortAudio(
+                    base64Audio,
+                    questionSessionId,
+                    `basicinterview_${interviewTypeKey}`,
+                );
+                transcript = sttResponse?.transcript?.trim() || "";
+            }
+
+            const userTranscript =
+                transcript || "Response captured, but transcript could not be generated clearly.";
+
+            const lastAiMessage = chatMessages.filter((msg) => msg.type === "ai").slice(-1)[0]?.content || "";
 
             setChatMessages((prev) => [
                 ...prev,
                 {
                     type: "user",
-                    content: mockTranscript,
+                    content: userTranscript,
                     timestamp: Date.now(),
                 },
             ]);
 
-            setTimeout(() => {
-                const followUp = generateFollowUpQuestion();
-                setChatMessages((prev) => [
-                    ...prev,
-                    {
-                        type: "ai",
-                        content: followUp,
-                        timestamp: Date.now(),
-                    },
-                ]);
+            setAnswerHistory((prev) => [
+                ...prev,
+                {
+                    questionNumber: currentQuestion,
+                    question: lastAiMessage,
+                    answer: userTranscript,
+                    sessionId: questionSessionId,
+                },
+            ]);
 
-                setCurrentQuestion((prev) => {
-                    const next = prev + 1;
-                    if (next > totalQuestions) {
-                        completeInterview();
-                    }
-                    return next;
-                });
-            }, 2000);
+            setIsLoading(true);
+            const aiResponse = await interviewAPI.sendMessage({
+                interviewType: interviewTypeKey,
+                level: interviewLevel.toLowerCase(),
+                mode,
+                sessionId: interviewSessionIdRef.current,
+                email: localStorage.getItem("email") || "",
+                message: userTranscript,
+            });
+
+            if (aiResponse.statusCode !== 200 || !aiResponse.aiResponse) {
+                throw new Error(aiResponse.message || aiResponse.error || "Interview AI response failed");
+            }
+
+            setChatMessages((prev) => [
+                ...prev,
+                {
+                    type: "ai",
+                    content: aiResponse.aiResponse,
+                    timestamp: Date.now(),
+                },
+            ]);
+
+            if (isInterviewCompletionResponse(aiResponse.aiResponse) || currentQuestion >= totalQuestions) {
+                completeInterview(aiResponse.aiResponse);
+                return;
+            }
+
+            setCurrentQuestion((prev) => prev + 1);
         } catch (error) {
             console.error("Error processing audio:", error);
+            setChatMessages((prev) => [
+                ...prev,
+                {
+                    type: "ai",
+                    content: "I could not process that response correctly. Please try again.",
+                    timestamp: Date.now(),
+                },
+            ]);
+        } finally {
+            setIsLoading(false);
         }
-    };
-
-    const generateFollowUpQuestion = () => {
-        if (currentQuestion >= totalQuestions) {
-            return "Thank you for your responses. That concludes our interview.";
-        }
-
-        const followUps = [
-            "That is interesting. Can you give a specific example?",
-            "Good response. What would you say is your greatest strength?",
-            "Thank you. Where do you see yourself in 5 years?",
-            "Excellent. What questions do you have for me?",
-            "Thank you for your responses. That concludes our interview.",
-        ];
-
-        return followUps[currentQuestion - 1] || followUps[0];
     };
 
     const calculateScore = () => {
-        const baseScore = isTestMode ? 75 : 85;
-        const randomVariation = Math.floor(Math.random() * 20) - 10;
-        return Math.max(0, Math.min(100, baseScore + randomVariation));
+        const answers = answerHistory.length || 1;
+        const averageAnswerLength =
+            answerHistory.reduce((sum, item) => sum + (item.answer?.split(/\s+/).filter(Boolean).length || 0), 0) / answers;
+        const completionRatio = Math.min(1, answers / totalQuestions);
+        const depthScore = Math.min(35, averageAnswerLength * 1.4);
+        const structureScore = Math.min(25, answerHistory.filter((item) => (item.answer || "").includes("because")).length * 8);
+        const consistencyScore = Math.round(20 * completionRatio);
+        const baseScore = isTestMode ? 30 : 40;
+        return Math.max(0, Math.min(100, Math.round(baseScore + depthScore + structureScore + consistencyScore)));
     };
 
     const generateFinalReport = (score) => {
         const performance = score >= 80 ? "Excellent" : score >= 70 ? "Good" : score >= 60 ? "Satisfactory" : "Needs Improvement";
-        return `
-INTERVIEW ASSESSMENT REPORT
+        const totalAnswered = answerHistory.length;
+        const averageWords = totalAnswered
+            ? Math.round(
+                answerHistory.reduce((sum, item) => sum + (item.answer?.split(/\s+/).filter(Boolean).length || 0), 0) /
+                totalAnswered
+            )
+            : 0;
+        const strengths = [];
+        const improvements = [];
+
+        if (averageWords >= 20) strengths.push("You provided reasonably detailed responses.");
+        else improvements.push("Expand answers with more specifics and outcomes.");
+
+        if (answerHistory.some((item) => /example|experience|project|because/i.test(item.answer || ""))) {
+            strengths.push("You supported answers with examples or reasoning.");
+        } else {
+            improvements.push("Support your answers with examples, evidence, or projects.");
+        }
+
+        if (totalAnswered >= totalQuestions) strengths.push("You completed the full interview flow.");
+        else improvements.push("Complete all questions to improve consistency and scoring.");
+
+        const recommendations = [
+            "Use the STAR method for behavioral responses.",
+            "Keep each answer specific, outcome-focused, and structured.",
+            "Practice role-specific vocabulary before the next interview.",
+        ];
+
+        return {
+            summary: `${performance} performance with ${totalAnswered}/${totalQuestions} questions answered.`,
+            report: `INTERVIEW ASSESSMENT REPORT
 
 OVERALL PERFORMANCE: ${performance}
 Final Score: ${score}/100
 
+ANSWERED QUESTIONS: ${totalAnswered}/${totalQuestions}
+AVERAGE RESPONSE LENGTH: ${averageWords} words
+
 STRENGTHS IDENTIFIED:
-- Clear communication and articulation
-- Professional demeanor throughout
-- Relevant experience and examples
+${strengths.length ? strengths.map((item) => `- ${item}`).join("\n") : "- Participation completed"}
 
 AREAS FOR IMPROVEMENT:
-- Could provide more specific examples
-- Consider expanding on technical details
-- Practice concise yet comprehensive answers
+${improvements.length ? improvements.map((item) => `- ${item}`).join("\n") : "- Keep practicing to maintain consistency"}
 
 RECOMMENDATIONS:
-- Continue practicing with similar questions
-- Focus on STAR method for behavioral questions
-- Research company-specific information
-        `;
+${recommendations.map((item) => `- ${item}`).join("\n")}`,
+            strengths,
+            improvements,
+            recommendations,
+            answers: answerHistory,
+        };
     };
 
-    const completeInterview = (overrideReport) => {
+    const completeInterview = async (overrideReport) => {
         if (interviewCompleted) return;
         setInterviewCompleted(true);
         if (sessionTimerRef.current) clearInterval(sessionTimerRef.current);
         exitFullscreen();
 
-        const score = calculateScore();
-        const report = overrideReport || generateFinalReport(score);
+        const score = typeof overrideReport === "string" && isInterviewCompletionResponse(overrideReport)
+            ? Math.round(extractInterviewScore(overrideReport) * 10)
+            : calculateScore();
+        const reportPayload = typeof overrideReport === "string"
+            ? {
+                summary: `${interviewTitle} completed.`,
+                report: overrideReport,
+                strengths: [],
+                improvements: [],
+                recommendations: [],
+                answers: answerHistory,
+            }
+            : (overrideReport || generateFinalReport(score));
+
+        try {
+            const studentEmail = localStorage.getItem("email") || "";
+            if (interviewResultsAPI?.submitSession) {
+                await interviewResultsAPI.submitSession({
+                    college_email: studentEmail,
+                    mode,
+                    interview_key: interviewKey,
+                    interview_title: interviewTitle,
+                    interview_level: String(interviewLevel || "basic").toLowerCase(),
+                    interview_session_id: interviewSessionIdRef.current,
+                    final_score: Number((score / 10).toFixed(1)),
+                    ai_feedback: reportPayload.report,
+                    answers: answerHistory,
+                });
+            }
+            await platformAPI.updateStreak(studentEmail);
+        } catch (error) {
+            console.error("Error submitting interview results:", error);
+        }
 
         navigate("/interview/feedback", {
             state: {
                 score,
                 mode,
                 interviewTitle,
-                report,
+                interviewLevel,
+                report: reportPayload.report,
+                summary: reportPayload.summary,
+                strengths: reportPayload.strengths,
+                improvements: reportPayload.improvements,
+                recommendations: reportPayload.recommendations,
+                answers: reportPayload.answers,
                 terminated: false,
             },
         });
@@ -492,7 +710,7 @@ RECOMMENDATIONS:
                         {interviewTitle || "Interview Session"}
                     </h1>
                     <p className="text-muted-foreground mb-1 text-sm">
-                        {isTestMode ? "Test" : "Practice"} - {interviewLevel} Level - {totalQuestions} questions
+                        {isTestMode ? "Test" : "Practice"} - {interviewLevel} Level - {(interviewModule?.title || interviewTitle)} - {totalQuestions} questions
                     </p>
                     <p className="text-muted-foreground mb-8 text-sm">
                         Remaining sessions: {remainingTests || 0}
@@ -506,7 +724,7 @@ RECOMMENDATIONS:
                             </h4>
                             <ul className="text-xs text-muted-foreground space-y-1">
                                 {getLevelTips().map((tip, i) => (
-                                    <li key={i}>• {tip}</li>
+                                    <li key={i}>{"\u2022"} {tip}</li>
                                 ))}
                             </ul>
                         </div>
@@ -624,7 +842,17 @@ RECOMMENDATIONS:
                                     ? "bg-card border border-border text-foreground"
                                     : "bg-primary text-primary-foreground"
                             }`}>
-                                {msg.content}
+                                {msg.type === "ai" ? (
+                                    <FormattedInterviewMessage 
+                                        message={msg.content}
+                                        interviewLevel={interviewLevel}
+                                        onButtonClick={handleMessageButtonClick}
+                                        isLoading={isLoading}
+                                        clickedButtons={clickedButtons}
+                                    />
+                                ) : (
+                                    msg.content
+                                )}
                             </div>
                         </div>
                     ))}

@@ -46,7 +46,29 @@ export const profileAPI = {
     apiCall('/student-profile', 'get_profile', { college_email }),
   
   submitSurvey: (surveyData) => 
-    apiCall('/student-profile', 'submit_survey', surveyData)
+    apiCall('/student-profile', 'submit_survey', surveyData),
+
+  decrementInterviewCount: async (college_email, mode, interview_key) => {
+    // This endpoint might need direct fetch without the apiCall wrapper
+    try {
+      const response = await fetch(`${API_BASE}/student-profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'decrement_interview_count',
+          college_email,
+          mode,
+          interview_key
+        })
+      });
+      
+      const result = await response.json();
+      return { statusCode: response.status, ...result };
+    } catch (error) {
+      console.error('Error in decrementInterviewCount:', error);
+      return { statusCode: 400, error: error.message };
+    }
+  }
 };
 
 export const testAPI = {
@@ -60,14 +82,77 @@ export const testAPI = {
     return apiCall('/communication-test', 'get_test_data', { college_email, test_type: mapped, sessionId, role });
   },
   
-  uploadRecording: (data, sessionId) => 
-    apiCall('/communication-test', 'upload_recording', { data, sessionId }),
+  uploadRecording: (data, sessionId) => {
+    const audioData =
+      typeof data === 'string'
+        ? data
+        : data?.data;
+
+    const resolvedSessionId =
+      sessionId || data?.sessionId;
+
+    return apiCall('/communication-test', 'upload_recording', {
+      data: audioData,
+      sessionId: resolvedSessionId
+    });
+  },
   
   getTranscript: (sessionId) => 
     apiCall('/communication-test', 'get_transcript', { sessionId }),
   
   decrement: (college_email, type, key) => 
     apiCall('/communication-test', 'decrement_test', { college_email, type, key })
+};
+
+export const speechToTextAPI = {
+  transcribeShortAudio: async (data, sessionId, testType) => {
+    const response = await fetch('https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/audiototranscript-api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        body: JSON.stringify({
+          data,
+          sessionId,
+          testType
+        }),
+        isBase64Encoded: false
+      })
+    });
+
+    const result = await response.json();
+
+    if (typeof result?.body === 'string') {
+      try {
+        return { statusCode: response.status, ...JSON.parse(result.body) };
+      } catch {
+        return { statusCode: response.status, body: result.body };
+      }
+    }
+
+    return { statusCode: response.status, ...result };
+  }
+};
+
+export const practiceVoiceAPI = {
+  synthesize: async (text) => {
+    const response = await fetch('https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/practice-text-to-speech', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+
+    const result = await response.json();
+
+    if (typeof result?.body === 'string') {
+      try {
+        return { statusCode: response.status, ...JSON.parse(result.body) };
+      } catch {
+        return { statusCode: response.status, body: result.body };
+      }
+    }
+
+    return { statusCode: response.status, ...result };
+  }
 };
 
 export const resultsAPI = {
@@ -84,6 +169,47 @@ export const resultsAPI = {
     apiCall('/communication-results', 'get_practice_results', { college_email })
 };
 
+export const interviewAPI = {
+  sendMessage: async ({ interviewType, level, mode, sessionId, email, message }) => {
+    const response = await fetch('https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/basic-interview-agent-api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        body: {
+          interviewType,
+          level,
+          mode,
+          sessionId,
+          email,
+          message
+        }
+      })
+    });
+
+    const result = await response.json();
+
+    // Response comes wrapped in body as JSON string
+    if (typeof result?.body === 'string') {
+      try {
+        const parsedBody = JSON.parse(result.body);
+        return { statusCode: response.status, ...parsedBody };
+      } catch {
+        return { statusCode: response.status, body: result.body };
+      }
+    }
+
+    return { statusCode: response.status, ...result };
+  }
+};
+
+export const interviewResultsAPI = {
+  submitSession: (resultData) =>
+    apiCall('/interview-results', 'submit_interview_result', resultData),
+
+  getDashboard: (college_email, mode = 'all') =>
+    apiCall('/interview-results', 'get_interview_results', { college_email, mode })
+};
+
 export const platformAPI = {
   updateStreak: (college_email, get_streak_data = false) => 
     apiCall('/platform', 'update_streak', { college_email, get_streak_data }),
@@ -96,6 +222,10 @@ export default {
   authAPI,
   profileAPI,
   testAPI,
+  speechToTextAPI,
+  practiceVoiceAPI,
   resultsAPI,
+  interviewAPI,
+  interviewResultsAPI,
   platformAPI
 };

@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { BarChart3, Flame, PlayCircle, Sparkles, TrendingUp, Trophy } from "lucide-react";
+import { profileAPI, resultsAPI } from "../services/api";
+
+const EMPTY_PRACTICE_DATA = {};
 
 const PracticeDashboard = ({
-  practiceData = {},
+  practiceData = EMPTY_PRACTICE_DATA,
   streakData = {},
   practiceType = "",
   practiceTitle = "Practice",
@@ -24,29 +27,13 @@ const PracticeDashboard = ({
       if (!storedEmail) return;
       setLoading(true);
       try {
-        const [profileResponse, dashboardResponse] = await Promise.all([
-          fetch("https://ntjkr8rnd6.execute-api.ap-south-1.amazonaws.com/dev/student_profilecreate/student_profile_senddata", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ college_email: storedEmail }),
-          }),
-          fetch("https://piw6c7f4sf.execute-api.ap-south-1.amazonaws.com/dev/comm-practice-send-results", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ college_email: storedEmail }),
-          }),
+        const [profileRes, dashboardRes] = await Promise.all([
+          profileAPI.get(storedEmail),
+          resultsAPI.getPractice(storedEmail),
         ]);
 
-        const profileRes = await profileResponse.json();
-        const dashboardRes = await dashboardResponse.json();
-        if (profileRes?.body) {
-          const parsedProfileData = typeof profileRes.body === "string" ? JSON.parse(profileRes.body) : profileRes.body;
-          setProfileData(parsedProfileData);
-        }
-        if (dashboardRes?.body) {
-          const parsedDashboardData = JSON.parse(dashboardRes.body).dashboard;
-          setDashboardApiData(parsedDashboardData);
-        }
+        setProfileData(profileRes || null);
+        setDashboardApiData(dashboardRes?.dashboard || {});
       } catch (fetchError) {
         console.error("Error fetching dashboard data:", fetchError);
         setError(fetchError.message);

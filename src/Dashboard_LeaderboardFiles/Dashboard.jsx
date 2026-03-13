@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, Flame, Lock, Menu, Sparkles, X } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
+import { platformAPI, profileAPI, resultsAPI } from "../services/api";
 import "../InterviewModule/interview-clone-theme.css";
 import "../CommunicationTestsFiles/test-custom.css";
 
@@ -10,9 +11,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [userEmail] = useState(localStorage.getItem("email"));
   const [userType, setUserType] = useState("free");
-  const [streakData, setStreakData] = useState({ current_streak: 0 });
   const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
 
   const interviewActivities = [
     { id: "interview-basic", title: "Basic Interview Skills", description: "Master fundamental interview communication skills" },
@@ -33,28 +32,17 @@ function Dashboard() {
         const storedEmail = localStorage.getItem("email");
         if (!storedEmail) return;
 
-        const [profileResponse, streakResponse] = await Promise.all([
-          fetch("https://ntjkr8rnd6.execute-api.ap-south-1.amazonaws.com/dev/student_profilecreate/student_profile_senddata", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ college_email: storedEmail }),
-          }),
-          fetch("https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/update-user-streak", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ body: JSON.stringify({ college_email: storedEmail, get_streak_data: true }) }),
-          }),
+        const [profile, streak] = await Promise.all([
+          profileAPI.get(storedEmail),
+          platformAPI.updateStreak(storedEmail, true),
         ]);
 
-        const profile = await profileResponse.json();
-        const streak = await streakResponse.json();
-
-        if (profile?.body) {
-          const userData = JSON.parse(profile.body);
-          const isPremium = userData?.user_type === "premium" && userData?.premium_status === "active";
+        if (profile?.statusCode === 200) {
+          const isPremium = profile.user_type === "premium" && profile.premium_status === "active";
           setUserType(isPremium ? "premium" : "free");
         }
-        if (streak?.body) setStreakData(JSON.parse(streak.body));
+
+        void streak;
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -67,13 +55,8 @@ function Dashboard() {
       if (!userEmail) return;
       setLoading(true);
       try {
-        const response = await fetch("https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-send-results", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ college_email: userEmail }),
-        });
-        const data = await response.json();
-        setApiData(JSON.parse(data.body).dashboard);
+        const data = await resultsAPI.getTest(userEmail);
+        setApiData(data?.dashboard || {});
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       }

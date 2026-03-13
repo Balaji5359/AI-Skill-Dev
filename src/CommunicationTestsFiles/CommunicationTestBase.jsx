@@ -5,13 +5,21 @@ import TestResultModal from "./components/TestResultModal";
 import TestSessionPopup from "./components/TestSessionPopup";
 import TestStartCard from "./components/TestStartCard";
 import { getTestKey } from "./testUtils";
-import { profileAPI, platformAPI, testAPI } from "../services/api";
+import { profileAPI, platformAPI, speechToTextAPI, testAPI } from "../services/api";
+import { createWavRecorder } from "./wavRecorder";
 import "../InterviewModule/interview-clone-theme.css";
 import "./test-custom.css";
 
-const TEST_AGENT_URL = "https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-ai-agent";
-
 const isLongRecordingTest = (testType) => testType === "jam" || testType === "situation";
+const usesDedicatedSpeechToText = (testType) => testType === "listening" || testType === "pronunciation";
+const TEST_SESSION_DURATION_SECONDS = 180;
+const SHORT_TRANSCRIPT_MAX_ATTEMPTS = 12;
+const LONG_TRANSCRIPT_MAX_ATTEMPTS = 45;
+const TRANSCRIPT_POLL_INTERVAL_MS = 2000;
+
+const logTestFlow = (stage, details) => {
+  console.log(`[communication-test:${stage}]`, details);
+};
 
 const getRecordingDuration = (testType) => {
   if (isLongRecordingTest(testType)) return 60;
@@ -90,7 +98,7 @@ export default function CommunicationTestBase({
   testTitle,
   testDescription,
   testLevel = "basic",
-  testDuration = 600,
+  testDuration = TEST_SESSION_DURATION_SECONDS,
   apiEndpoint,
   autoStartMessage = "hi",
 }) {
@@ -120,6 +128,8 @@ export default function CommunicationTestBase({
   const [testTimeLeft, setTestTimeLeft] = useState(testDuration);
   const [resultType, setResultType] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
+  const [resultFeedback, setResultFeedback] = useState("");
+  const [resultScore, setResultScore] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const sessionIdRef = useRef(null);
@@ -127,6 +137,7 @@ export default function CommunicationTestBase({
   const timerRef = useRef(null);
   const testTimerRef = useRef(null);
   const mediaRecorderRef = useRef(null);
+  const wavRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const streamRef = useRef(null);
   const completionHandledRef = useRef(false);
@@ -146,6 +157,8 @@ export default function CommunicationTestBase({
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+
+    wavRecorderRef.current = null;
 
     try {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
@@ -249,28 +262,35 @@ export default function CommunicationTestBase({
     return false;
   }, [testType]);
 
-  const pollTranscript = async (sessionId, attempts = 0) => {
+  const pollTranscript = async (sessionId, attempts = 0, maxAttempts = SHORT_TRANSCRIPT_MAX_ATTEMPTS) => {
     try {
+      logTestFlow("poll-transcript:start", { sessionId, attempts, maxAttempts });
       const resp = await testAPI.getTranscript(sessionId);
+      logTestFlow("poll-transcript:response", { sessionId, attempts, resp });
       if (resp.statusCode === 200 && resp.transcript) {
         await sendMessage(resp.transcript.trim());
         return true;
       }
-      if (resp.statusCode === 404 || attempts >= 12) return false;
-      await new Promise((r) => setTimeout(r, 2000));
-      return pollTranscript(sessionId, attempts + 1);
+      if (attempts >= maxAttempts) {
+        logTestFlow("poll-transcript:timeout", { sessionId, attempts, maxAttempts });
+        return false;
+      }
+      await new Promise((r) => setTimeout(r, TRANSCRIPT_POLL_INTERVAL_MS));
+      return pollTranscript(sessionId, attempts + 1, maxAttempts);
     } catch (error) {
-      if (attempts >= 12) return false;
-      await new Promise((r) => setTimeout(r, 2000));
-      return pollTranscript(sessionId, attempts + 1);
+      console.error("[communication-test:poll-transcript:error]", { sessionId, attempts, error });
+      if (attempts >= maxAttempts) return false;
+      await new Promise((r) => setTimeout(r, TRANSCRIPT_POLL_INTERVAL_MS));
+      return pollTranscript(sessionId, attempts + 1, maxAttempts);
     }
   };
 
   const sendMessage = async (message) => {
     setIsLoading(true);
+    logTestFlow("ai-request:start", { sessionId, testType, level: actualTestLevel, message });
 
     try {
-      const response = await fetch(TEST_AGENT_URL, {
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -286,6 +306,7 @@ export default function CommunicationTestBase({
 
       if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
+      logTestFlow("ai-request:response", { sessionId, statusCode: response.status, data });
       const decoded = JSON.parse(data.body).aiResponse;
       const textarea = document.createElement("textarea");
       textarea.innerHTML = decoded;
@@ -301,6 +322,7 @@ export default function CommunicationTestBase({
         { type: "user", content: message, timestamp: Date.now() },
         { type: "ai", content: `Error: ${error.message}. Please try again.`, timestamp: Date.now() },
       ]);
+      console.error("[communication-test:ai-request:error]", { sessionId, error });
     } finally {
       setIsLoading(false);
     }
@@ -312,16 +334,79 @@ export default function CommunicationTestBase({
       const reader = new FileReader();
       reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
-        const base64Audio = reader.result.split(",")[1];
-        await testAPI.uploadRecording({ data: base64Audio, sessionId });
-        const success = await pollTranscript(sessionId);
-        if (!success) {
+        try {
+          const base64Audio = reader.result.split(",")[1];
+          logTestFlow("audio-upload:start", {
+            sessionId,
+            mode: "short",
+            size: audioBlob.size,
+            base64Length: base64Audio.length
+          });
+          await testAPI.uploadRecording(base64Audio, sessionId);
+          logTestFlow("audio-upload:queued", { sessionId, mode: "short" });
+          const success = await pollTranscript(sessionId, 0, SHORT_TRANSCRIPT_MAX_ATTEMPTS);
+          if (!success) {
+            setChatMessages((prev) => [
+              ...prev,
+              { type: "ai", content: "Could not process audio. Please try again.", timestamp: Date.now() },
+            ]);
+          }
+        } catch (error) {
+          console.error("Direct audio upload failed:", error);
           setChatMessages((prev) => [
             ...prev,
-            { type: "ai", content: "Could not process audio. Please try again.", timestamp: Date.now() },
+            { type: "ai", content: `Audio upload failed: ${error.message}. Please try again.`, timestamp: Date.now() },
           ]);
+        } finally {
+          setIsLoading(false);
         }
-        setIsLoading(false);
+      };
+    } catch (error) {
+      console.error("Error processing audio:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const sendAudioToDedicatedSpeechLambda = async (audioBlob) => {
+    try {
+      setIsLoading(true);
+      const reader = new FileReader();
+      reader.readAsDataURL(audioBlob);
+      reader.onloadend = async () => {
+        try {
+          const base64Audio = reader.result.split(",")[1];
+          logTestFlow("audio-upload:start", {
+            sessionId,
+            mode: "short-direct-stt",
+            testType,
+            size: audioBlob.size,
+            base64Length: base64Audio.length
+          });
+          const response = await speechToTextAPI.transcribeShortAudio(base64Audio, sessionId, testType);
+          logTestFlow("audio-upload:transcript-response", { sessionId, testType, response });
+
+          if (response.statusCode === 200 && response.transcript) {
+            await sendMessage(response.transcript.trim());
+          } else {
+            const failureMessage =
+              response.message ||
+              response.error ||
+              (response.status === "completed" ? "No speech detected clearly. Please speak louder and try again." : null) ||
+              "Could not process audio. Please try again.";
+            setChatMessages((prev) => [
+              ...prev,
+              { type: "ai", content: failureMessage, timestamp: Date.now() },
+            ]);
+          }
+        } catch (error) {
+          console.error("Dedicated speech-to-text failed:", error);
+          setChatMessages((prev) => [
+            ...prev,
+            { type: "ai", content: `Audio upload failed: ${error.message}. Please try again.`, timestamp: Date.now() },
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
       };
     } catch (error) {
       console.error("Error processing audio:", error);
@@ -335,14 +420,30 @@ export default function CommunicationTestBase({
       const reader = new FileReader();
       reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
-        const base64Audio = reader.result.split(",")[1];
-        await testAPI.uploadRecording({ data: base64Audio, sessionId });
-        const success = await pollTranscript(sessionId);
-        if (!success) {
+        try {
+          const base64Audio = reader.result.split(",")[1];
+          logTestFlow("audio-upload:start", {
+            sessionId,
+            mode: "long",
+            size: audioBlob.size,
+            base64Length: base64Audio.length
+          });
+          await testAPI.uploadRecording(base64Audio, sessionId);
+          logTestFlow("audio-upload:queued", { sessionId, mode: "long" });
+          const success = await pollTranscript(sessionId, 0, LONG_TRANSCRIPT_MAX_ATTEMPTS);
+          if (!success) {
+            setChatMessages((prev) => [
+              ...prev,
+              { type: "ai", content: "Audio is still processing. Please wait a bit and try again.", timestamp: Date.now() },
+            ]);
+          }
+        } catch (error) {
+          console.error("Long audio upload failed:", error);
           setChatMessages((prev) => [
             ...prev,
-            { type: "ai", content: "Audio processing timeout. Please try again.", timestamp: Date.now() },
+            { type: "ai", content: `Audio upload failed: ${error.message}. Please try again.`, timestamp: Date.now() },
           ]);
+        } finally {
           setIsLoading(false);
         }
       };
@@ -354,8 +455,10 @@ export default function CommunicationTestBase({
 
   const startRecording = async () => {
     const useLongRecordingApi = isLongRecordingTest(testType);
+    const useDedicatedSpeechLambda = usesDedicatedSpeechToText(testType);
     if (hasRecorded && useLongRecordingApi) return;
     setRecordingState("preparing");
+    logTestFlow("recording:prepare", { sessionId, testType, useLongRecordingApi, useDedicatedSpeechLambda });
 
     setTimeout(async () => {
       const duration = getRecordingDuration(testType);
@@ -375,31 +478,38 @@ export default function CommunicationTestBase({
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         streamRef.current = stream;
         setRecording(true);
-        audioChunksRef.current = [];
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) audioChunksRef.current.push(event.data);
-        };
-        mediaRecorder.onstop = async () => {
-          setRecordingState("processing");
-          const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-          setTimeout(async () => {
-            if (useLongRecordingApi) {
-              await sendAudioToLongRecordingAPI(audioBlob);
-              setHasRecorded(true);
-            } else {
-              await sendAudioToDirectAPI(audioBlob);
-            }
-            setRecordingState("idle");
-          }, 1500);
+        logTestFlow("recording:start", { sessionId, duration, testType });
 
-          if (streamRef.current) {
-            streamRef.current.getTracks().forEach((track) => track.stop());
-            streamRef.current = null;
-          }
-        };
-        mediaRecorder.start();
+        if (useDedicatedSpeechLambda) {
+          wavRecorderRef.current = await createWavRecorder(stream);
+        } else {
+          audioChunksRef.current = [];
+          const mediaRecorder = new MediaRecorder(stream);
+          mediaRecorderRef.current = mediaRecorder;
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) audioChunksRef.current.push(event.data);
+          };
+          mediaRecorder.onstop = async () => {
+            setRecordingState("processing");
+            const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+            logTestFlow("recording:stop", { sessionId, blobSize: audioBlob.size, chunks: audioChunksRef.current.length });
+            setTimeout(async () => {
+              if (useLongRecordingApi) {
+                await sendAudioToLongRecordingAPI(audioBlob);
+                setHasRecorded(true);
+              } else {
+                await sendAudioToDirectAPI(audioBlob);
+              }
+              setRecordingState("idle");
+            }, 1500);
+
+            if (streamRef.current) {
+              streamRef.current.getTracks().forEach((track) => track.stop());
+              streamRef.current = null;
+            }
+          };
+          mediaRecorder.start();
+        }
 
         timerRef.current = setInterval(() => {
           setTimeLeft((prev) => {
@@ -426,6 +536,28 @@ export default function CommunicationTestBase({
   };
 
   const stopRecording = () => {
+    if (usesDedicatedSpeechToText(testType) && wavRecorderRef.current) {
+      const recorder = wavRecorderRef.current;
+      wavRecorderRef.current = null;
+      setRecording(false);
+      setRecordingState("processing");
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+
+      void recorder.stop().then(async (audioBlob) => {
+        logTestFlow("recording:stop", { sessionId, blobSize: audioBlob.size, mode: "short-direct-stt" });
+        await sendAudioToDedicatedSpeechLambda(audioBlob);
+        setRecordingState("idle");
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current = null;
+        }
+      });
+      return;
+    }
+
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
       mediaRecorderRef.current.stop();
     }
@@ -444,9 +576,27 @@ export default function CommunicationTestBase({
     setShowTestPopup(false);
     setResultType("failed");
     setResultMessage(message);
+    setResultFeedback("");
+    setResultScore(null);
   };
 
-  const handleCompletion = async () => {
+  const extractFinalScore = (feedback = "") => {
+    const patterns = [
+      /JAM Score:\s*(\d+\.?\d*)\s*\/\s*10/i,
+      /Final Speaking Score:\s*(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)/i,
+      /Final Listening Score:\s*(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)/i,
+      /Situational Score:\s*(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)/i,
+    ];
+
+    for (const pattern of patterns) {
+      const match = feedback.match(pattern);
+      if (match) return match[1];
+    }
+
+    return null;
+  };
+
+  const handleCompletion = async (finalFeedback = "") => {
     if (completionHandledRef.current) return;
     completionHandledRef.current = true;
     stopTestTimer();
@@ -457,9 +607,13 @@ export default function CommunicationTestBase({
     if (decremented) {
       setResultType("success");
       setResultMessage(`You have successfully completed ${testTitle} - ${actualTestLevel} level.`);
+      setResultFeedback(finalFeedback);
+      setResultScore(extractFinalScore(finalFeedback));
     } else {
       setResultType("failed");
       setResultMessage("Test was completed but count update failed. Please retry later.");
+      setResultFeedback("");
+      setResultScore(null);
     }
   };
 
@@ -481,6 +635,8 @@ export default function CommunicationTestBase({
     setHasRecorded(false);
     setClickedButtons(new Set());
     setResultType(null);
+    setResultFeedback("");
+    setResultScore(null);
     setShowTestPopup(true);
     setTestTimeLeft(testDuration);
 
@@ -538,6 +694,8 @@ export default function CommunicationTestBase({
           setShowTestPopup(false);
           setResultType("failed");
           setResultMessage("Test ended due to multiple fullscreen violations. One test attempt has been deducted.");
+          setResultFeedback("");
+          setResultScore(null);
           void decrementTestCount();
           return;
         }
@@ -610,6 +768,8 @@ export default function CommunicationTestBase({
         onCompletionError={(msg) => {
           setResultType("failed");
           setResultMessage(msg || "Feedback submission failed. Test not decremented.");
+          setResultFeedback("");
+          setResultScore(null);
         }}
         testTitle={testTitle}
         testTimeLeft={testTimeLeft}
@@ -697,7 +857,24 @@ export default function CommunicationTestBase({
         resultType={resultType}
         title={`${testTitle} - ${actualTestLevel} Level`}
         message={resultMessage}
+        feedbackPreview={resultFeedback}
+        closeLabel={resultType === "success" ? "View Detailed Feedback" : "Close"}
         onClose={() => {
+          if (resultType === "success") {
+            navigate("/test/feedback", {
+              state: {
+                testTitle,
+                testType,
+                actualTestLevel,
+                sessionId,
+                score: resultScore,
+                aiFeedback: resultFeedback,
+                chatMessages,
+              },
+            });
+            setResultType(null);
+            return;
+          }
           setResultType(null);
           window.location.reload();
         }}

@@ -8,8 +8,8 @@ export default function Listening() {
             testTitle="Listening Test"
             testDescription="Test your listening skills by listen and speaking of 5 sentences"
             testLevel="basic"
-            testDuration={600}
-            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-ai-agent"
+            testDuration={180}
+            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/jamagent-test"
             recordingMode="short"
             autoStartMessage="hi"
         />

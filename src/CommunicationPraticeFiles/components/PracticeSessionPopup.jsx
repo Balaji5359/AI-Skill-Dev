@@ -1,5 +1,6 @@
 import React from "react";
 import { Loader2, Mic, Square, PhoneOff } from "lucide-react";
+import PracticeCompletionHandler from "../PracticeCompletionHandler";
 
 export default function PracticeSessionPopup({
   open,
@@ -16,6 +17,9 @@ export default function PracticeSessionPopup({
   hasRecorded,
   practiceType,
   onEndPractice,
+  sessionId,
+  onComplete,
+  onCompletionError,
 }) {
   if (!open) return null;
 
@@ -30,6 +34,15 @@ export default function PracticeSessionPopup({
         <div className="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-4">
           <div className="min-h-0 rounded-2xl border border-border bg-card p-3 md:p-4 flex flex-col">
             <div ref={chatRef} className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-3">
+              <PracticeCompletionHandler
+                aiResponse={chatMessages[chatMessages.length - 1]?.content}
+                sessionId={sessionId}
+                practiceType={practiceType}
+                practiceLevel={actualPracticeLevel}
+                onComplete={onComplete}
+                onError={onCompletionError}
+              />
+
               {chatMessages.map((msg, index) => (
                 <div key={index} className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}>
                   <div

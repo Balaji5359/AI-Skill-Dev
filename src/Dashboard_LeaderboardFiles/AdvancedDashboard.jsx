@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Filter, Search, X } from "lucide-react";
 import TestList from "./TestList";
 import TestModal from "./TestModal";
+import { testAPI } from "../services/api";
 
 const toMinutes = (dateValue) => {
   if (!dateValue) return null;
@@ -47,16 +48,8 @@ const AdvancedDashboard = ({ testType, userEmail }) => {
     const fetchTests = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/studentcommunicationtests_idretrivalapi", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ college_email: userEmail, test_type: testType }),
-        });
-        const data = await response.json();
-        if (data.body) {
-          const testsData = JSON.parse(data.body);
-          setTests(testsData.sessions || []);
-        }
+        const data = await testAPI.getIds(userEmail, testType);
+        setTests(data?.sessions || []);
       } catch (error) {
         console.error("Error fetching tests:", error);
         setTests([]);
@@ -115,15 +108,9 @@ const AdvancedDashboard = ({ testType, userEmail }) => {
       return;
     }
     try {
-      const response = await fetch("https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/studentcommunicationtests_dataretrivalapi", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ college_email: userEmail, test_type: testType, sessionId: test.sessionId }),
-      });
-      const data = await response.json();
-      const parsedData = JSON.parse(data.body);
-      setSessionDetails((prev) => ({ ...prev, [test.sessionId]: parsedData }));
-      setSelectedTest({ ...test, ...parsedData });
+      const data = await testAPI.getData(userEmail, testType, test.sessionId);
+      setSessionDetails((prev) => ({ ...prev, [test.sessionId]: data }));
+      setSelectedTest({ ...test, ...data });
     } catch (error) {
       console.error("Error fetching test details:", error);
     }

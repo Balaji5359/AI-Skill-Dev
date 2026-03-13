@@ -1,11 +1,13 @@
 ﻿import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { profileAPI, platformAPI, testAPI } from "../services/api";
+import TestResultModal from "../CommunicationTestsFiles/components/TestResultModal";
+import { practiceVoiceAPI, profileAPI, platformAPI, speechToTextAPI, testAPI } from "../services/api";
 import PracticeDashboard from "./PracticeDashboard";
 import PracticeModal from "./components/PracticeModal";
 import PracticeNavBar from "./components/PracticeNavBar";
 import PracticeSessionPopup from "./components/PracticeSessionPopup";
 import PracticeStartCard from "./components/PracticeStartCard";
+import { createWavRecorder } from "../CommunicationTestsFiles/wavRecorder";
 import "../InterviewModule/interview-clone-theme.css";
 import "../CommunicationTestsFiles/test-custom.css";
 
@@ -100,18 +102,24 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
   const [streakData, setStreakData] = useState({ current_streak: 0 });
   const [recordingState, setRecordingState] = useState("idle");
   const [showEndConfirm, setShowEndConfirm] = useState(false);
-  const [showCongrats, setShowCongrats] = useState(false);
   const [hasRecorded, setHasRecorded] = useState(false);
   const [remainingPractices, setRemainingPractices] = useState(initialRemainingPractices);
   const [clickedButtons, setClickedButtons] = useState(new Set());
   const [playCounts, setPlayCounts] = useState({});
   const [showDashboard, setShowDashboard] = useState(true);
+  const [resultType, setResultType] = useState(null);
+  const [resultMessage, setResultMessage] = useState("");
+  const [resultFeedback, setResultFeedback] = useState("");
+  const [resultScore, setResultScore] = useState(null);
+  const [isVoiceMuted, setIsVoiceMuted] = useState(false);
+  const [playingMessageIndex, setPlayingMessageIndex] = useState(null);
 
   const chatRef = useRef(null);
   const timerRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]);
+  const wavRecorderRef = useRef(null);
   const streamRef = useRef(null);
+  const practiceAudioRef = useRef(null);
+  const practiceAudioUrlRef = useRef(null);
 
   const themeVars = useMemo(() => getThemeVars(theme), [theme]);
 
@@ -154,14 +162,112 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
     document.body.className = `theme-${theme}`;
   }, [theme]);
 
+  useEffect(() => {
+    return () => {
+      if (practiceAudioRef.current) {
+        practiceAudioRef.current.pause();
+        practiceAudioRef.current = null;
+      }
+
+      if (practiceAudioUrlRef.current) {
+        URL.revokeObjectURL(practiceAudioUrlRef.current);
+        practiceAudioUrlRef.current = null;
+      }
+    };
+  }, []);
+
+  const stopPracticeVoice = () => {
+    if (practiceAudioRef.current) {
+      practiceAudioRef.current.pause();
+      practiceAudioRef.current.currentTime = 0;
+      practiceAudioRef.current = null;
+    }
+
+    if (practiceAudioUrlRef.current) {
+      URL.revokeObjectURL(practiceAudioUrlRef.current);
+      practiceAudioUrlRef.current = null;
+    }
+
+    setPlayingMessageIndex(null);
+  };
+
+  const playPracticeVoice = async (text, messageIndex) => {
+    try {
+      stopPracticeVoice();
+      const response = await practiceVoiceAPI.synthesize(text);
+
+      if (response.statusCode !== 200 || !response.audioBase64) {
+        throw new Error(response.message || response.error || "Voice playback failed");
+      }
+
+      const byteCharacters = atob(response.audioBase64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i += 1) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+
+      const audioBlob = new Blob([new Uint8Array(byteNumbers)], {
+        type: response.contentType || "audio/mpeg",
+      });
+
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.muted = isVoiceMuted;
+      audio.onended = () => {
+        if (practiceAudioUrlRef.current === audioUrl) {
+          URL.revokeObjectURL(audioUrl);
+          practiceAudioUrlRef.current = null;
+        }
+        if (practiceAudioRef.current === audio) {
+          practiceAudioRef.current = null;
+        }
+        setPlayingMessageIndex(null);
+      };
+      audio.onerror = () => {
+        stopPracticeVoice();
+        setChatMessages((prev) => [
+          ...prev,
+          { type: "ai", content: "Unable to play practice audio right now. Please try again.", timestamp: Date.now() },
+        ]);
+      };
+
+      practiceAudioUrlRef.current = audioUrl;
+      practiceAudioRef.current = audio;
+      setPlayingMessageIndex(messageIndex);
+      await audio.play();
+    } catch (error) {
+      console.error("Error playing practice voice:", error);
+      stopPracticeVoice();
+      setChatMessages((prev) => [
+        ...prev,
+        { type: "ai", content: "Could not play the practice audio. Please try again.", timestamp: Date.now() },
+      ]);
+    }
+  };
+
+  const togglePracticeMute = () => {
+    setIsVoiceMuted((prev) => {
+      const nextMuted = !prev;
+      if (practiceAudioRef.current) {
+        practiceAudioRef.current.muted = nextMuted;
+      }
+      return nextMuted;
+    });
+  };
+
   const decrementPracticeCount = async () => {
     try {
       const email = localStorage.getItem("email");
-      await testAPI.decrement(email, "practice", practiceType);
-      setRemainingPractices((prev) => Math.max(0, prev - 1));
+      const response = await testAPI.decrement(email, "practice", practiceType);
+      if (response.statusCode === 200) {
+        setRemainingPractices((prev) => Math.max(0, prev - 1));
+        return true;
+      }
     } catch (error) {
       console.error("Error decrementing practice count:", error);
     }
+
+    return false;
   };
 
       const formatMessageText = (text) => {
@@ -210,15 +316,11 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
         if (listeningMatch) {
             const [, current, total, sentence] = listeningMatch;
             const playCount = playCounts[messageIndex] || 0;
+            const isCurrentAudioPlaying = playingMessageIndex === messageIndex;
 
-            const handlePlayAudio = () => {
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(sentence.trim());
-                    utterance.rate = 0.8;
-                    utterance.pitch = 1;
-                    speechSynthesis.speak(utterance);
-                    setPlayCounts(prev => ({ ...prev, [messageIndex]: (prev[messageIndex] || 0) + 1 }));
-                }
+            const handlePlayAudio = async () => {
+                setPlayCounts(prev => ({ ...prev, [messageIndex]: (prev[messageIndex] || 0) + 1 }));
+                await playPracticeVoice(sentence.trim(), messageIndex);
             };
             
             return (
@@ -244,28 +346,51 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
                         gap: '15px',
                         margin: '20px 0'
                     }}>
-                        <button
-                            onClick={handlePlayAudio}
-                            style={{
-                                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                                color: 'white',
-                                border: 'none',
-                                padding: '15px 30px',
-                                borderRadius: '25px',
-                                fontWeight: '600',
-                                fontSize: '16px',
-                                cursor: 'pointer',
-                                boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
-                                transition: 'all 0.3s ease',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '10px'
-                            }}
-                            onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-                            onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-                        >
-                            ?? {playCount > 0 ? `Play Again (${playCount})` : 'Play Audio'}
-                        </button>
+                        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                            <button
+                                onClick={() => void handlePlayAudio()}
+                                style={{
+                                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '15px 30px',
+                                    borderRadius: '25px',
+                                    fontWeight: '600',
+                                    fontSize: '16px',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
+                                    transition: 'all 0.3s ease',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px'
+                                }}
+                                onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                                onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                            >
+                                {playCount > 0 ? `Play Again (${playCount})` : 'Play Audio'}
+                            </button>
+                            {isCurrentAudioPlaying && (
+                                <button
+                                    onClick={togglePracticeMute}
+                                    style={{
+                                        background: isVoiceMuted
+                                            ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+                                            : 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+                                        color: 'white',
+                                        border: 'none',
+                                        padding: '15px 24px',
+                                        borderRadius: '25px',
+                                        fontWeight: '600',
+                                        fontSize: '16px',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 6px 20px rgba(99, 102, 241, 0.25)',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                >
+                                    {isVoiceMuted ? 'Unmute Voice' : 'Mute Voice'}
+                                </button>
+                            )}
+                        </div>
                         <div style={{
                             fontSize: '14px',
                             color: 'var(--muted)',
@@ -495,10 +620,9 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
     };
 
 
-    const initializeAIAgent = async () => {
+  const initializeAIAgent = async () => {
     try {
       setIsLoading(true);
-      await decrementPracticeCount();
       setChatMessages([]);
       const response = await fetch(import.meta.env.VITE_PRACTICE_AI_AGENT_API, {
         method: "POST",
@@ -525,17 +649,7 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
       setRecordingState("preparing");
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => audioChunksRef.current.push(event.data);
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-        await sendAudioToTranscript(audioBlob);
-      };
-
-      mediaRecorder.start();
+      wavRecorderRef.current = await createWavRecorder(stream);
       setRecording(true);
       setRecordingState("recording");
       setHasRecorded(true);
@@ -557,12 +671,19 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current && recording) {
-      mediaRecorderRef.current.stop();
+    if (wavRecorderRef.current && recording) {
+      const recorder = wavRecorderRef.current;
+      wavRecorderRef.current = null;
       setRecording(false);
       setRecordingState("processing");
       if (timerRef.current) clearInterval(timerRef.current);
-      if (streamRef.current) streamRef.current.getTracks().forEach((track) => track.stop());
+      void recorder.stop().then(async (audioBlob) => {
+        await sendAudioToTranscript(audioBlob);
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current = null;
+        }
+      });
     }
   };
 
@@ -572,19 +693,24 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
       const reader = new FileReader();
       reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
-        const base64Audio = reader.result.split(",")[1];
-        const response = await fetch("https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/audiototranscript-api", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ body: JSON.stringify({ data: base64Audio }), isBase64Encoded: false }),
-        });
+        try {
+          const base64Audio = reader.result.split(",")[1];
+          const response = await speechToTextAPI.transcribeShortAudio(base64Audio, sessionId, practiceType);
+          console.log("[practice:audio-upload:transcript-response]", { sessionId, practiceType, response });
 
-        const data = await response.json();
-        const transcript = JSON.parse(data.body).transcript;
-        if (transcript) {
-          await sendMessage(transcript.trim());
-        } else {
-          setChatMessages((prev) => [...prev, { type: "ai", content: "Could not process audio. Please try again.", timestamp: Date.now() }]);
+          if (response.statusCode === 200 && response.transcript) {
+            await sendMessage(response.transcript.trim());
+          } else {
+            const failureMessage =
+              response.message ||
+              response.error ||
+              (response.status === "completed" ? "No speech detected clearly. Please speak louder and try again." : null) ||
+              "Could not process audio. Please try again.";
+            setChatMessages((prev) => [...prev, { type: "ai", content: failureMessage, timestamp: Date.now() }]);
+          }
+        } catch (error) {
+          console.error("Error transcribing audio:", error);
+          setChatMessages((prev) => [...prev, { type: "ai", content: "Error processing audio. Please try again.", timestamp: Date.now() }]);
         }
         setIsLoading(false);
         setRecordingState("idle");
@@ -623,21 +749,65 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
 
   const handleStartPractice = () => setShowStartConfirm(true);
   const confirmStartPractice = () => {
+    stopPracticeVoice();
+    setIsVoiceMuted(false);
     setShowStartConfirm(false);
     setShowDashboard(false);
     setShowPracticePopup(true);
+    setHasRecorded(false);
+    setClickedButtons(new Set());
+    setResultType(null);
+    setResultMessage("");
+    setResultFeedback("");
+    setResultScore(null);
     initializeAIAgent();
   };
   const handleEndPractice = () => setShowEndConfirm(true);
-  const confirmEndPractice = (shouldRefresh) => {
+  const confirmEndPractice = (shouldClose) => {
     setShowEndConfirm(false);
-    if (shouldRefresh) {
-      setShowCongrats(true);
-      setTimeout(() => {
-        setShowCongrats(false);
-        window.location.reload();
-      }, 2000);
+    if (shouldClose) {
+      stopPracticeVoice();
+      setShowPracticePopup(false);
+      setResultType("failed");
+      setResultMessage("Practice not completed properly because it was ended manually. No decrement applied.");
+      setResultFeedback("");
+      setResultScore(null);
     }
+  };
+
+  const extractFinalScore = (feedback = "") => {
+    const patterns = [
+      /JAM Score:\s*(\d+\.?\d*)\s*\/\s*10/i,
+      /Final Speaking Score:\s*(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)/i,
+      /Final Listening Score:\s*(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)/i,
+      /Situational Score:\s*(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)/i,
+    ];
+
+    for (const pattern of patterns) {
+      const match = feedback.match(pattern);
+      if (match) return match[1];
+    }
+
+    return null;
+  };
+
+  const handlePracticeComplete = async (finalFeedback = "") => {
+    stopPracticeVoice();
+    const decremented = await decrementPracticeCount();
+    setShowPracticePopup(false);
+
+    if (decremented) {
+      setResultType("success");
+      setResultMessage(`You have successfully completed ${practiceTitle} - ${actualPracticeLevel} level.`);
+      setResultFeedback(finalFeedback);
+      setResultScore(extractFinalScore(finalFeedback));
+      return;
+    }
+
+    setResultType("failed");
+    setResultMessage("Practice was completed but count update failed. Please retry later.");
+    setResultFeedback("");
+    setResultScore(null);
   };
 
   return (
@@ -690,6 +860,15 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
         practiceType={practiceType}
         onEndPractice={handleEndPractice}
         timeLeft={timeLeft}
+        sessionId={sessionId}
+        onComplete={handlePracticeComplete}
+        onCompletionError={(msg) => {
+          setShowPracticePopup(false);
+          setResultType("failed");
+          setResultMessage(msg || "Feedback submission failed. Practice count not decremented.");
+          setResultFeedback("");
+          setResultScore(null);
+        }}
       />
 
       <PracticeModal
@@ -712,14 +891,35 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
         onConfirm={() => confirmEndPractice(true)}
       />
 
-      {showCongrats && (
-        <div className="fixed inset-0 z-[80] bg-foreground/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-2xl bg-card border border-border shadow-lg p-6 text-center">
-            <h2 className="font-heading text-2xl font-bold text-foreground mb-2">Practice Completed</h2>
-            <p className="text-sm text-muted-foreground">{`${practiceTitle} - ${actualPracticeLevel}`}</p>
-          </div>
-        </div>
-      )}
+      <TestResultModal
+        open={Boolean(resultType)}
+        resultType={resultType}
+        title={`${practiceTitle} - ${actualPracticeLevel} Level`}
+        message={resultMessage}
+        feedbackPreview={resultFeedback}
+        closeLabel={resultType === "success" ? "View Detailed Feedback" : "Close"}
+        onClose={() => {
+          stopPracticeVoice();
+          if (resultType === "success") {
+            navigate("/practice/feedback", {
+              state: {
+                practiceTitle,
+                practiceType,
+                actualPracticeLevel,
+                sessionId,
+                score: resultScore,
+                aiFeedback: resultFeedback,
+                chatMessages,
+              },
+            });
+            setResultType(null);
+            return;
+          }
+
+          setResultType(null);
+          window.location.reload();
+        }}
+      />
     </div>
   );
 };

@@ -8,8 +8,8 @@ export default function SituationSpeak() {
             testTitle="Situational Speaking"
             testDescription="Practice real-life scenarios to build confidence"
             testLevel="basic"
-            testDuration={600}
-            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/comm-test-ai-agent"
+            testDuration={180}
+            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/jamagent-test"
             recordingMode="long"
             autoStartMessage="hi"
         />
