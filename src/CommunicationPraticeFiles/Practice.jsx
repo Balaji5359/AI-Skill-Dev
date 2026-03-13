@@ -280,9 +280,6 @@ function Practice() {
                                 You're on the Free plan. Upgrade to Premium to unlock more features, advanced analytics, and unlimited practice sessions.
                             </p>
                             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                                <button className="practice-level-button" onClick={() => { setShowPremiumModal(false); setShowLevelModal(true); }}>
-                                    Continue (Use free attempt)
-                                </button>
                                 <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
                                     Buy Premium
                                 </button>

@@ -85,6 +85,11 @@ function LandingPage() {
 
   const communicationActivities = [
     {
+      id: 'speaking',
+      title: 'JAM - Just A Minute',
+      levels: ['Basic', 'Intermediate', 'Advanced']
+    },
+    {
       id: 'pronunciation',
       title: 'Pronunciation Practice',
       levels: ['Basic', 'Intermediate', 'Advanced']
@@ -92,11 +97,6 @@ function LandingPage() {
     {
       id: 'listening',
       title: 'Listening Comprehension',
-      levels: ['Basic', 'Intermediate', 'Advanced']
-    },
-    {
-      id: 'speaking',
-      title: 'Fluency Speaking',
       levels: ['Basic', 'Intermediate', 'Advanced']
     },
     {
