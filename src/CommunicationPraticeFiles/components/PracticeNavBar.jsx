@@ -9,12 +9,23 @@ export default function PracticeNavBar({
   theme,
   setTheme,
   onBack,
+  remainingPractices,
 }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const levelLabel = `${actualPracticeLevel?.charAt(0).toUpperCase() || "B"}${(actualPracticeLevel || "basic").slice(1)}`;
 
+  const getNavBarStyle = () => {
+    if (theme === "dark") {
+      return { background: "hsl(222 47% 11% / 0.8)" };
+    }
+    if (theme === "custom") {
+      return { background: "hsl(40 40% 97% / 0.8)" };
+    }
+    return { background: "rgba(255, 255, 255, 0.8)" };
+  };
+
   return (
-    <div className="sticky top-0 z-40 glass border-b border-border">
+    <div className="sticky top-0 z-40 border-b border-border" style={{ ...getNavBarStyle(), backdropFilter: "blur(20px)" }}>
       <div className="w-full px-4 py-4 flex items-center gap-3">
         <button
           className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
@@ -30,7 +41,8 @@ export default function PracticeNavBar({
         </div>
 
         <div className="ml-auto hidden sm:flex items-center gap-2">
-          <span className="interview-badge accent">{`Streak ${streakData.current_streak || 0}`}</span>
+          <span className="interview-badge accent">{`Remaining: ${remainingPractices}`}</span>
+          <span className="interview-badge primary">{`Streak ${streakData.current_streak || 0}`}</span>
           <span className="interview-badge primary">{userType === "premium" ? "Premium" : "Free"}</span>
           <div className="relative">
             <select
@@ -56,6 +68,7 @@ export default function PracticeNavBar({
 
       {showMobileMenu && (
         <div className="sm:hidden border-t border-border bg-card px-4 py-3 space-y-2">
+          <div className="text-xs text-muted-foreground">{`Remaining: ${remainingPractices}`}</div>
           <div className="text-xs text-muted-foreground">{`Streak: ${streakData.current_streak || 0}`}</div>
           <div className="text-xs text-muted-foreground">{`Plan: ${userType === "premium" ? "Premium" : "Free"}`}</div>
           <select

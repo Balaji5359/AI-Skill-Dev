@@ -221,9 +221,9 @@ function SignUp() {
                 <div className="welcome-section">
                     <div className="welcome-content">
                         <h1>Welcome to Skill Route!</h1>
-                        <p>Discover our administrator advisory and exciting new features designed to enhance your experience.</p>
+                        <h2 style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Ready to level up your communication skills?</h2>
+                        <p>Create your account now and transform the way you present yourself to the world.</p>
                         <div className="cta-buttons">
-                            <button className="btn-outline">Learn More</button>
                             <button className="btn-outline">Watch Demo</button>
                         </div>
                     </div>

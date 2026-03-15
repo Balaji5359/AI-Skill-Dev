@@ -1,7 +1,268 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { X, Play, ChevronLeft, ChevronRight } from "lucide-react";
 import { profileAPI, resultsAPI } from "../services/api";
 import "./test-custom.css";
+
+const buildTestInstructions = () => ({
+  jam: [
+    {
+      title: "JAM Session Overview",
+      content: (
+        <div className="space-y-3">
+          <p>You will be given a <strong>random topic</strong> by <strong>Tara AI</strong>.</p>
+          <p>Prepare to demonstrate your spontaneous speaking abilities in this challenging test.</p>
+          <ul>
+            <li><strong>Tips :-</strong></li>
+            <li>- Start with good introduction</li>
+            <li>- Maintain good points</li>
+            <li>- Close with a conclusion</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "Timeline",
+      content: (
+        <div className="space-y-3">
+          <p>You have <strong>30 seconds</strong> to think and plan your response.</p>
+          <p>You have <strong>60 seconds</strong> to speak continuously.</p>
+          <p>Make sure you speak clearly and cover the topic thoroughly within the time limit.</p>
+        </div>
+      )
+    },
+    {
+      title: "Mic Condition",
+      content: (
+        <div className="space-y-3">
+          <p>Ensure a <strong>quiet environment</strong> for the test.</p>
+          <p>Only <strong>1 time recording</strong> is allowed, then mic will be <strong>disabled</strong>.</p>
+          <p>Test in a professional, distraction-free setting.</p>
+        </div>
+      )
+    },
+    {
+      title: "Test Count",
+      content: (
+        <div className="space-y-3">
+          <p>Your <strong>"Remaining" count</strong> decrements <strong>immediately</strong> upon successful completion of the test or if time runs out.</p>
+          <p>In case <strong>exit from test</strong>, <strong>internet issue</strong>, <strong>exit full screen</strong> or any <strong>other issue</strong>, the test will be considered <strong>incomplete</strong> and <strong><br></br>no count decrement</strong>, then start new Test</p>
+        </div>
+      )
+    },
+    {
+      title: "Focus Areas",
+      content: (
+        <div className="space-y-3">
+          <p><strong>Content Relevance:</strong> Stay focused on the topic given.</p>
+          <p><strong>Clarity:</strong> Speak clearly and confidently your words.</p>
+          <p><strong>Fluency:</strong> Maintain smooth, continuous speech without long pauses.</p>
+          <p><strong>Confidence:</strong> Project confidence in your delivery.</p>
+        </div>
+      )
+    }
+  ],
+  pronunciation: [
+    {
+      title: "Pronunciation Test Overview",
+      content: (
+        <div className="space-y-3">
+          <p>You will be given <strong>5 sentences</strong> to pronounce (Level based).</p>
+          <p>Each sentence will be evaluated for correct pronunciation and phonemic accuracy.</p>
+        </div>
+      )
+    },
+    {
+      title: "Mic Condition",
+      content: (
+        <div className="space-y-3">
+          <p>Grant <strong>microphone permissions</strong> when prompted.</p>
+          <p>Speak <strong>clearly</strong> into the receiver.</p>
+          <p>Ensure you're in a quiet environment for accurate audio capture.</p>
+        </div>
+      )
+    },
+    {
+      title: "Attempts & Scoring",
+      content: (
+        <div className="space-y-3">
+          <p>You have <strong>one attempts</strong> per sentence to achieve a score.</p>
+          <p>Each attempt is recorded and evaluated independently.</p>
+          <p>Your <strong>average performance</strong> on all <strong>5 sentences</strong> will be the <br></br><strong>final score</strong>.</p>
+        </div>
+      )
+    },
+    {
+      title: "Test Count",
+      content: (
+        <div className="space-y-3">
+          <p>Your <strong>"Remaining" count</strong> decrements <strong>immediately</strong> upon successful completion of the test or if time runs out.</p>
+          <p>In case <strong>exit from test</strong>, <strong>internet issue</strong>, <strong>exit full screen</strong> or any <strong>other issue</strong>, the test will be considered <strong>incomplete</strong> and <strong><br></br>no count decrement</strong>, then start new Test</p>
+        </div>
+      )
+    },
+    {
+      title: "Focus Areas",
+      content: (
+        <div className="space-y-3">
+          <p><strong>Clarity:</strong> Pronounce each word clearly, distinctly and confidently.</p>
+          <p><strong>Accuracy:</strong> Match the correct pronunciation patterns.</p>
+          <p><strong>Phonemic Sounds:</strong> Pay attention to individual phonetic elements.</p>
+        </div>
+      )
+    }
+  ],
+  listening: [
+    {
+      title: "Listening Test Overview",
+      content: (
+        <div className="space-y-3">
+          <p>You will be listen to <strong>5 sentences</strong> and speak back (Level based).</p>
+          <p>Each sentence will be evaluated for <strong>correct pronunciation</strong> of <strong>listened sentences</strong> and phonemic accuracy.</p>
+          <p>You have <strong>10 seconds</strong> to speak each sentence.</p>
+        </div>
+      )
+    },
+    {
+      title: "Timeline",
+      content: (
+        <div className="space-y-3">
+          <p>Audio plays <strong>only once</strong>.</p>
+          <p><strong>No pausing or rewinding</strong> allowed during playback.</p>
+          <p>Listen attentively the first time as you won't get a second chance.</p>
+        </div>
+      )
+    },
+    {
+      title: "Test Count",
+      content: (
+        <div className="space-y-3">
+          <p>Your <strong>"Remaining" count</strong> decrements <strong>immediately</strong> upon successful completion of the test or if time runs out.</p>
+          <p>In case <strong>exit from test</strong>, <strong>internet issue</strong>, <strong>exit full screen</strong> or any <strong>other issue</strong>, the test will be considered <strong>incomplete</strong> and <strong><br></br>no count decrement</strong>, then start new Test</p>
+        </div>
+      )
+    },
+    {
+      title: "Focus Areas",
+      content: (
+        <div className="space-y-3">
+          <p><strong>Context:</strong> Listen for the overall context and meaning.</p>
+          <p><strong>Specific Details:</strong> Pay attention to words, punctuation, and tone.</p>
+          <p><strong>Tone & Intent:</strong> Understand the speaker's tone and purpose.</p>
+        </div>
+      )
+    }
+  ],
+  situational: [
+    {
+      title: "Situational Speaking Overview",
+      content: (
+        <div className="space-y-3">
+          <p>You will be given a <strong>real-life workplace scenario</strong> by <strong>Tara AI</strong>.</p>
+          <p>Respond as if you were in that actual professional situation.</p>
+          <ul>
+            <li><strong>Tips :-</strong></li>
+            <li>- Begin with a strong introduction.</li>
+            <li>- Highlight the positive aspects of the situation.</li>
+            <li>- Describe how you act, react, and manage that situation.</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "Timeline",
+      content: (
+        <div className="space-y-3">
+          <p><strong>30 seconds</strong> preparation time to think and plan your response.</p>
+          <p><strong>60 seconds</strong> to deliver your spoken response.</p>
+          <p>Use the preparation time wisely to structure your thoughts.</p>
+        </div>
+      )
+    },
+    {
+      title: "Mic Condition",
+      content: (
+        <div className="space-y-3">
+          <p>Ensure a <strong>quiet environment</strong> for the test.</p>
+          <p>Only <strong>1 time recording</strong> is allowed, then mic will be <strong>disabled</strong>.</p>
+          <p>Test in a professional, distraction-free setting.</p>
+        </div>
+      )
+    },
+    {
+      title: "Test Count",
+      content: (
+        <div className="space-y-3">
+          <p>Your <strong>"Remaining" count</strong> decrements <strong>immediately</strong> upon successful completion of the test or if time runs out.</p>
+          <p>In case <strong>exit from test</strong>, <strong>internet issue</strong>, <strong>exit full screen</strong> or any <strong>other issue</strong>, the test will be considered <strong>incomplete</strong> and <strong><br></br>no count decrement</strong>, then start new Test</p>
+        </div>
+      )
+    },
+    {
+      title: "Response Guidelines",
+      content: (
+        <div className="space-y-3">
+          <p>Respond as you would in a <strong>professional interview</strong>.</p>
+          <p><strong>Be professional:</strong> Use formal language and courteous tone.</p>
+          <p><strong>Be relevant:</strong> Address the scenario directly.</p>
+          <p><strong>Be confident:</strong> Speak with clarity and assurance.</p>
+        </div>
+      )
+    }
+  ],
+  "image-speak": [
+    {
+      title: "Image Speaking Overview",
+      content: (
+        <div className="space-y-3">
+          <p>You will be shown a <strong>complex visual or chart</strong>.</p>
+          <p>Describe and analyze what you see in detail.</p>
+        </div>
+      )
+    },
+    {
+      title: "Timeline",
+      content: (
+        <div className="space-y-3">
+          <p>Describe the image within the <strong>2-minute</strong> time limit.</p>
+          <p>Make full use of the time to provide detailed analysis.</p>
+          <p>You cannot pause or extend the time beyond 2 minutes.</p>
+        </div>
+      )
+    },
+    {
+      title: "Minimum Speaking Time",
+      content: (
+        <div className="space-y-3">
+          <p><strong>45 seconds</strong> minimum speaking time is required for valid scoring.</p>
+          <p>If you speak for less than 45 seconds, your response won't be scored.</p>
+          <p>Aim to use most of the 2-minute window.</p>
+        </div>
+      )
+    },
+    {
+      title: "Test Count",
+      content: (
+        <div className="space-y-3">
+          <p>Credit is deducted <strong>upon image reveal</strong>.</p>
+          <p>Once you see the image, the test credit is consumed.</p>
+          <p>Be ready to begin speaking when the image appears.</p>
+        </div>
+      )
+    },
+    {
+      title: "Response Guidelines",
+      content: (
+        <div className="space-y-3">
+          <p><strong>Observe:</strong> Describe what you see in the image.</p>
+          <p><strong>Analyze:</strong> Explain patterns, relationships, and significance.</p>
+          <p><strong>Conclude:</strong> Provide your overall interpretation and conclusions.</p>
+          <p>Cover all aspects clearly and systematically.</p>
+        </div>
+      )
+    }
+  ]
+});
 
 function Test() {
     const [tests, setTests] = useState({});
@@ -14,7 +275,9 @@ function Test() {
     const [showLevelModal, setShowLevelModal] = useState(false);
     const [showPremiumModal, setShowPremiumModal] = useState(false);
     const [showPremiumLockModal, setShowPremiumLockModal] = useState(false);
+    const [showInstructionModal, setShowInstructionModal] = useState(false);
     const navigate = useNavigate();
+    const testInstructions = buildTestInstructions();
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("email");
@@ -143,67 +406,6 @@ function Test() {
         }
     ];
 
-const testInstructions = {
-    jam: [
-        {
-        title: "Instructions for JAM",
-        content: (
-            <strong>
-            - You will be given a <b>random topic</b> by{" "}
-            <b style={{ fontFamily: "Arial", fontSize: "22px" }}>Tara AI</b>.<br />
-            - You will have <b>1 minute</b> to speak continuously.<br />
-            - Focus on <b>content relevance, clarity, fluency, confidence</b>.
-            </strong>
-        )
-        }
-    ],
-    pronunciation: [
-        {
-        title: "Pronunciation Practice Overview",
-        content: (
-            <strong>
-            - You will be given <b>words or sentences</b> to pronounce.<br />
-            - Focus on <b>clarity, accuracy, and correct sounds</b>.
-            </strong>
-        )
-        }
-    ],
-    listening: [
-        {
-        title: "Listening Test Instructions",
-        content: (
-            <strong>
-            - You will hear <b>audio clips</b> carefully curated by{" "}
-            <b>Tara AI</b>.<br />
-            - Listen attentively before answering.
-            </strong>
-        )
-        }
-    ],
-    situational: [
-        {
-        title: "Situational Speaking Overview",
-        content: (
-            <strong>
-            - You will be given a <b>real-life situation</b>.<br />
-            - Respond as you would in an interview or workplace.
-            </strong>
-        )
-        }
-    ],
-    "image-speak": [
-        {
-        title: "Image Speaking Instructions",
-        content: (
-            <strong>
-            - You will be shown an <b>image</b>.<br />
-            - Describe what you observe clearly and confidently.
-            </strong>
-        )
-        }
-    ]
-    };
-
     const handleStartChallenge = (id) => {
         const activity = activities.find(a => a.id === id);
         if (activity?.count === 0) {
@@ -225,6 +427,7 @@ const testInstructions = {
         setSelectedLevel(level);
         setShowLevelModal(false);
         setInstructionIndex(0);
+        setShowInstructionModal(true);
     };
 
     const handleLaunchChallenge = () => {
@@ -242,10 +445,10 @@ const testInstructions = {
 
     // disable background scroll when modals are open
     useEffect(() => {
-        if (showPremiumModal || showPremiumLockModal) document.body.style.overflow = 'hidden';
+        if (showPremiumModal || showPremiumLockModal || showInstructionModal) document.body.style.overflow = 'hidden';
         else document.body.style.overflow = '';
         return () => { document.body.style.overflow = ''; };
-    }, [showPremiumModal, showPremiumLockModal]);
+    }, [showPremiumModal, showPremiumLockModal, showInstructionModal]);
 
     if (loading) {
         return (
@@ -294,6 +497,7 @@ const testInstructions = {
                                         )}
                                     </div>
                                     <div className="test-activity-stats">
+                                      <p style={{ paddingBottom: '10px' }} className="test-activity-stats-title">Your {activity.title} Progress</p>
                                         <div className="test-activity-stats-text">
                                             <div>Basic Count: {loading ? '...' : getTestStats(activity.id).testCount}</div>
                                             <div>Basic Avg Score: {loading ? '...' : getTestStats(activity.id).avgScore}</div>
@@ -404,34 +608,98 @@ const testInstructions = {
                 </div>
             )}
 
-            {activeChallenge && !showLevelModal && (
-                <div className="test-modal-overlay">
-                    <div className="test-modal">
-                        <div className="test-modal-header">
-                            <h2 className="test-modal-title">
+{showInstructionModal && activeChallenge && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'hsl(var(--foreground)/0.5)', backdropFilter: 'blur(4px)' }}>
+                    <div className="relative w-full max-w-lg rounded-2xl overflow-hidden shadow-lg" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+                        <button
+                            onClick={() => {
+                                setShowInstructionModal(false);
+                                setActiveChallenge(null);
+                            }}
+                            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                            style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+
+                        <div className="p-8">
+                            <div className="flex gap-1.5 mb-6">
+                                {testInstructions[activeChallenge]?.map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="h-1 rounded-full transition-all"
+                                        style={{
+                                            flex: i === instructionIndex ? '2' : '1',
+                                            background: i === instructionIndex 
+                                                ? 'hsl(var(--accent))' 
+                                                : i < instructionIndex 
+                                                ? 'hsl(var(--accent) / 0.3)' 
+                                                : 'hsl(var(--muted))'
+                                        }}
+                                    />
+                                ))}
+                            </div>
+
+                            <h2 className="font-heading text-xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>
                                 {testInstructions[activeChallenge]?.[instructionIndex]?.title}
                             </h2>
-                            <button 
-                                onClick={() => setActiveChallenge(null)}
-                                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
-                            >
-                                X
-                            </button>
-                        </div>
-                        
-                        <div className="test-modal-content">
-                            {testInstructions[activeChallenge]?.[instructionIndex]?.content}
-                        </div>
-                        
-                        <div className="test-modal-actions">
-                            <button 
-                                onClick={handleLaunchChallenge}
-                                className="test-level-button"
-                                style={{ padding: '10px 24px', background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)' }}
-                            >
-                                START TEST
-                            </button>
+
+                            <div className="text-sm leading-relaxed mb-8 min-h-[120px]" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                                {testInstructions[activeChallenge]?.[instructionIndex]?.content}
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                {instructionIndex > 0 && (
+                                    <button
+                                        onClick={() => setInstructionIndex(instructionIndex - 1)}
+                                        className="flex items-center gap-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                                        style={{
+                                            color: 'hsl(var(--muted-foreground))',
+                                            background: 'hsl(var(--muted))'
+                                        }}
+                                    >
+                                        <ChevronLeft className="w-4 h-4" />
+                                        Back
+                                    </button>
+                                )}
+
+                                <div className="flex-1" />
+
+                                {instructionIndex < testInstructions[activeChallenge]?.length - 1 ? (
+                                    <>
+                                        <button
+                                            onClick={() => setInstructionIndex(testInstructions[activeChallenge]?.length - 1)}
+                                            className="px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                                            style={{ color: 'hsl(var(--muted-foreground))' }}
+                                        >
+                                            Skip
+                                        </button>
+                                        <button
+                                            onClick={() => setInstructionIndex(instructionIndex + 1)}
+                                            className="flex items-center gap-1 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors hover:opacity-90"
+                                            style={{
+                                                background: 'hsl(var(--accent))',
+                                                color: 'hsl(var(--accent-foreground))'
+                                            }}
+                                        >
+                                            Next
+                                            <ChevronRight className="w-4 h-4" />
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        onClick={handleLaunchChallenge}
+                                        className="flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all hover:opacity-90"
+                                        style={{
+                                            background: 'hsl(var(--accent))',
+                                            color: 'hsl(var(--accent-foreground))'
+                                        }}
+                                    >
+                                        <Play className="w-4 h-4" />
+                                        START TEST
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -410,8 +410,16 @@ const QuickActions = ({ navigate }) => (
             <button className="profile-action-btn" onClick={() => navigate('/test')}>
                 <div className="profile-action-icon">🗣️</div>
                 <div className="profile-action-text">
-                    <div className="profile-action-title">Start Practice Now</div>
+                    <div className="profile-action-title">Start Communication Practice Now</div>
                     <div className="profile-action-desc">Daily practices makes you perfect</div>
+                </div>
+            </button>
+            {/* ADD INTERVIEW NAV one button */}
+            <button className="profile-action-btn" onClick={() => navigate('/interview')}>
+                <div className="profile-action-icon">I</div>
+                <div className="profile-action-text">
+                    <div className="profile-action-title">Start Interview with Tara AI Now</div>
+                    <div className="profile-action-desc">practice level by level interview module</div>
                 </div>
             </button>
             <button className="profile-action-btn" onClick={() => navigate('/student-dashboard')}>

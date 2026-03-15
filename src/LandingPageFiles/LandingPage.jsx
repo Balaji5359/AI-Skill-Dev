@@ -78,7 +78,7 @@ function LandingPage() {
   ];
 
   const features = [
-    { number: '01', icon: BookOpen, title: 'ACCESS TARA', description: 'Sign up and get personalized feedback' },
+    { number: '01', icon: BookOpen, title: 'ACCESS TARA', description: 'Sign up and access tara-ai activities' },
     { number: '02', icon: Zap, title: 'Practice Daily', description: 'Engage with interactive activities' },
     { number: '03', icon: BarChart3, title: 'Track Progress', description: 'Monitor improvement with analytics' }
   ];
@@ -310,7 +310,7 @@ function LandingPage() {
                     <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                       <Icon className="w-6 h-6 text-primary" />
                     </div>
-                    <div className="text-3xl font-bold text-primary/20 font-heading mb-2">{feature.number}</div>
+                    <div className="text-3xl md:text-4xl font-bold font-heading text-foreground mb-4">{feature.number}</div>
                     <h3 className="text-lg md:text-xl font-bold font-heading text-foreground mb-2">{feature.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
                   </div>
@@ -546,7 +546,7 @@ function LandingPage() {
               <div className="space-y-6">
                 {[
                   { icon: '💼', label: 'LinkedIn', value: 'linkedin.com/in/rrbalaji' },
-                  { icon: '📧', label: 'Email', value: 'support@skillrouteai.com' },
+                  { icon: '📧', label: 'Email', value: 'admin@skillrouteai.com' },
                   { icon: '📞', label: 'Phone', value: '+91 9398350217' }
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-start gap-4">
@@ -643,33 +643,6 @@ function LandingPage() {
                 <p><strong>Subscription Period:</strong> Your premium access will be valid for the selected duration (1 month, 3 months, or 1 year).</p>
                 <p><strong>Auto-renewal:</strong> Premium subscriptions do not auto-renew. You must manually renew your subscription.</p>
                 <p><strong>Cancellation:</strong> You can cancel anytime, but refunds will not be provided for the existing period.</p>
-              </div>
-
-              <div className="space-y-4">
-                <label className="flex items-start gap-3 text-sm text-foreground">
-                  <input
-                    type="checkbox"
-                    checked={agreeToTerms}
-                    onChange={(e) => setAgreeToTerms(e.target.checked)}
-                    className="mt-1"
-                  />
-                  I agree to the Terms & Conditions
-                </label>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => {
-                      if (!agreeToTerms) return;
-                      if (pendingPlan) {
-                        navigate('/signup', { state: { selectedPlan: pendingPlan } });
-                        setPendingPlan(null);
-                      }
-                      setShowTerms(false);
-                    }}
-                    className="landing-btn-primary w-full text-center text-base font-bold"
-                  >
-                    {pendingPlan ? 'Agree & Continue' : 'Agree & Close'}
-                  </button>
-                </div>
               </div>
             </div>
           </div>

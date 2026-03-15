@@ -6,7 +6,7 @@ export default function Pronunciation() {
         <BaseComponent2
             testType="pronunciation"
             testTitle="Pronunciation Test"
-            testDescription="Test your pronunciation accuracy with 5 sentences"
+            testDescription={<span>Test your pronunciation accuracy with 5 sentences from <strong>Tara AI</strong></span>}
             testLevel="basic"
             testDuration={180}
             apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/jamagent-test"

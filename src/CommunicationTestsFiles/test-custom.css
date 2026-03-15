@@ -149,7 +149,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.45);
+  background: hsl(var(--foreground)/0.5);
   backdrop-filter: blur(4px);
   padding: 16px;
 }

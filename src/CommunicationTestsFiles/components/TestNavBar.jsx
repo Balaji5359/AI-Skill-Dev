@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { ArrowLeft, LayoutDashboard, Trophy, Menu, X } from "lucide-react";
 
+
 const getRoute = (tabKey) => {
   if (tabKey === "Back") return "/test";
   if (tabKey === "Practice") return "/practice";
   if (tabKey === "Dashboard") return "/student-dashboard";
-  if (tabKey === "Leaderboard") return "/profiledata";
   return "#";
 };
 
-const navItems = ["Back", "Practice", "Dashboard", "Leaderboard"];
+const navItems = ["Back", "Practice", "Dashboard"];
 
 const tabIcon = (tabName) => {
   if (tabName.includes("Back")) return <ArrowLeft className="w-4 h-4" />;
-  if (tabName.includes("Leaderboard")) return <Trophy className="w-4 h-4" />;
+  if (tabName.includes("Dashboard")) return <LayoutDashboard className="w-4 h-4" />;
   return <LayoutDashboard className="w-4 h-4" />;
 };
 
@@ -30,10 +30,16 @@ export default function TestNavBar({
   userEmail,
 }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
+  
   const levelLabel =
     actualTestLevel && typeof actualTestLevel === "string"
       ? `${actualTestLevel.charAt(0).toUpperCase()}${actualTestLevel.slice(1)}`
       : "Basic";
+
+  const handleLeaderboardClick = () => {
+    setShowComingSoonModal(true);
+  };
 
   return (
     <div className="sticky top-0 z-40 glass border-b border-border">
@@ -70,6 +76,13 @@ export default function TestNavBar({
               <span>{tabName}</span>
             </button>
           ))}
+          <button
+            onClick={handleLeaderboardClick}
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-muted text-muted-foreground hover:text-foreground whitespace-nowrap"
+          >
+            <Trophy className="w-4 h-4" />
+            <span>Leaderboard</span>
+          </button>
         </div>
 
         <div className="ml-auto flex items-center gap-2">
@@ -120,6 +133,16 @@ export default function TestNavBar({
                 <span>{tabName}</span>
               </button>
             ))}
+            <button
+              onClick={() => {
+                setShowMobileMenu(false);
+                handleLeaderboardClick();
+              }}
+              className="w-full inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-muted text-muted-foreground hover:text-foreground"
+            >
+              <Trophy className="w-4 h-4" />
+              <span>Leaderboard</span>
+            </button>
 
             <div className="pt-2 border-t border-border space-y-2">
               <select
@@ -134,6 +157,42 @@ export default function TestNavBar({
               <div className="text-xs text-muted-foreground">Streak: {streakData.current_streak || 0}</div>
               <div className="text-xs text-muted-foreground">Plan: {userType === "premium" ? "Premium" : "Free"}</div>
               {userEmail && <div className="text-xs text-muted-foreground truncate">{userEmail}</div>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showComingSoonModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'hsl(var(--foreground)/0.5)', backdropFilter: 'blur(4px)' }}>
+          <div className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-lg" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+            <button
+              onClick={() => setShowComingSoonModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+              style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="p-8 text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(var(--primary)/0.1)' }}>
+                <Trophy className="w-8 h-8" style={{ color: 'hsl(var(--primary))' }} />
+              </div>
+              <h2 className="font-heading text-xl font-bold mb-2" style={{ color: 'hsl(var(--foreground))' }}>
+                Coming Soon
+              </h2>
+              <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                The leaderboard feature is currently under development. Stay tuned for updates!
+              </p>
+              <button
+                onClick={() => setShowComingSoonModal(false)}
+                className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+                style={{
+                  background: 'hsl(var(--primary))',
+                  color: 'hsl(var(--primary-foreground))'
+                }}
+              >
+                Got it
+              </button>
             </div>
           </div>
         </div>

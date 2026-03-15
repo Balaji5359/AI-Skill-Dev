@@ -116,19 +116,29 @@ function Dashboard() {
                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-muted text-muted-foreground"><Sparkles className="w-4 h-4" /></span>
                   </div>
                   <div className="space-y-1 text-sm">
-                    <div className="flex justify-between"><span className="text-muted-foreground">Basic Avg</span><span className="text-foreground font-medium">{loading ? "..." : stats.basicAvgScore}</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Inter Avg</span><span className="text-foreground font-medium">{loading ? "..." : stats.intermediateAvgScore}</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Advanced Avg</span><span className="text-foreground font-medium">{loading ? "..." : stats.advancedAvgScore}</span></div>
-                    <div className="flex justify-between pt-2"><span className="text-muted-foreground">Basic Tests</span><span className="text-foreground">{loading ? "..." : stats.basicTestCount}</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Inter Tests</span><span className="text-foreground">{loading ? "..." : stats.intermediateTestCount}</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Advanced Tests</span><span className="text-foreground">{loading ? "..." : stats.advancedTestCount}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Basic - Avg Score </span><span className="text-foreground font-medium">{loading ? "..." : stats.basicAvgScore}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Intermediate - Avg Score </span><span className="text-foreground font-medium">{loading ? "..." : stats.intermediateAvgScore}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Advanced - Avg Score </span><span className="text-foreground font-medium">{loading ? "..." : stats.advancedAvgScore}</span></div>
+                    <div className="flex justify-between pt-2"><span className="text-muted-foreground">Basic - Tests Count</span><span className="text-foreground">{loading ? "..." : stats.basicTestCount}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Intermediate - Tests Count</span><span className="text-foreground">{loading ? "..." : stats.intermediateTestCount}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Advanced - Tests Count</span><span className="text-foreground">{loading ? "..." : stats.advancedTestCount}</span></div>
                   </div>
                   <button
-                    onClick={() => handleAnalyticsClick(activity)}
-                    className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90"
+                    onClick={() => {
+                      if (activity.id === "image-speak") {
+                        return;
+                      }
+                      handleAnalyticsClick(activity);
+                    }}
+                    disabled={activity.id === "image-speak"}
+                    className={`mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold ${
+                      activity.id === "image-speak"
+                        ? "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                        : "bg-primary text-primary-foreground hover:opacity-90"
+                    }`}
                   >
-                    View Detailed Dashboard
-                    {userType !== "premium" && <Lock className="w-4 h-4" />}
+                    {activity.id === "image-speak" ? "Coming Soon" : "View Detailed Dashboard"}
+                    {activity.id !== "image-speak" && userType !== "premium" && <Lock className="w-4 h-4" />}
                   </button>
                 </div>
               );

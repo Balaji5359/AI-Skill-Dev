@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Flame, LayoutDashboard } from "lucide-react";
+import { ArrowLeft, ArrowRight, Flame, LayoutDashboard } from "lucide-react";
 import AdvancedDashboard from "./AdvancedDashboard";
 import { platformAPI, profileAPI } from "../services/api";
 import "../InterviewModule/interview-clone-theme.css";
@@ -66,12 +66,13 @@ const BaseDashboard = ({ testTitle, apiTestType, children }) => {
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="rounded-2xl border border-border bg-card p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-muted-foreground">Switch to advanced mode to inspect session-level details and conversation history.</p>
-          {activeSection !== "advanced" ? (
-            <button onClick={() => setActiveSection("advanced")} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold">
-              Open Advanced Dashboard
-            </button>
-          ) : (
+          <p className="text-sm text-muted-foreground">Switch to advanced mode to inspect session-level details and conversation history.  </p>
+          <div className="flex-shrink-0" style={{paddingLeft: '250px'}}>{'-> click on it'}</div>
+            {activeSection !== "advanced" ? (
+              <button onClick={() => setActiveSection("advanced")} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold">
+                Open Advanced Dashboard
+              </button>
+            ) : (
             <button onClick={() => setActiveSection("main")} className="px-4 py-2 rounded-lg bg-muted text-foreground text-sm font-semibold">
               Close Advanced Dashboard
             </button>
