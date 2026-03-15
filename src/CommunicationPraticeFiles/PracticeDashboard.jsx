@@ -124,10 +124,10 @@ const PracticeDashboard = ({
           <button
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={onNavigateToPractice}
-            disabled={remainingPractices === 0}
+            disabled={stats.remainingPractices === 0}
           >
             <PlayCircle className="w-4 h-4" />
-            {remainingPractices === 0 ? "No Practices Remaining" : "Start Practice"}
+            {stats.remainingPractices === 0 ? "No Practices Remaining" : "Start Practice"}
           </button>
         </div>
       </div>
@@ -255,10 +255,10 @@ const PracticeDashboard = ({
             <button
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={onNavigateToPractice}
-              disabled={remainingPractices === 0}
+              disabled={stats.remainingPractices === 0}
             >
               <PlayCircle className="w-4 h-4" />
-              {remainingPractices === 0 ? "No Practices Remaining" : "Start Next Practice"}
+              {stats.remainingPractices === 0 ? "No Practices Remaining" : "Start Next Practice"}
             </button>
           </div>
         </div>

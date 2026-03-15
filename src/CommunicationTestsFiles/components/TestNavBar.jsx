@@ -42,6 +42,7 @@ export default function TestNavBar({
   };
 
   return (
+    <>
     <div className="sticky top-0 z-40 glass border-b border-border">
       <div className="w-full px-4 py-4 flex items-center gap-3">
         <div className="flex items-center gap-3 min-w-0">
@@ -162,41 +163,39 @@ export default function TestNavBar({
         </div>
       )}
 
-      {showComingSoonModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'hsl(var(--foreground)/0.5)', backdropFilter: 'blur(4px)' }}>
-          <div className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-lg" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+    </div>
+
+    {showComingSoonModal && (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ background: 'hsl(var(--foreground)/0.5)', backdropFilter: 'blur(4px)' }}>
+        <div className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-lg" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+          <button
+            onClick={() => setShowComingSoonModal(false)}
+            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(var(--primary)/0.1)' }}>
+              <Trophy className="w-8 h-8" style={{ color: 'hsl(var(--primary))' }} />
+            </div>
+            <h2 className="font-heading text-xl font-bold mb-2" style={{ color: 'hsl(var(--foreground))' }}>
+              Coming Soon
+            </h2>
+            <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              The leaderboard feature is currently under development. Stay tuned for updates!
+            </p>
             <button
               onClick={() => setShowComingSoonModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-              style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
+              className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+              style={{ background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }}
             >
-              <X className="w-4 h-4" />
+              Got it
             </button>
-
-            <div className="p-8 text-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(var(--primary)/0.1)' }}>
-                <Trophy className="w-8 h-8" style={{ color: 'hsl(var(--primary))' }} />
-              </div>
-              <h2 className="font-heading text-xl font-bold mb-2" style={{ color: 'hsl(var(--foreground))' }}>
-                Coming Soon
-              </h2>
-              <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                The leaderboard feature is currently under development. Stay tuned for updates!
-              </p>
-              <button
-                onClick={() => setShowComingSoonModal(false)}
-                className="px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors"
-                style={{
-                  background: 'hsl(var(--primary))',
-                  color: 'hsl(var(--primary-foreground))'
-                }}
-              >
-                Got it
-              </button>
-            </div>
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    )}
+    </>
   );
 }
