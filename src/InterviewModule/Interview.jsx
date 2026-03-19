@@ -37,7 +37,7 @@ function Interview() {
                         </button>
 
                         <button
-                            onClick={() => navigate("/student-dashboard")}
+                            onClick={() => navigate("/student-dashboard/interview-basic")}
                             className="px-3 py-3 rounded-lg bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors hidden sm:block"
                         >
                             Dashboard
@@ -80,7 +80,7 @@ function Interview() {
                             </button>
                             <button
                                 onClick={() => {
-                                    navigate("/student-dashboard");
+                            navigate("/student-dashboard/interview-basic");
                                     setShowMobileMenu(false);
                                 }}
                                 className="px-3 py-2 rounded-lg bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors text-left"

@@ -31,19 +31,38 @@ function ProfileData() {
                 const storedEmail = localStorage.getItem("email");
                 
                 const [profile, streak] = await Promise.all([
-                    profileAPI.get(storedEmail),
-                    platformAPI.updateStreak(storedEmail, true)
+                    profileAPI.get(storedEmail).catch(() => ({ statusCode: 400 })),
+                    platformAPI.updateStreak(storedEmail, true).catch(() => ({ statusCode: 400 }))
                 ]);
 
-                if (profile.statusCode !== 200) {
-                    throw new Error(`Profile API failed: ${profile.statusCode}`);
-                }
-                if (streak.statusCode !== 200) {
-                    throw new Error(`Streak API failed: ${streak.statusCode}`);
-                }
-                
-                setProfileData(profile);
-                setStreakData(streak);
+                const fallbackProfile = {
+                    full_name: "Student",
+                    user_type: "free",
+                    premium_status: "inactive",
+                    college_email: storedEmail
+                };
+
+                const resolvedProfile = profile?.statusCode === 200 ? profile : fallbackProfile;
+                setProfileData(resolvedProfile);
+
+                const profileStreak = resolvedProfile?.streak || {};
+                const profileActiveDates = resolvedProfile?.active_dates || [];
+
+                const resolvedStreak = streak?.statusCode === 200 ? streak : {
+                    current_streak: profileStreak.current_streak || 0,
+                    longest_streak: profileStreak.longest_streak || 0,
+                    active_dates: profileActiveDates
+                };
+
+                const mergedActiveDates = (resolvedStreak.active_dates && resolvedStreak.active_dates.length > 0)
+                  ? resolvedStreak.active_dates
+                  : profileActiveDates;
+
+                setStreakData({
+                    current_streak: resolvedStreak.current_streak || profileStreak.current_streak || 0,
+                    longest_streak: resolvedStreak.longest_streak || profileStreak.longest_streak || 0,
+                    active_dates: mergedActiveDates
+                });
 
                 const hour = new Date().getHours();
                 if (hour < 12) setGreeting("Good Morning");

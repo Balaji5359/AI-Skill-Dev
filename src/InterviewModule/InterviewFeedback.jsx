@@ -247,7 +247,7 @@ const InterviewFeedback = () => {
                                 Try Again
                             </button>
                             <button
-                                onClick={() => navigate("/student-dashboard")}
+                                onClick={() => navigate("/student-dashboard/interview-basic")}
                                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-success text-success-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
                             >
                                 <LayoutDashboard className="w-4 h-4" />

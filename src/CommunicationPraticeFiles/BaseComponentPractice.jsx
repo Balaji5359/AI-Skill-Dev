@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TestResultModal from "../CommunicationTestsFiles/components/TestResultModal";
-import { practiceVoiceAPI, profileAPI, platformAPI, speechToTextAPI, testAPI } from "../services/api";
+import { practiceVoiceAPI, profileAPI, platformAPI, speechToTextAPI, testAPI, activityUsageAPI } from "../services/api";
 import PracticeDashboard from "./PracticeDashboard";
 import PracticeModal from "./components/PracticeModal";
 import PracticeNavBar from "./components/PracticeNavBar";
@@ -135,20 +135,45 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
     const fetchProfileData = async () => {
       try {
         const localUserEmail = localStorage.getItem("email") || localStorage.getItem("userEmail");
+        // preload cached values
+        const cachedUserType = localStorage.getItem("user_type");
+        if (cachedUserType) setUserType(cachedUserType);
+        const cachedCurrent = Number(localStorage.getItem("streak_current") || 0);
+        const cachedBest = Number(localStorage.getItem("streak_longest") || 0);
+        if (cachedCurrent || cachedBest) {
+          setStreakData({ current_streak: cachedCurrent, best_streak: cachedBest });
+        }
+
         const [profile, streak] = await Promise.all([
           profileAPI.get(localUserEmail),
           platformAPI.updateStreak(localUserEmail, true)
         ]);
 
+        const normalizeStreak = (src = {}) => ({
+          current_streak: parseInt(src.current_streak ?? src.current ?? 0, 10) || 0,
+          best_streak: parseInt(src.best_streak ?? src.longest_streak ?? src.longest ?? 0, 10) || 0,
+          active_dates: src.active_dates || []
+        });
+
+        const profileStreak = profile?.user_info?.streak || profile?.streak;
+
         if (profile?.statusCode === 200) {
           setUserType(profile.user_type || "free");
+          localStorage.setItem("user_type", profile.user_type || "free");
         }
 
-        if (streak?.statusCode === 200) {
-          setStreakData({
-            current_streak: streak.current_streak || 0,
-            best_streak: streak.longest_streak || 0,
-          });
+        if (profileStreak) {
+          const ns = normalizeStreak(profileStreak);
+          setStreakData(ns);
+          localStorage.setItem("streak_current", String(ns.current_streak));
+          localStorage.setItem("streak_longest", String(ns.best_streak));
+          localStorage.setItem("active_dates", JSON.stringify(ns.active_dates || []));
+        } else if (streak?.statusCode === 200) {
+          const ns = normalizeStreak(streak);
+          setStreakData(ns);
+          localStorage.setItem("streak_current", String(ns.current_streak));
+          localStorage.setItem("streak_longest", String(ns.best_streak));
+          localStorage.setItem("active_dates", JSON.stringify(ns.active_dates || []));
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -258,9 +283,23 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
   const decrementPracticeCount = async () => {
     try {
       const email = localStorage.getItem("email");
-      const response = await testAPI.decrement(email, "practice", practiceType);
+      
+      // Use the new activity usage API
+      const response = await activityUsageAPI.decrement(email, "practice", "communication", practiceType);
       if (response.statusCode === 200) {
-        setRemainingPractices((prev) => Math.max(0, prev - 1));
+        // After successful decrement, get the updated count from backend
+        try {
+          const updatedCountResp = await profileAPI.get(email, "usage", "communication_practices", practiceType);
+          if (updatedCountResp.statusCode === 200 && updatedCountResp[practiceType] !== undefined) {
+            setRemainingPractices(updatedCountResp[practiceType]);
+          } else {
+            // Fallback to local decrement if specific key API fails
+            setRemainingPractices((prev) => Math.max(0, prev - 1));
+          }
+        } catch (error) {
+          // Fallback to local decrement if API call fails
+          setRemainingPractices((prev) => Math.max(0, prev - 1));
+        }
         return true;
       }
     } catch (error) {
@@ -727,7 +766,7 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
     setChatMessages((prev) => [...prev, { type: "user", content: userMessage, timestamp: Date.now() }]);
     try {
       setIsLoading(true);
-      const response = await fetch("https://piw6c7f4sf.execute-api.ap-south-1.amazonaws.com/dev/comm-practice-ai-agent", {
+      const response = await fetch(import.meta.env.VITE_COMM_PRACTICE_AGENT_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -101,12 +101,11 @@ function SignUp() {
                 return;
             }
 
-            // Login API call using consolidated endpoint
+            // Login API call using updated backend structure
             try {
                 const data = await authAPI.login(
                     formData.email,
-                    formData.password,
-                    formData.collegeName
+                    formData.password
                 );
                 
                 const errorMsg = data.message || "Login failed";
@@ -179,7 +178,7 @@ function SignUp() {
                 return;
             }
 
-            // Signup API call using consolidated endpoint
+            // Signup API call using updated backend structure
             try {
                 const data = await authAPI.signup(
                     formData.email,
@@ -192,7 +191,7 @@ function SignUp() {
                 setStatusCode(data.statusCode);
                 setApiMessage(errorMsg);
                 
-                if (data.statusCode === 200) {
+                if (data.statusCode === 200 || data.statusCode === 201) {
                     localStorage.setItem("email", formData.email);
                     localStorage.setItem("fullName", formData.name);
                     setShowErrorCard(false);

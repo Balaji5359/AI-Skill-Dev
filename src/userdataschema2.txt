@@ -1,0 +1,1783 @@
+{
+  "college_email": {
+    "S": "22691a2828@mits.ac.in"
+  },
+  "account_creation_date": {
+    "S": "2026-01-11"
+  },
+  "account_creation_time": {
+    "S": "16:35:10"
+  },
+  "active_dates": {
+    "L": [
+      {
+        "S": "2026-01-20"
+      },
+      {
+        "S": "2026-02-24"
+      },
+      {
+        "S": "2026-03-15"
+      },
+      {
+        "S": "2026-01-23"
+      },
+      {
+        "S": "2026-03-17"
+      },
+      {
+        "S": "2026-02-05"
+      },
+      {
+        "S": "2026-03-16"
+      },
+      {
+        "S": "2026-01-24"
+      },
+      {
+        "S": "2026-01-25"
+      },
+      {
+        "S": "2026-01-21"
+      },
+      {
+        "S": "2026-03-11"
+      },
+      {
+        "S": "2026-02-15"
+      },
+      {
+        "S": "2026-01-17"
+      },
+      {
+        "S": "2026-02-13"
+      },
+      {
+        "S": "2026-01-18"
+      },
+      {
+        "S": "2026-03-14"
+      },
+      {
+        "S": "2026-01-26"
+      }
+    ]
+  },
+  "basic_interviews_practices": {
+    "M": {
+      "certifications_exploration_practice": {
+        "N": "2"
+      },
+      "future_career_planning_practice": {
+        "N": "2"
+      },
+      "hobbies_interests_practice": {
+        "N": "2"
+      },
+      "programming_knowledge_practice": {
+        "N": "1"
+      },
+      "project_discussion_practice": {
+        "N": "2"
+      },
+      "self_introduction_practice": {
+        "N": "2"
+      },
+      "worked_domain_practice": {
+        "N": "2"
+      }
+    }
+  },
+  "basic_interviews_tests": {
+    "M": {
+      "certifications_exploration_test": {
+        "N": "2"
+      },
+      "future_career_planning_test": {
+        "N": "2"
+      },
+      "hobbies_interests_test": {
+        "N": "1"
+      },
+      "programming_knowledge_test": {
+        "N": "2"
+      },
+      "project_discussion_test": {
+        "N": "2"
+      },
+      "self_introduction_test": {
+        "N": "2"
+      },
+      "worked_domain_test": {
+        "N": "2"
+      }
+    }
+  },
+  "college_name": {
+    "S": "MITS University"
+  },
+  "CommunicationPractice_Attempts": {
+    "M": {
+      "jam_practice": {
+        "M": {
+          "basic": {
+            "N": "5"
+          },
+          "intermediate": {
+            "N": "1"
+          }
+        }
+      }
+    }
+  },
+  "CommunicationPractice_AvgScores": {
+    "M": {
+      "jam_practice": {
+        "M": {
+          "basic": {
+            "N": "2.06"
+          },
+          "intermediate": {
+            "N": "6.5"
+          }
+        }
+      }
+    }
+  },
+  "CommunicationTest_Attempts": {
+    "M": {
+      "jam_test": {
+        "M": {
+          "advanced": {
+            "N": "3"
+          },
+          "basic": {
+            "N": "17"
+          },
+          "intermediate": {
+            "N": "4"
+          }
+        }
+      },
+      "listen_test": {
+        "M": {
+          "basic": {
+            "N": "1"
+          },
+          "intermediate": {
+            "N": "3"
+          }
+        }
+      },
+      "pronu_test": {
+        "M": {
+          "basic": {
+            "N": "3"
+          },
+          "intermediate": {
+            "N": "2"
+          }
+        }
+      },
+      "situation_test": {
+        "M": {
+          "advanced": {
+            "N": "1"
+          },
+          "basic": {
+            "N": "13"
+          },
+          "intermediate": {
+            "N": "4"
+          }
+        }
+      }
+    }
+  },
+  "CommunicationTest_AvgScores": {
+    "M": {
+      "jam_test": {
+        "M": {
+          "advanced": {
+            "N": "5.3"
+          },
+          "basic": {
+            "N": "5.84"
+          },
+          "intermediate": {
+            "N": "5.48"
+          }
+        }
+      },
+      "listen_test": {
+        "M": {
+          "basic": {
+            "N": "6.5"
+          },
+          "intermediate": {
+            "N": "6.1"
+          }
+        }
+      },
+      "pronu_test": {
+        "M": {
+          "basic": {
+            "N": "7.63"
+          },
+          "intermediate": {
+            "N": "9.9"
+          }
+        }
+      },
+      "situation_test": {
+        "M": {
+          "advanced": {
+            "N": "5.5"
+          },
+          "basic": {
+            "N": "5.03"
+          },
+          "intermediate": {
+            "N": "7.05"
+          }
+        }
+      }
+    }
+  },
+  "current_streak": {
+    "N": "4"
+  },
+  "full_name": {
+    "S": "R Balaji"
+  },
+  "InterviewAgents-SessionIds": {
+    "M": {
+      "basicinterview-hobbies_interests-basic-9704315": {
+        "S": "2026-03-16 05:46:46"
+      },
+      "basicinterview-programming_knowledge-intermediate-2692004": {
+        "S": "2026-03-16 05:45:22"
+      }
+    }
+  },
+  "is_registered": {
+    "BOOL": true
+  },
+  "JAMAgent-Practice-Id": {
+    "M": {
+      "jam-basic-001": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Good clarity, logical flow, and confident delivery."
+              },
+              "end_time": {
+                "S": "2026-01-24 18:05:33"
+              },
+              "score": {
+                "N": "4.8"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 17:54:45"
+          }
+        }
+      },
+      "jam-intermediate-001": {
+        "S": "2026-01-24 19:21:34"
+      },
+      "jam_practice-basic-1083474": {
+        "S": "2026-01-25 12:29:25"
+      },
+      "jam_practice-basic-2521637": {
+        "S": "2026-01-25 14:42:59"
+      },
+      "jam_practice-basic-3257191": {
+        "S": "2026-01-25 12:08:29"
+      },
+      "jam_practice-basic-3582077": {
+        "S": "2026-01-25 23:23:48"
+      },
+      "jam_practice-basic-3683194": {
+        "S": "2026-01-25 12:30:51"
+      },
+      "jam_practice-basic-3719875": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Your assessment topics are:\n1. How teamwork helps students\n2. What motivates me during challenges\nSelect your topic by clicking '1' or '2'.\nRemember: You have exactly 60 seconds to demonstrate your communication skills.\nBegin when ready."
+              },
+              "end_time": {
+                "S": "2026-01-25 12:07:06"
+              },
+              "score": {
+                "N": "0"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-25 12:05:17"
+          }
+        }
+      },
+      "jam_practice-basic-3867126": {
+        "S": "2026-01-25 23:21:15"
+      },
+      "jam_practice-basic-4476210": {
+        "S": "2026-01-25 12:13:28"
+      },
+      "jam_practice-basic-5156624": {
+        "S": "2026-01-25 12:12:08"
+      },
+      "jam_practice-basic-5327047": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How my communication skills improved in college\n\nPERFORMANCE SUMMARY:\nYour response provided a general overview of the importance of communication skills but lacked specific examples and depth. The structure was somewhat coherent, but the content could have been more detailed and relevant to the topic.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing (e.g., \"in terms of job and all,\" \"requires skills for, uh, something\").\n- Vocabulary & Expression: Average — Limited variety in word choice and expression.\n- Content Relevance: Average — Basic topic coverage but missed opportunities for deeper insights.\n- Fluency & Delivery: Average — Adequate pace with noticeable hesitations and filler words.\n- Structure & Organization: Good — Logical flow with some coherence.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve grammar and sentence structure to enhance clarity and professionalism.\n2. Expand vocabulary and use more varied expressions to enrich your communication.\n3. Provide specific examples and detailed insights to demonstrate a deeper understanding of the topic.\n\nPLACEMENT READINESS: Needs Improvement - Requires further development in communication skills."
+              },
+              "end_time": {
+                "S": "2026-01-25 22:17:29"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-25 22:15:38"
+          }
+        }
+      },
+      "jam_practice-basic-6140652": {
+        "S": "2026-01-25 12:30:20"
+      },
+      "jam_practice-basic-6275814": {
+        "S": "2026-01-25 11:52:33"
+      },
+      "jam_practice-basic-6440749": {
+        "S": "2026-01-25 11:40:44"
+      },
+      "jam_practice-basic-6707814": {
+        "S": "2026-01-25 12:34:12"
+      },
+      "jam_practice-basic-6893790": {
+        "S": "2026-01-25 23:11:20"
+      },
+      "jam_practice-basic-7106695": {
+        "S": "2026-01-25 12:32:06"
+      },
+      "jam_practice-Basic-7194948": {
+        "S": "2026-02-09 15:57:29"
+      },
+      "jam_practice-basic-7917113": {
+        "S": "2026-01-25 13:08:00"
+      },
+      "jam_practice-basic-7926492": {
+        "S": "2026-01-25 12:31:29"
+      },
+      "jam_practice-basic-8182157": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Your assessment topics are:\n1. The importance of discipline\n2. What college life taught me about responsibility\nSelect your topic by clicking '1' or '2'."
+              },
+              "end_time": {
+                "S": "2026-01-25 12:23:32"
+              },
+              "score": {
+                "N": "0"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-25 12:23:10"
+          }
+        }
+      },
+      "jam_practice-basic-8295783": {
+        "S": "2026-01-25 12:03:15"
+      },
+      "jam_practice-basic-9731379": {
+        "S": "2026-01-25 12:33:58"
+      },
+      "jam_practice-Intermediate-4968122": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How online resources have changed self-learning\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a clear understanding of the topic, with relevant examples and insights. However, there were some grammatical errors and the delivery could have been more fluent.\n\nDETAILED EVALUATION:\n- JAM Score: 6.5 / 10.0\n- Grammar & Language: Good — Few errors, generally clear communication\n- Vocabulary & Expression: Good — Adequate word choice and variety\n- Content Relevance: Good — Relevant content with adequate development\n- Fluency & Delivery: Average — Adequate pace with noticeable breaks\n- Structure & Organization: Good — Logical flow and coherence\n- Time Utilization: Good — Effective use of 60-second window\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve grammatical accuracy and sentence structure\n2. Practice speaking more fluently to reduce hesitations\n3. Enhance vocabulary to express ideas more precisely\n\nPLACEMENT READINESS: Needs Improvement"
+              },
+              "end_time": {
+                "S": "2026-03-15 14:53:08"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-15 14:50:14"
+          }
+        }
+      },
+      "jam_practice-Intermediate-5408916": {
+        "S": "2026-03-15 14:54:12"
+      },
+      "jam_practice-intermediate-6022188": {
+        "S": "2026-01-25 23:15:51"
+      },
+      "jam_practice-Intermediate-7715070": {
+        "S": "2026-03-13 10:00:27"
+      }
+    }
+  },
+  "JAMAgent-Test-Id": {
+    "M": {
+      "jam-test-2363598": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Clear structure, good confidence"
+              },
+              "end_time": {
+                "S": "2026-01-24 02:03:06"
+              },
+              "score": {
+                "N": "7.8"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-21 19:08:41"
+          }
+        }
+      },
+      "jam-test-advanced-01": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Clear structure, good confidence"
+              },
+              "end_time": {
+                "S": "2026-01-23 23:40:48"
+              },
+              "score": {
+                "N": "7.8"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-22 23:40:32"
+          }
+        }
+      },
+      "jam-test-Advanced-1545369": {
+        "S": "2026-02-15 23:50:07"
+      },
+      "jam-test-Advanced-2761443": {
+        "S": "2026-02-15 23:44:16"
+      },
+      "jam-test-advanced-4357953": {
+        "M": {
+          "advanced": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How automation is reshaping organizational decision-making\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some understanding of the topic but lacked depth and clarity. The content was somewhat relevant but did not fully address the complexities of how automation reshapes decision-making processes.\n\nDETAILED EVALUATION:\n- JAM Score: 4.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing (e.g., \"what is the thing is,\" \"they're bringing some techniques, tools, and some other things\").\n- Vocabulary & Expression: Average — Limited vocabulary and repetitive phrases.\n- Content Relevance: Average — Some relevant points but lacked depth and specific examples.\n- Fluency & Delivery: Below Average — Frequent hesitations and unclear expressions.\n- Structure & Organization: Below Average — Lack of clear structure and logical flow.\n- Time Utilization: Good — Efficient use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve vocabulary and expression by using varied and precise language.\n2. Enhance content depth by including specific examples and detailed explanations.\n3. Practice speaking with a clear structure and logical flow to improve coherence.\n\nPLACEMENT READINESS: Needs Improvement - Requires further training and practice."
+              },
+              "end_time": {
+                "S": "2026-01-24 16:00:54"
+              },
+              "score": {
+                "N": "4.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 15:58:58"
+          }
+        }
+      },
+      "jam-test-Advanced-4620838": {
+        "S": "2026-02-15 23:16:00"
+      },
+      "jam-test-Advanced-4947771": {
+        "S": "2026-02-15 23:47:31"
+      },
+      "jam-test-advanced-7169731": {
+        "M": {
+          "advanced": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: The future of intelligent systems\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some understanding of the topic but lacked depth and clarity. There were noticeable hesitations and grammatical errors that affected the overall fluency and professionalism of your delivery.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Frequent grammatical errors and hesitations (e.g., \"able to see that uh AI is changing,\" \"help the people and system to become more intelligent\").\n- Vocabulary & Expression: Average — Limited variety in word choice and expression.\n- Content Relevance: Good — Relevant content with some development but gaps in depth.\n- Fluency & Delivery: Average — Noticeable hesitations and breaks in flow.\n- Structure & Organization: Good — Logical flow with some coherence issues.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve grammatical accuracy and reduce hesitations to enhance fluency.\n2. Expand vocabulary and use more varied expressions to enrich your speech.\n3. Develop deeper insights and provide more detailed examples to strengthen content.\n\nPLACEMENT READINESS: Needs Improvement"
+              },
+              "end_time": {
+                "S": "2026-01-24 16:04:54"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 16:03:18"
+          }
+        }
+      },
+      "jam-test-Advanced-8724846": {
+        "S": "2026-02-15 23:50:50"
+      },
+      "jam-test-Advanced-9775405": {
+        "S": "2026-02-15 23:47:04"
+      },
+      "jam-test-ba-1308067": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Clear structure, good confidence"
+              },
+              "end_time": {
+                "S": "2026-01-24 18:01:05"
+              },
+              "score": {
+                "N": "7.8"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-23 01:54:27"
+          }
+        }
+      },
+      "jam-test-ba-5133823": {
+        "S": "2026-01-23 01:12:56"
+      },
+      "jam-test-ba-5555596": {
+        "S": "2026-01-24 00:56:17"
+      },
+      "jam-test-ba-8255811": {
+        "S": "2026-01-24 00:42:48"
+      },
+      "jam-test-basic-01": {
+        "S": "2026-01-22 23:38:44"
+      },
+      "jam-test-Basic-1471873": {
+        "S": "2026-02-15 23:14:11"
+      },
+      "jam-test-Basic-1956212": {
+        "S": "2026-02-15 22:48:51"
+      },
+      "jam-test-Basic-2029328": {
+        "S": "2026-02-15 23:03:22"
+      },
+      "jam-test-Basic-2224730": {
+        "S": "2026-03-11 12:10:45"
+      },
+      "jam-test-basic-2258973": {
+        "S": "2026-02-05 16:27:09"
+      },
+      "jam-test-basic-2487909": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: My expectations from college\n\nCRITICAL ISSUE: OFF-TOPIC RESPONSE DETECTED\nExpected Topic: My expectations from college\nActual Content: Discussion on DBMS, OSCs, teachers, exam preparation, projects, internship placements, degree, marks, transcripts, certificates, eligibility for jobs, higher studies, abroad opportunities, campus placements, living environment, library, labs, internet competitions, headphones, clubs, peer learning, self-learning, tech cloud, iPack, iPackage.\n\nTOPIC ADHERENCE: Failed (Similarity: 0.00)\nCONTENT ANALYSIS: [N] words in approximately [X] seconds\n\nPERFORMANCE SUMMARY:\nResponse completely deviated from assigned topic. This demonstrates poor listening skills and inability to follow instructions - critical failures in professional settings.\n\nDETAILED EVALUATION:\n- JAM Score: 0.5 / 10.0\n- Grammar & Language: Below Average — Frequent errors affecting clarity\n- Vocabulary & Expression: Below Average — Limited word choice and variety\n- Content Relevance: Failed — Complete topic deviation (0/10)\n- Fluency & Delivery: Below Average — Frequent hesitations affecting flow\n- Structure & Organization: Irrelevant — Wrong topic addressed\n- Time Utilization: Wasted — Time not used effectively\n\nCRITICAL IMPROVEMENTS REQUIRED:\n1. Listen carefully and confirm topic understanding before speaking\n2. Practice topic analysis and content planning skills\n3. Develop focus and attention to detail for professional settings\n\nPLACEMENT READINESS: Not Ready - Requires Fundamental Training"
+              },
+              "end_time": {
+                "S": "2026-01-24 20:25:07"
+              },
+              "score": {
+                "N": "0.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 20:19:52"
+          }
+        }
+      },
+      "jam-test-basic-3069869": {
+        "S": "2026-01-24 00:59:34"
+      },
+      "jam-test-basic-3103540": {
+        "S": "2026-02-08 03:37:25"
+      },
+      "jam-test-basic-3264719": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: My strengths as a student\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some strengths in identifying personal abilities, but it lacked clarity and fluency. Frequent hesitations and filler words affected the overall delivery. While the content was relevant, it could have been more structured and concise.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing.\n- Vocabulary & Expression: Average — Limited variety in word choice.\n- Content Relevance: Good — Relevant content with some depth.\n- Fluency & Delivery: Below Average — Frequent hesitations and filler words.\n- Structure & Organization: Average — Some logical flow but could be improved.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve clarity and fluency by practicing speaking without hesitations.\n2. Expand vocabulary and use varied expressions to enhance communication.\n3. Work on structuring thoughts more logically before speaking.\n\nPLACEMENT READINESS: Needs Improvement - Requires further training on fluency and structure."
+              },
+              "end_time": {
+                "S": "2026-02-24 14:55:31"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-02-24 14:53:39"
+          }
+        }
+      },
+      "jam-test-basic-3455656": {
+        "S": "2026-02-08 22:35:27"
+      },
+      "jam-test-basic-3677412": {
+        "S": "2026-01-25 11:58:24"
+      },
+      "jam-test-Basic-3897500": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How exams help self-evaluation\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a basic understanding of the topic but lacked depth and clarity. There were several grammatical errors and hesitations that affected the fluency and delivery of your speech.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and hesitations (e.g., \"um,\" \"uh\")\n- Vocabulary & Expression: Average — Limited word choice and variety\n- Content Relevance: Good — Relevant content with adequate development\n- Fluency & Delivery: Average — Noticeable hesitations and breaks\n- Structure & Organization: Good — Logical flow with some coherence\n- Time Utilization: Good — Effective use of the 60-second window\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve grammar and reduce hesitations by practicing speaking and recording yourself\n2. Expand vocabulary and use varied expressions to enhance clarity and engagement\n3. Focus on maintaining a smooth and confident delivery to improve overall fluency\n\nPLACEMENT READINESS: Needs Improvement - Requires further practice and refinement"
+              },
+              "end_time": {
+                "S": "2026-02-13 22:58:22"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-02-13 22:56:31"
+          }
+        }
+      },
+      "jam-test-Basic-4188640": {
+        "S": "2026-03-12 10:00:00"
+      },
+      "jam-test-Basic-4194079": {
+        "S": "2026-02-15 22:57:48"
+      },
+      "jam-test-Basic-4220929": {
+        "S": "2026-03-15 14:14:27"
+      },
+      "jam-test-Basic-4343661": {
+        "S": "2026-03-12 01:36:09"
+      },
+      "jam-test-Basic-4651726": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: My career goals\n\nCRITICAL ISSUE: OFF-TOPIC RESPONSE DETECTED\nExpected Topic: My career goals\nActual Content: First day in college and orientation session\n\nTOPIC ADHERENCE: Failed (Similarity: 0.00)\nCONTENT ANALYSIS: [N] words in approximately [X] seconds\n\nPERFORMANCE SUMMARY:\nResponse completely deviated from assigned topic. This demonstrates poor listening skills and inability to follow instructions - critical failures in professional settings.\n\nDETAILED EVALUATION:\n- JAM Score: 0.5 / 10.0\n- Grammar & Language: Below Average — Frequent errors affecting clarity\n- Vocabulary & Expression: Below Average — Limited word choice and variety\n- Content Relevance: Failed — Complete topic deviation (0/10)\n- Fluency & Delivery: Below Average — Frequent hesitations affecting flow\n- Structure & Organization: Irrelevant — Wrong topic addressed\n- Time Utilization: Wasted — Time not used effectively\n\nCRITICAL IMPROVEMENTS REQUIRED:\n1. Listen carefully and confirm topic understanding before speaking\n2. Practice topic analysis and content planning skills\n3. Develop focus and attention to detail for professional settings\n\nPLACEMENT READINESS: Not Ready - Requires Fundamental Training"
+              },
+              "end_time": {
+                "S": "2026-03-11 12:14:00"
+              },
+              "score": {
+                "N": "0.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-11 12:12:13"
+          }
+        }
+      },
+      "jam-test-basic-4772494": {
+        "S": "2026-01-29 17:04:35"
+      },
+      "jam-test-basic-4925320": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: My favorite college memory\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some relevant content but lacked clarity and structure. You mentioned learning values and completing your studies, but the delivery was choppy and included several hesitations and filler words.\n\nDETAILED EVALUATION:\n- JAM Score: 4.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing\n- Vocabulary & Expression: Average — Limited word choice and variety\n- Content Relevance: Good — Relevant content with some development\n- Fluency & Delivery: Below Average — Frequent hesitations and unclear delivery\n- Structure & Organization: Below Average — Lack of clear structure and logical flow\n- Time Utilization: Good — Effective use of the 60-second window\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve clarity and reduce filler words to enhance fluency\n2. Practice structuring your thoughts before speaking to improve organization\n3. Expand vocabulary and use varied expressions to enrich your speech\n\nPLACEMENT READINESS: Needs Improvement - Requires further training on fluency and structure"
+              },
+              "end_time": {
+                "S": "2026-01-24 16:33:28"
+              },
+              "score": {
+                "N": "4.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 16:31:46"
+          }
+        }
+      },
+      "jam-test-Basic-5260296": {
+        "S": "2026-02-26 07:22:08"
+      },
+      "jam-test-Basic-5814735": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: My first day in college\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a clear structure and relevant content, but there were noticeable gaps in fluency and vocabulary usage. You managed to stay on topic but could benefit from more precise language and improved delivery.\n\nDETAILED EVALUATION:\n- JAM Score: 6.5 / 10.0\n- Grammar & Language: Good — Few errors, generally clear communication. (e.g., \"entered uh into MITS university\" could be clearer)\n- Vocabulary & Expression: Good — Competent but needs refinement. (e.g., repetitive use of \"so\" and \"really\")\n- Content Relevance: Good — Relevant content with adequate development.\n- Fluency & Delivery: Average — Adequate pace with noticeable breaks.\n- Structure & Organization: Good — Logical flow and coherence.\n- Time Utilization: Good — Effective use of 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve vocabulary and expression by using varied and precise language.\n2. Work on fluency by reducing filler words and hesitations.\n3. Practice speaking with a focus on clear and confident delivery.\n\nPLACEMENT READINESS: Needs Improvement - Requires further training on language precision and delivery."
+              },
+              "end_time": {
+                "S": "2026-03-11 12:14:17"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-11 12:12:50"
+          }
+        }
+      },
+      "jam-test-Basic-6262531": {
+        "S": "2026-02-15 23:11:21"
+      },
+      "jam-test-basic-6572321": {
+        "S": "2026-01-29 17:03:34"
+      },
+      "jam-test-basic-6573389": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How discipline helps achieve goals\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a basic understanding of the importance of discipline in achieving goals. However, there were noticeable hesitations and filler words that affected the fluency and clarity of your speech.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several errors but understandable\n- Vocabulary & Expression: Average — Adequate word choice but limited variety\n- Content Relevance: Good — Relevant content with adequate development\n- Fluency & Delivery: Below Average — Frequent hesitations affecting flow\n- Structure & Organization: Good — Logical flow with some coherence\n- Time Utilization: Good — Effective use of 60-second window\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve fluency by reducing filler words and hesitations\n2. Expand vocabulary and use varied expressions\n3. Practice speaking with more confidence and clarity\n\nPLACEMENT READINESS: Needs Improvement - Requires further practice and refinement"
+              },
+              "end_time": {
+                "S": "2026-01-26 09:36:44"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-26 09:34:07"
+          }
+        }
+      },
+      "jam-test-Basic-6861970": {
+        "S": "2026-02-09 11:09:21"
+      },
+      "jam-test-Basic-7836815": {
+        "S": "2026-02-13 22:27:49"
+      },
+      "jam-test-basic-7905692": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT TOPIC: The value of patience\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a clear understanding of the importance of patience. However, there were noticeable repetitions and some grammatical errors that affected the overall fluency and clarity of your speech.\n\nDETAILED EVALUATION:\n- JAM Score: 6.5 / 10.0\n- Grammar & Language: Good — Several minor grammatical errors but generally clear communication.\n- Vocabulary & Expression: Good — Adequate word choice with some repetitions.\n- Content Relevance: Good — Relevant content with adequate development.\n- Fluency & Delivery: Average — Adequate pace with noticeable repetitions and hesitations.\n- Structure & Organization: Good — Logical flow with some repetitions.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Reduce repetitions and improve sentence variety to enhance fluency.\n2. Focus on grammatical accuracy to improve overall clarity.\n3. Practice speaking with a focus on maintaining a natural pace without unnecessary pauses.\n\nPLACEMENT READINESS: Needs Improvement"
+              },
+              "end_time": {
+                "S": "2026-01-24 16:43:04"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 16:41:24"
+          }
+        }
+      },
+      "jam-test-Basic-8089833": {
+        "S": "2026-02-09 11:05:23"
+      },
+      "jam-test-basic-8150043": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How hostel life changes a student\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some understanding of the topic but lacked clarity and structure. Frequent hesitations and filler words affected the fluency and delivery of your speech.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several errors but understandable\n- Vocabulary & Expression: Average — Limited word choice and variety\n- Content Relevance: Good — Relevant content with adequate development\n- Fluency & Delivery: Below Average — Frequent hesitations affecting flow\n- Structure & Organization: Average — Adequate but not well-organized\n- Time Utilization: Good — Time used effectively\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve vocabulary and expression to enhance clarity and variety\n2. Practice speaking without frequent hesitations and filler words\n3. Develop better structure and organization for coherent delivery\n\nPLACEMENT READINESS: Needs Improvement - Requires further training on fluency and structure"
+              },
+              "end_time": {
+                "S": "2026-01-24 15:47:08"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 15:45:26"
+          }
+        }
+      },
+      "jam-test-Basic-8346130": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How social media affects students\n\nPERFORMANCE SUMMARY:\nThe response provided was brief and lacked depth. It did not address the topic comprehensively or provide any specific insights.\n\nDETAILED EVALUATION:\n- JAM Score: 3.5 / 10.0\n- Grammar & Language: Average — Minor grammatical errors but generally understandable.\n- Vocabulary & Expression: Below Average — Limited word choice and expression.\n- Content Relevance: Below Average — Minimal topic coverage.\n- Fluency & Delivery: Average — Adequate pace but lacked depth.\n- Structure & Organization: Below Average — Lacked clear structure and coherence.\n- Time Utilization: Average — Time was used but not effectively.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Expand vocabulary and improve expression to provide more detailed insights.\n2. Practice structuring thoughts logically and coherently.\n3. Develop content depth and relevance to the topic.\n\nPLACEMENT READINESS: Needs Improvement - Requires further training and practice."
+              },
+              "end_time": {
+                "S": "2026-03-11 12:09:44"
+              },
+              "score": {
+                "N": "3.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-11 12:08:30"
+          }
+        }
+      },
+      "jam-test-basic-8804855": {
+        "S": "2026-02-06 17:55:12"
+      },
+      "jam-test-Basic-8948658": {
+        "S": "2026-02-13 22:54:15"
+      },
+      "jam-test-basic-9858602": {
+        "S": "2026-02-24 14:52:04"
+      },
+      "jam-test-Basic-9938092": {
+        "S": "2026-02-15 23:04:01"
+      },
+      "jam-test-in-9465658": {
+        "S": "2026-01-23 00:56:43"
+      },
+      "jam-test-intermediate-01": {
+        "S": "2026-01-22 23:39:40"
+      },
+      "jam-test-Intermediate-1670344": {
+        "S": "2026-02-14 00:14:08"
+      },
+      "jam-test-Intermediate-1704720": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: Is technical knowledge alone enough for career success?\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a clear understanding of the topic, but it was hindered by frequent hesitations, filler words, and a lack of clear structure. While the content was relevant, the delivery was not smooth, which affected the overall effectiveness of your communication.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Frequent filler words and minor grammatical errors.\n- Vocabulary & Expression: Average — Limited word choice and variety.\n- Content Relevance: Good — Relevant content with some depth.\n- Fluency & Delivery: Below Average — Frequent hesitations and filler words.\n- Structure & Organization: Below Average — Lack of clear structure and logical flow.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve fluency by reducing filler words and hesitations.\n2. Enhance vocabulary and expression by using a wider range of words.\n3. Develop a clear structure for your responses to improve coherence and logical flow.\n\nPLACEMENT READINESS: Needs Improvement - Requires further training in fluency and structure."
+              },
+              "end_time": {
+                "S": "2026-03-17 13:55:53"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-17 13:53:45"
+          }
+        }
+      },
+      "jam-test-Intermediate-2236239": {
+        "S": "2026-02-15 23:26:38"
+      },
+      "jam-test-Intermediate-2842655": {
+        "S": "2026-02-14 00:15:00"
+      },
+      "jam-test-intermediate-3397149": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: How students can stay updated with fast-changing technologies\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some understanding of the topic but lacked clarity and structure. Frequent hesitations and filler words affected the fluency and delivery of your speech.\n\nDETAILED EVALUATION:\n- JAM Score: 4.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing.\n- Vocabulary & Expression: Average — Limited variety in word choice.\n- Content Relevance: Average — Relevant content but poorly organized.\n- Fluency & Delivery: Below Average — Frequent hesitations and filler words.\n- Structure & Organization: Below Average — Lack of clear structure and logical flow.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve grammar and sentence structure to enhance clarity.\n2. Expand vocabulary and use varied expressions to enrich your speech.\n3. Practice organizing thoughts and delivering them coherently.\n\nPLACEMENT READINESS: Needs Improvement - Requires further training on clarity, structure, and fluency."
+              },
+              "end_time": {
+                "S": "2026-01-24 15:51:27"
+              },
+              "score": {
+                "N": "4.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 15:49:36"
+          }
+        }
+      },
+      "jam-test-intermediate-3586759": {
+        "S": "2026-01-28 17:01:54"
+      },
+      "jam-test-Intermediate-5324706": {
+        "S": "2026-02-15 23:25:01"
+      },
+      "jam-test-Intermediate-5526269": {
+        "S": "2026-02-15 23:28:51"
+      },
+      "jam-test-Intermediate-5724471": {
+        "S": "2026-02-15 23:32:36"
+      },
+      "jam-test-intermediate-5959947": {
+        "S": "2026-01-24 15:52:12"
+      },
+      "jam-test-intermediate-6403273": {
+        "S": "2026-01-24 15:57:48"
+      },
+      "jam-test-Intermediate-9508503": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: The role of innovation in engineering\n\nPERFORMANCE SUMMARY:\nYour response provided a basic understanding of innovation in engineering but lacked depth and specific examples. The structure was somewhat coherent, but the delivery had noticeable hesitations and filler words.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several errors but understandable (e.g., \"uh\", \"like uh\")\n- Vocabulary & Expression: Average — Limited word choice and variety\n- Content Relevance: Good — Relevant content with adequate development\n- Fluency & Delivery: Below Average — Frequent hesitations affecting flow\n- Structure & Organization: Good — Logical flow with some coherence\n- Time Utilization: Good — Effective use of 60-second window\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve vocabulary and reduce filler words to enhance clarity\n2. Practice speaking with more specific examples to strengthen content\n3. Work on fluency by reducing hesitations and improving pace\n\nPLACEMENT READINESS: Needs Improvement - Requires further practice and refinement"
+              },
+              "end_time": {
+                "S": "2026-03-15 22:20:23"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-15 22:18:03"
+          }
+        }
+      },
+      "jam-test-Intermediate-9704663": {
+        "S": "2026-02-18 23:44:42"
+      },
+      "jam_test-0575529": {
+        "S": "2026-01-16 19:59:23"
+      },
+      "jam_test-0577530": {
+        "S": "2026-01-16 20:02:42"
+      },
+      "jam_test-0581527": {
+        "S": "2026-01-16 20:07:01"
+      },
+      "jam_test-0770271": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Clear structure, good confidence"
+              },
+              "end_time": {
+                "S": "2026-01-23 23:39:08"
+              },
+              "score": {
+                "N": "7.8"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-16 19:19:09"
+          }
+        }
+      },
+      "jam_test-0973942": {
+        "M": {
+          "ai_feedback": {
+            "S": "ASSESSMENT REPORT TOPIC: Role of values in personal and professional life\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a basic understanding of the topic but lacked depth and clarity. You mentioned key values such as responsibility and discipline but did not elaborate sufficiently on how these values manifest in personal and professional contexts. Your delivery was hesitant and included several filler words, which affected the overall fluency.\n\nDETAILD EVALUATION:\n- JAM Score: 4.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and frequent use of filler words (\"um,\" \"so,\" \"OK\").\n- Vocabulary & Expression: Average — Limited vocabulary and repetitive phrases.\n- Content Relevance: Average — Basic understanding of the topic but lacked depth.\n- Fluency & Delivery: Below Average — Hesitant and choppy delivery with frequent pauses.\n- Structure & Organization: Below Average — Lack of clear structure and logical flow.\n- Time Utilization: Good — Efficient use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve vocabulary and expression by using a wider range of words and avoiding filler words.\n2. Practice structuring your thoughts logically and coherently before speaking.\n3. Work on fluency by reducing hesitations and speaking at a natural pace.\n\nPLACEMENT READINESS: Needs Improvement"
+          },
+          "end_time": {
+            "S": "2026-01-16 19:02:01"
+          },
+          "score": {
+            "N": "4.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 18:52:16"
+          }
+        }
+      },
+      "jam_test-3888419": {
+        "M": {
+          "ai_feedback": {
+            "S": "ASSESSMENT REPORT TOPIC: Role of technology in education\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some understanding of the topic but lacked depth and clarity. There were noticeable hesitations and filler words, which affected the overall fluency and delivery.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing (e.g., \"everyday we can see the evaluation of technology\").\n- Vocabulary & Expression: Average — Limited word choice and repetitive phrases.\n- Content Relevance: Good — Relevant content with some development but lacked depth.\n- Fluency & Delivery: Average — Noticeable hesitations and filler words.\n- Structure & Organization: Average — Basic logical flow but not well-organized.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve grammar and sentence structure to enhance clarity and professionalism.\n2. Expand vocabulary and avoid repetitive phrases to enrich expression.\n3. Practice speaking with fewer hesitations and filler words to improve fluency.\n\nPLACEMENT READINESS: Needs Improvement"
+          },
+          "end_time": {
+            "S": "2026-01-16 13:22:50"
+          },
+          "score": {
+            "N": "5.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 13:18:32"
+          }
+        }
+      },
+      "jam_test-4047109": {
+        "M": {
+          "ai_feedback": {
+            "S": "ASSESSMENT REPORT TOPIC: Can machines replace humans?\n\nPERFORMANCE SUMMARY:\nYour response demonstrated some understanding of the topic but lacked clarity and structure. Frequent hesitations and filler words ('um', 'so') affected the fluency and delivery of your speech.\n\nDETAILED EVALUATION:\n- JAM Score: 4.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing.\n- Vocabulary & Expression: Average — Limited word choice and repetitive phrases.\n- Content Relevance: Average — Partially relevant with some gaps in logic.\n- Fluency & Delivery: Below Average — Frequent hesitations and filler words.\n- Structure & Organization: Below Average — Lack of clear structure and logical flow.\n- Time Utilization: Good — Effective use of the 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve clarity and reduce filler words to enhance fluency.\n2. Expand vocabulary and vary expressions to enrich content.\n3. Practice structuring thoughts logically to improve organization.\n\nPLACEMENT READINESS: Needs Improvement - Requires further training on communication skills."
+          },
+          "end_time": {
+            "S": "2026-01-16 18:50:28"
+          },
+          "score": {
+            "N": "4.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 18:45:58"
+          }
+        }
+      },
+      "jam_test-5115218": {
+        "S": "2026-01-16 19:55:58"
+      },
+      "jam_test-5211857": {
+        "S": "2026-01-21 00:30:59"
+      },
+      "jam_test-5214766": {
+        "M": {
+          "ai_feedback": {
+            "S": "ASSESSMENT REPORT TOPIC: Cybersecurity in the digital age\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a basic understanding of the importance of cybersecurity in the digital age. However, the delivery was somewhat hesitant and lacked clear structure and depth.\n\nDETAILED EVALUATION:\n- JAM Score: 5.5 / 10.0\n- Grammar & Language: Average — Several grammatical errors and awkward phrasing (e.g., \"placing, playing a very crucial role,\" \"users will come forward to use those applications\").\n- Vocabulary & Expression: Average — Limited vocabulary and repetitive expressions.\n- Content Relevance: Good — The content was relevant but lacked depth and specific examples.\n- Fluency & Delivery: Average — Frequent hesitations and filler words affected the flow.\n- Structure & Organization: Below Average — The response lacked a clear structure and logical flow.\n- Time Utilization: Good — The response was within the 60-second limit.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve vocabulary and expression by using varied and precise language.\n2. Practice structuring your thoughts logically before speaking.\n3. Work on reducing hesitations and filler words for smoother delivery.\n\nPLACEMENT READINESS: Needs Improvement"
+          },
+          "end_time": {
+            "S": "2026-01-16 13:28:34"
+          },
+          "score": {
+            "N": "5.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 13:23:22"
+          }
+        }
+      },
+      "jam_test-8644859": {
+        "S": "2026-01-16 19:17:06"
+      },
+      "jam_test-8677891": {
+        "S": "2026-01-16 19:16:02"
+      },
+      "jam_test-9011705": {
+        "S": "2026-01-16 19:21:16"
+      }
+    }
+  },
+  "JAM_Attempts": {
+    "N": "4"
+  },
+  "last_active_date": {
+    "S": "2026-03-17"
+  },
+  "last_daily_reset_date": {
+    "S": "2026-03-12"
+  },
+  "ListeningPractice-Id": {
+    "M": {
+      "listen_practice-basic-6851320": {
+        "S": "2026-01-25 23:01:26"
+      },
+      "listen_practice-intermediate-2214488": {
+        "S": "2026-01-25 23:48:16"
+      },
+      "listen_practice-intermediate-5601051": {
+        "S": "2026-01-25 23:09:53"
+      },
+      "listen_practice-intermediate-6338837": {
+        "S": "2026-01-25 23:02:41"
+      }
+    }
+  },
+  "ListeningTest-Id": {
+    "M": {
+      "listen-test-5550909": {
+        "S": "2026-01-21 20:32:40"
+      },
+      "listen-test-basic-1492631": {
+        "S": "2026-01-24 14:59:35"
+      },
+      "listen-test-basic-3751243": {
+        "S": "2026-01-24 04:14:28"
+      },
+      "listen-test-basic-5423329": {
+        "S": "2026-01-24 01:53:30"
+      },
+      "listen-test-intermediate-2007337": {
+        "S": "2026-01-24 04:03:28"
+      },
+      "listen-test-intermediate-5429720": {
+        "S": "2026-01-24 04:07:01"
+      },
+      "listening-test-advanced-001": {
+        "S": "2026-01-23 15:09:58"
+      },
+      "listening-test-Advanced-6066949": {
+        "S": "2026-02-24 15:22:59"
+      },
+      "listening-test-basic-001": {
+        "S": "2026-01-23 15:09:28"
+      },
+      "listening-test-basic-1685502": {
+        "S": "2026-01-24 01:52:23"
+      },
+      "listening-test-Basic-3526943": {
+        "S": "2026-02-24 15:19:32"
+      },
+      "listening-test-basic-4192062": {
+        "S": "2026-01-29 22:06:19"
+      },
+      "listening-test-basic-6030116": {
+        "S": "2026-01-24 01:36:33"
+      },
+      "listening-test-basic-6500459": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "COMPREHENSIVE LISTENING ASSESSMENT REPORT\n\nOVERALL LISTENING PERFORMANCE:\nYour listening comprehension and repetition accuracy have shown a mix of strengths and weaknesses throughout the assessment. While you demonstrated good understanding and complete repetitions for some sentences, there were significant comprehension failures in others, indicating areas that need improvement.\n\nDETAILED LISTENING SCORES:\n- Final Listening Score: 6.5 / 10.0\n- Average Comprehension Rate: 50%\n- Repetition Accuracy: Adequate\n- Audio Processing Ability: Variable\n- Listening Consistency: Inconsistent\n\nCOMPREHENSIVE ANALYSIS:\n- Total Words in Audio: 27\n- Correctly Heard/Repeated: 11 (41%)\n- Words Missed: 16\n- Incorrect Repetitions: 1\n- Extra Words Added: 1\n- Sequence Errors: 0\n\nLISTENING STRENGTHS:\n- Good comprehension for some sentences\n- Accurate repetition for certain phrases\n\nCRITICAL LISTENING DEFICIENCIES:\n- Major comprehension failures in one sentence\n- Incomplete repetition in the final sentence\n\nPROFESSIONAL LISTENING RECOMMENDATIONS:\n1. Focus on improving comprehension for complex sentences.\n2. Practice active listening to enhance retention of key information.\n3. Work on reducing filler words and improving audio processing.\n\nLISTENING READINESS: Needs Development"
+              },
+              "end_time": {
+                "S": "2026-01-24 20:54:38"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 20:50:51"
+          }
+        }
+      },
+      "listening-test-basic-7632641": {
+        "S": "2026-01-25 12:18:24"
+      },
+      "listening-test-basic-8116641": {
+        "S": "2026-01-25 12:00:52"
+      },
+      "listening-test-Basic-9412885": {
+        "S": "2026-02-13 23:31:11"
+      },
+      "listening-test-intermediate-001": {
+        "S": "2026-01-23 15:10:47"
+      },
+      "listening-test-Intermediate-2066260": {
+        "S": "2026-03-17 14:39:39"
+      },
+      "listening-test-intermediate-3876871": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "COMPREHENSIVE LISTENING ASSESSMENT REPORT\n\nOVERALL LISTENING PERFORMANCE:\nYour listening comprehension and repetition accuracy have been evaluated across five intermediate-level sentences. Your performance varied, with some sentences demonstrating good understanding and others showing areas for improvement.\n\nDETAILED LISTENING SCORES:\n- Final Listening Score: 7.3 / 10.0\n- Average Comprehension Rate: 74%\n- Repetition Accuracy: Good\n- Audio Processing Ability: Average\n- Listening Consistency: Variable\n\nCOMPREHENSIVE ANALYSIS:\n- Total Words in Audio: 55\n- Correctly Heard/Repeated: 44 (80%)\n- Words Missed: 11\n- Incorrect Repetitions: 3\n- Extra Words Added: 0\n- Sequence Errors: 0\n\nLISTENING STRENGTHS:\n- Good comprehension in some sentences\n- Accurate repetition in most cases\n\nCRITICAL LISTENING DEFICIENCIES:\n- Missed key words in some sentences\n- Minor comprehension gaps\n\nPROFESSIONAL LISTENING RECOMMENDATIONS:\n1. Focus on key content words to improve comprehension\n2. Practice listening for specific details in sentences\n3. Engage in targeted listening exercises to enhance overall understanding\n\nLISTENING READINESS: Good"
+              },
+              "end_time": {
+                "S": "2026-01-24 17:04:58"
+              },
+              "score": {
+                "N": "7.3"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 17:00:08"
+          }
+        }
+      },
+      "listening-test-Intermediate-5301896": {
+        "S": "2026-02-15 23:16:45"
+      },
+      "listening-test-Intermediate-7142190": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "COMPREHENSIVE LISTENING ASSESSMENT REPORT\n\nOVERALL LISTENING PERFORMANCE:\nYour listening skills have shown areas of struggle, particularly in accurately hearing and repeating key content words and maintaining sentence structure. Improvement in these areas will significantly enhance your listening comprehension.\n\nDETAILED LISTENING SCORES:\n- Final Listening Score: 3.9 / 10.0\n- Average Comprehension Rate: 28%\n- Repetition Accuracy: Poor\n- Audio Processing Ability: Struggling\n- Listening Consistency: Inconsistent\n\nCOMPREHENSIVE ANALYSIS:\n- Total Words in Audio: 45\n- Correctly Heard/Repeated: 12 (26.7%)\n- Words Missed: 33\n- Incorrect Repetitions: 4\n- Extra Words Added: 0\n- Sequence Errors: 15\n\nLISTENING STRENGTHS:\n- Some ability to recognize familiar words and phrases.\n\nCRITICAL LISTENING DEFICIENCIES:\n- Frequent omission of key content words.\n- Difficulty in maintaining correct word order and sentence structure.\n- Struggles with audio processing and comprehension.\n\nPROFESSIONAL LISTENING RECOMMENDATIONS:\n1. Targeted auditory training exercises focusing on key content word recognition.\n2. Specific listening skill development to improve sentence structure comprehension.\n3. Audio processing improvement strategies to enhance overall listening ability.\n\nLISTENING READINESS: Needs Development"
+              },
+              "end_time": {
+                "S": "2026-03-14 10:42:53"
+              },
+              "score": {
+                "N": "3.9"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-14 10:40:12"
+          }
+        }
+      },
+      "listening-test-Intermediate-7698616": {
+        "S": "2026-02-15 23:17:30"
+      },
+      "listening-test-Intermediate-8141568": {
+        "S": "2026-03-14 10:37:07"
+      },
+      "listen_test-0121088": {
+        "S": "2026-01-19 20:51:35"
+      },
+      "listen_test-0568102": {
+        "S": "2026-01-16 18:44:42"
+      },
+      "listen_test-1265237": {
+        "S": "2026-01-16 19:24:52"
+      },
+      "listen_test-3466448": {
+        "S": "2026-01-16 20:40:21"
+      },
+      "listen_test-4048712": {
+        "S": "2026-01-17 22:12:33"
+      },
+      "listen_test-9840983": {
+        "S": "2026-01-20 12:38:41"
+      }
+    }
+  },
+  "longest_streak": {
+    "N": "4"
+  },
+  "order_id": {
+    "S": "order_SJvvRhGW1rEN9n"
+  },
+  "password_hash": {
+    "S": "42f7cccfdfaa67251b09b023d18e8578:3796bc59a30364cb660ffce2814e897ddb139c8908bba2c43026ac282689f301"
+  },
+  "payment_id": {
+    "S": "pay_SJvviZB5jDWQWV"
+  },
+  "payment_status": {
+    "S": "success"
+  },
+  "practices": {
+    "M": {
+      "image_speak_practice": {
+        "N": "2"
+      },
+      "jam_practice": {
+        "N": "1"
+      },
+      "listen_practice": {
+        "N": "2"
+      },
+      "pronu_practice": {
+        "N": "2"
+      },
+      "situation_practice": {
+        "N": "2"
+      }
+    }
+  },
+  "premium_expiry_date": {
+    "S": "2026-03-26"
+  },
+  "premium_plan": {
+    "S": "monthly"
+  },
+  "premium_start_date": {
+    "S": "2026-02-24"
+  },
+  "PronunciationPractice-Id": {
+    "M": {
+      "pronu_practice-basic-4894664": {
+        "S": "2026-01-25 23:23:59"
+      },
+      "pronu_practice-basic-5155161": {
+        "S": "2026-01-25 23:59:01"
+      },
+      "pronu_practice-basic-5957126": {
+        "S": "2026-01-26 23:21:42"
+      },
+      "pronu_practice-basic-9918759": {
+        "S": "2026-01-25 14:31:06"
+      },
+      "pronu_practice-Intermediate-4952596": {
+        "S": "2026-02-16 00:18:19"
+      }
+    }
+  },
+  "PronunciationTest-Id": {
+    "M": {
+      "pronu-test-basic-3159424": {
+        "S": "2026-01-24 01:04:28"
+      },
+      "pronu-test-basic-3865982": {
+        "S": "2026-01-24 01:18:54"
+      },
+      "pronu-test-basic-7792918": {
+        "S": "2026-01-24 01:20:21"
+      },
+      "pronunciation-test-Basic-2568389": {
+        "S": "2026-02-26 07:23:34"
+      },
+      "pronunciation-test-Basic-2802438": {
+        "S": "2026-02-13 23:01:53"
+      },
+      "pronunciation-test-Basic-3711277": {
+        "S": "2026-02-13 22:47:20"
+      },
+      "pronunciation-test-basic-4377168": {
+        "S": "2026-02-19 01:07:59"
+      },
+      "pronunciation-test-basic-5492654": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "FINAL SPEAKING ASSESSMENT REPORT\n\nOVERALL PERFORMANCE SUMMARY:\nYour pronunciation skills show potential, but there are areas that need improvement, particularly in word completeness and accuracy.\n\nCOMPREHENSIVE SCORES:\n- Final Speaking Score: 6.2 / 10.0\n- Average Word Accuracy: 76%\n- Pronunciation Consistency: Good\n- Speech Clarity Rating: Clear\n- Fluency Assessment: Smooth\n\nDETAILED ANALYSIS:\n- Total Words Assessed: 25\n- Correctly Pronounced: 19 (76%)\n- Mispronunciations: 1\n- Missing Words: 5\n- Extra Words Added: 2\n\nSTRENGTHS IDENTIFIED:\n- Clear articulation in most sentences\n- Smooth fluency throughout the assessment\n\nPROFESSIONAL RECOMMENDATIONS:\n1. Focus on pronouncing all words in each sentence completely.\n2. Practice sentences with a variety of word lengths and complexities.\n3. Continue to refine pronunciation of specific words that were challenging."
+              },
+              "end_time": {
+                "S": "2026-01-24 16:51:50"
+              },
+              "score": {
+                "N": "6.2"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 16:48:15"
+          }
+        }
+      },
+      "pronunciation-test-basic-6730387": {
+        "S": "2026-01-24 16:45:12"
+      },
+      "pronunciation-test-basic-9414877": {
+        "S": "2026-01-25 12:00:03"
+      },
+      "pronunciation-test-Intermediate-1155691": {
+        "S": "2026-03-17 14:42:00"
+      },
+      "pronunciation-test-Intermediate-7295628": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "FINAL SPEAKING ASSESSMENT REPORT\n\nOVERALL PERFORMANCE SUMMARY:\nYour pronunciation skills are exceptional, demonstrating clear and precise articulation throughout the assessment.\n\nCOMPREHENSIVE SCORES:\n- Final Speaking Score: 10.0 / 10.0\n- Average Word Accuracy: 100%\n- Pronunciation Consistency: Excellent\n- Speech Clarity Rating: Professional\n- Fluency Assessment: Natural\n\nDETAILED ANALYSIS:\n- Total Words Assessed: 10\n- Correctly Pronounced: 10 (100%)\n- Mispronunciations: 0\n- Missing Words: 0\n- Extra Words Added: 0\n\nSTRENGTHS IDENTIFIED:\n- Excellent pronunciation accuracy\n- Clear and natural speech\n\nPROFESSIONAL RECOMMENDATIONS:\n1. Continue practicing with complex sentences to maintain and enhance skills.\n2. Focus on maintaining clarity and precision in fast-paced speech.\n3. Engage in regular pronunciation drills to reinforce correct sounds and stress patterns.\n\nYour dedication to achieving near-perfect pronunciation is commendable. Keep up the excellent work!"
+              },
+              "end_time": {
+                "S": "2026-02-15 23:55:16"
+              },
+              "score": {
+                "N": "10"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-02-15 23:54:20"
+          }
+        }
+      },
+      "pronunciation-test-Intermediate-7523913": {
+        "S": "2026-02-24 15:06:46"
+      },
+      "pronu_test-0315489": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "Clear structure, good confidence"
+              },
+              "end_time": {
+                "S": "2026-01-23 23:42:20"
+              },
+              "score": {
+                "N": "7.8"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-16 18:33:47"
+          }
+        }
+      },
+      "pronu_test-0510420": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "Clear structure, good confidence"
+              },
+              "end_time": {
+                "S": "2026-01-23 23:43:58"
+              },
+              "score": {
+                "N": "9.8"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-16 20:29:05"
+          }
+        }
+      },
+      "pronu_test-2574861": {
+        "S": "2026-01-17 21:22:21"
+      },
+      "pronu_test-2875894": {
+        "S": "2026-01-17 21:59:11"
+      },
+      "pronu_test-2972677": {
+        "S": "2026-01-16 20:25:21"
+      },
+      "pronu_test-3643400": {
+        "S": "2026-01-16 20:22:10"
+      },
+      "pronu_test-4319455": {
+        "M": {
+          "ai_feedback": {
+            "S": "FINAL SPEAKING ASSESSMENT REPORT\n\nOVERALL PERFORMANCE SUMMARY:\nYour speaking accuracy has shown a good level of proficiency with minor errors in pronunciation and word choice. You demonstrated clear speech and good fluency throughout the assessment.\n\nCOMPREHENSIVE SCORES:\n- Final Speaking Score: 8.0 / 10.0\n- Average Word Accuracy: 87%\n- Pronunciation Consistency: Good\n- Speech Clarity Rating: Clear\n- Fluency Assessment: Smooth\n\nDETAILED ANALYSIS:\n- Total Words Assessed: 45\n- Correctly Pronounced: 38 (84.4%)\n- Mispronunciations: 2\n- Missing Words: 0\n- Extra Words Added: 0\n\nSTRENGTHS IDENTIFIED:\n- Good overall pronunciation\n- Clear and fluent speech\n\nPROFESSIONAL RECOMMENDATIONS:\n1. Continue practicing pronunciation to minimize minor errors.\n2. Focus on maintaining clear and smooth speech patterns.\n\nThank you for completing the speaking assessment."
+          },
+          "end_time": {
+            "S": "2026-01-19 20:44:23"
+          },
+          "score": {
+            "N": "8"
+          },
+          "start_time": {
+            "S": "2026-01-19 20:20:54"
+          }
+        }
+      },
+      "pronu_test-4444247": {
+        "S": "2026-01-19 20:48:58"
+      },
+      "pronu_test-5157373": {
+        "S": "2026-01-16 18:42:01"
+      },
+      "pronu_test-6060719": {
+        "S": "2026-01-16 20:09:06"
+      },
+      "pronu_test-6638078": {
+        "S": "2026-01-16 18:37:57"
+      },
+      "pronu_test-8578661": {
+        "S": "2026-01-16 20:15:46"
+      },
+      "pronu_test-9308823": {
+        "S": "2026-01-16 13:52:09"
+      },
+      "pronu_test-9662636": {
+        "S": "2026-01-16 20:18:31"
+      },
+      "proun-test-advanced-123": {
+        "S": "2026-01-23 14:59:31"
+      },
+      "proun-test-basic-123": {
+        "S": "2026-01-23 14:58:06"
+      },
+      "proun-test-intermediate-123": {
+        "S": "2026-01-23 14:58:43"
+      }
+    }
+  },
+  "Pronunciation_Attempts": {
+    "N": "1"
+  },
+  "roll_no": {
+    "S": "22691a2828"
+  },
+  "SituationSpeak-Practice-Id": {
+    "M": {
+      "situation_practice-basic-8009281": {
+        "S": "2026-01-25 23:47:39"
+      },
+      "situation_practice-intermediate-1180280": {
+        "S": "2026-01-25 22:56:38"
+      },
+      "situation_practice-intermediate-2926000": {
+        "S": "2026-01-25 23:01:01"
+      }
+    }
+  },
+  "SituationSpeak-Test-Id": {
+    "M": {
+      "situation-test-advanced-01": {
+        "S": "2026-01-22 23:45:30"
+      },
+      "situation-test-advanced-2208159": {
+        "M": {
+          "advanced": {
+            "M": {
+              "ai_feedback": {
+                "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You are offered a promotion that requires relocating, but you have family responsibilities. How will you evaluate this situation and communicate your decision?\n\nRESPONSE ANALYSIS:\nThe response demonstrates a basic understanding of the situation but lacks depth in analysis and structured problem-solving. The User briefly mentions considering the relocation location and planning for family involvement but does not provide a comprehensive evaluation or actionable solutions.\n\nDETAILED EVALUATION:\n- Situational Score: 5.5 / 10.0\n- Problem Analysis: Basic — Understands the situation but misses key elements (3/10)\n- Solution Quality: Basic — Simple approach with limited development (3/10)\n- Professional Reasoning: Basic — Simple reasoning with some logical gaps (3/10)\n- Communication Clarity: Basic — Simple structure and articulation (3/10)\n- Practical Application: Basic — Limited real-world viability (3/10)\n- Time Management: Competent — Effective use of response time (5/10)\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: Basic understanding of the scenario.\n2. Critical skill gap: Lack of depth in analysis and structured problem-solving.\n3. Professional development priority: Improve analytical skills and structured thinking.\n\nPLACEMENT EVALUATION: Needs Development"
+              },
+              "end_time": {
+                "S": "2026-01-24 16:59:37"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 16:57:47"
+          }
+        }
+      },
+      "situation-test-ba-5566790": {
+        "S": "2026-01-23 01:18:59"
+      },
+      "situation-test-basic-01": {
+        "S": "2026-01-22 23:44:21"
+      },
+      "situation-test-basic-1625757": {
+        "S": "2026-01-24 02:33:56"
+      },
+      "situation-test-basic-2035259": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You forgot an important notebook at home and the class depends on it. How will you handle the situation calmly?\n\nRESPONSE ANALYSIS:\nThe response lacked clarity and structure, with several irrelevant details and unclear steps. The User did not provide a coherent plan to handle the situation calmly and effectively.\n\nDETAILED EVALUATION:\n- Situational Score: 3.5 / 10.0\n- Problem Analysis: Basic — Limited understanding of the situation and its implications\n- Solution Quality: Basic — Simple and vague solutions with minimal development\n- Professional Reasoning: Basic — Simple reasoning with logical gaps\n- Communication Clarity: Basic — Unclear and disjointed communication\n- Practical Application: Basic — Limited real-world viability of the response\n- Time Management: Basic — Ineffective use of response time\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength or weakness with impact on interview performance: Lack of clear and structured problem-solving approach\n2. Critical skill gap or competency demonstrated: Inability to provide a coherent and practical solution\n3. Professional development priority for placement success: Improving clarity, structure, and relevance in responses\n\nPLACEMENT EVALUATION: Needs Development - Requires improvement in problem-solving and communication skills"
+              },
+              "end_time": {
+                "S": "2026-01-24 02:39:55"
+              },
+              "score": {
+                "N": "3.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 02:38:15"
+          }
+        }
+      },
+      "situation-test-basic-5971860": {
+        "S": "2026-01-25 11:58:50"
+      },
+      "situation-test-basic-6123684": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "<div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 SITUATIONAL ASSESSMENT REPORT</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\n<div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 SCENARIO:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> You are feeling stressed due to multiple assignments and deadlines. How will you manage your stress and complete your tasks effectively?\n\n<div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 RESPONSE ANALYSIS:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\nThe User demonstrated a basic understanding of the scenario by prioritizing tasks based on deadlines. However, the response lacked depth in terms of stress management techniques and did not provide a comprehensive solution.\n\n<div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 DETAILED EVALUATION:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\n- Situational Score: 5.5 / 10.0\n- Problem Analysis: Basic — Identified the need to prioritize tasks but did not consider other stress management strategies.\n- Solution Quality: Basic — Proposed a simple prioritization strategy but did not elaborate on other methods to manage stress.\n- Professional Reasoning: Basic — Basic logical flow with some gaps in reasoning.\n- Communication Clarity: Basic — Simple and somewhat unclear structure.\n- Practical Application: Basic — Simple approach with limited depth.\n- Time Management: Basic — Time was used to provide a basic response.\n\n<div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 INTERVIEW READINESS ASSESSMENT:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\n1. Specific strength: Demonstrated ability to prioritize tasks.\n2. Critical skill gap: Lack of comprehensive stress management strategies.\n3. Professional development priority: Develop a more structured approach to stress management and task prioritization.\n\n<div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 PLACEMENT EVALUATION:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> Competent - Acceptable with development"
+              },
+              "end_time": {
+                "S": "2026-01-24 02:29:52"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 02:26:33"
+          }
+        }
+      },
+      "situation-test-basic-6454239": {
+        "S": "2026-02-05 16:18:59"
+      },
+      "situation-test-Basic-7983311": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You are unsure whether to ask a doubt in class. How will you overcome hesitation?\n\nRESPONSE ANALYSIS:\nThe User demonstrated a structured approach to overcoming hesitation by first seeking clarification from a friend. If the friend could not provide clarity, the User planned to consult another friend. As a last resort, the User intended to approach the lecturer when they were available.\n\nDETAILED EVALUATION:\n- Situational Score: 6.5 / 10.0\n- Problem Analysis: Competent — The User identified the problem of hesitation and proposed a multi-step approach to address it.\n- Solution Quality: Competent — The User provided a practical and step-by-step solution involving peers and the lecturer.\n- Professional Reasoning: Competent — The reasoning was logical and sequential, though it could have been more detailed.\n- Communication Clarity: Competent — The User's response was clear and easy to follow.\n- Practical Application: Competent — The approach is practical and could be effective in a real-world classroom setting.\n- Time Management: Competent — The User effectively used the response time to provide a structured solution.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: The User demonstrated a clear, step-by-step approach to problem-solving.\n2. Critical skill gap: The response could benefit from more detailed reasoning and consideration of potential challenges.\n3. Professional development priority: Enhance problem-solving skills by considering additional perspectives and potential obstacles.\n\nPLACEMENT EVALUATION: Competent (Acceptable with development)"
+              },
+              "end_time": {
+                "S": "2026-02-13 23:39:08"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-02-13 23:37:21"
+          }
+        }
+      },
+      "situation-test-basic-8713564": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You feel distracted during online classes. How will you improve your focus and participation?\n\nCRITICAL FAILURE: NON-RESPONSIVE TO SCENARIO\nExpected Response: Situation analysis and solution approach\nActual Content: Um, you do. Let's see um Feeling like distraction, how I handle the question?\n\nRESPONSE ANALYSIS:\nComplete failure to address the given scenario. This demonstrates inability to listen, analyze, and respond appropriately - critical failures in professional interviews.\n\nDETAILED EVALUATION:\n- Situational Score: 0.5 / 10.0\n- Problem Analysis: Failed — Did not address scenario (0/10)\n- Solution Quality: Irrelevant — No relevant solutions provided\n- Professional Reasoning: Absent — No logical connection to scenario\n- Communication Clarity: Poor — Unclear and off-topic\n- Practical Application: None — Response not applicable\n- Time Management: Wasted — Time not used effectively\n\nCRITICAL DEFICIENCIES:\n1. Listen carefully and analyze scenario requirements before responding\n2. Practice structured problem-solving and solution development\n3. Develop focus and scenario comprehension for professional settings\n\nPLACEMENT EVALUATION: Not Interview Ready - Requires Fundamental Training"
+              },
+              "end_time": {
+                "S": "2026-01-24 04:09:18"
+              },
+              "score": {
+                "N": "0.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 04:08:25"
+          }
+        }
+      },
+      "situation-test-basic-8738211": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "<div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 <div style=\"background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: white; padding: 20px; border-radius: 15px; font-weight: 700; font-size: 22px; margin: 20px 0; text-align: center; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);\">🎭 SITUATIONAL ASSESSMENT REPORT</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\n<div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 <div style=\"background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📝 SCENARIO:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> Attending college events regularly but studies are affected.\n\n<div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 <div style=\"background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">📊 RESPONSE ANALYSIS:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\nThe User acknowledges the importance of attending college events but recognizes the need to balance it with studies. The response shows some understanding of the situation but lacks a structured approach and actionable solutions.\n\n<div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 <div style=\"background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🔍 DETAILED EVALUATION:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\n- Situational Score: 5.5 / 10.0\n- Problem Analysis: Basic — Understands the conflict between events and studies but does not identify specific issues or stakeholders.\n- Solution Quality: Basic — Mentions the importance of events but does not provide concrete solutions or steps to balance both.\n- Professional Reasoning: Basic — Simple reasoning with some logical gaps.\n- Communication Clarity: Basic — Clear but lacks depth and structure.\n- Practical Application: Basic — Limited real-world viability of the response.\n- Time Management: Competent — Effective use of response time.\n\n<div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 <div style=\"background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🎯 INTERVIEW READINESS ASSESSMENT:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>\n1. Specific strength: Acknowledges the importance of both events and studies.\n2. Critical skill gap: Lacks a structured approach and actionable solutions.\n3. Professional development priority: Develop structured problem-solving skills and provide concrete solutions.\n\n<div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 <div style=\"background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 12px 16px; border-radius: 10px; font-weight: 700; margin: 12px 0;\">🏆 PLACEMENT EVALUATION:</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div> Competent - Acceptable with development"
+              },
+              "end_time": {
+                "S": "2026-01-24 02:31:51"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-01-24 02:30:07"
+          }
+        }
+      },
+      "situation-test-basic-9939628": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You are disappointed with yourself after making a careless mistake. How will you recover emotionally?\n\nRESPONSE ANALYSIS:\nThe User demonstrated a basic understanding of the scenario by recounting a personal experience of making a careless mistake and how they recovered from it. The response was simple and lacked depth in analysis and structured thinking.\n\nDETAILED EVALUATION:\n- Situational Score: 5.5 / 10.0\n- Problem Analysis: Basic — The User identified the primary issue of making a careless mistake but did not consider broader implications or other perspectives.\n- Solution Quality: Basic — The User proposed a relevant solution by learning from the mistake and being more careful in the future, but the development was limited.\n- Professional Reasoning: Basic — The reasoning was simple and lacked logical depth and connections.\n- Communication Clarity: Basic — The response was clear but lacked structure and depth.\n- Practical Application: Basic — The response was relevant but lacked detailed implementation steps.\n- Time Management: Competent — The User effectively used the response time.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: The User demonstrated the ability to learn from mistakes, which is a valuable trait.\n2. Critical skill gap: The User needs to improve their ability to analyze situations more deeply and provide more structured and detailed solutions.\n3. Professional development priority: Focus on enhancing analytical skills and structured problem-solving.\n\nPLACEMENT EVALUATION: Competent - Acceptable with development"
+              },
+              "end_time": {
+                "S": "2026-02-05 16:38:57"
+              },
+              "score": {
+                "N": "5.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-02-05 16:36:27"
+          }
+        }
+      },
+      "situation-test-in-1358756": {
+        "S": "2026-01-23 01:37:05"
+      },
+      "situation-test-in-6390365": {
+        "S": "2026-01-23 01:33:54"
+      },
+      "situation-test-intermediate-01": {
+        "S": "2026-01-22 23:44:55"
+      },
+      "situation-test-Intermediate-7191201": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You receive constructive criticism in front of peers. How will you handle it professionally?\n\nRESPONSE ANALYSIS:\nThe response demonstrates an understanding of the value of constructive criticism and its role in personal and professional development. However, the delivery was somewhat hesitant and lacked clear structure and conciseness.\n\nDETAILED EVALUATION:\n- Situational Score: 6.5 / 10.0\n- Problem Analysis: Competent — Understands the value of constructive criticism but lacks depth in analysis.\n- Solution Quality: Competent — Proposes a positive approach to handling criticism but does not provide specific actionable steps.\n- Professional Reasoning: Competent — Demonstrates a logical understanding of the benefits of criticism but lacks strategic depth.\n- Communication Clarity: Basic — The response was somewhat unclear and lacked conciseness.\n- Practical Application: Competent — The response is relevant but could be more practical.\n- Time Management: Basic — The response was delivered in 90 seconds, exceeding the allotted time.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: Understands the value of constructive criticism.\n2. Critical skill gap: Needs to improve clarity and conciseness in communication.\n3. Professional development priority: Enhance structured thinking and concise response delivery.\n\nPLACEMENT EVALUATION: Competent - Acceptable with development"
+              },
+              "end_time": {
+                "S": "2026-02-24 15:28:00"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-02-24 15:24:43"
+          }
+        }
+      },
+      "situation_test-0558687": {
+        "M": {
+          "ai_feedback": {
+            "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: A startup job offers learning but no job security. Would you recommend it?\n\nRESPONSE ANALYSIS:\nThe candidate provided a response that emphasizes the importance of job security and learning opportunities. They recommend taking the job due to the learning experience and the potential to gain skills that could be beneficial for future job opportunities.\n\nDETAILED EVALUATION:\n- Situational Score: 6.5 / 10.0\n- Problem Analysis: Competent — Understands the importance of job security and learning but misses some key elements such as the risk of instability.\n- Solution Quality: Competent — Proposes a relevant solution with basic reasoning but lacks depth in considering potential risks and alternatives.\n- Professional Reasoning: Competent — Demonstrates basic logical flow and reasonable conclusions but lacks strategic thinking.\n- Communication Clarity: Competent — The response is clear but could be more structured and concise.\n- Practical Application: Competent — The response is relevant but lacks consideration of real-world complexities.\n- Time Management: Competent — The response was completed within the time limit.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Strength: The candidate recognizes the importance of learning and skill development.\n2. Skill Gap: The candidate could improve by considering the risks of job instability and exploring alternative solutions.\n3. Development Priority: Focus on strategic thinking and risk assessment in future scenarios.\n\nPLACEMENT EVALUATION: Competent - Acceptable with development"
+          },
+          "end_time": {
+            "S": "2026-01-16 19:10:52"
+          },
+          "score": {
+            "N": "6.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 19:08:56"
+          }
+        }
+      },
+      "situation_test-1215614": {
+        "S": "2026-01-16 19:24:10"
+      },
+      "situation_test-2462678": {
+        "S": "2026-01-16 20:08:08"
+      },
+      "situation_test-4465037": {
+        "M": {
+          "ai_feedback": {
+            "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You disagree with your manager’s decision. How will you communicate it?\n\nRESPONSE ANALYSIS:\nThe User demonstrated a polite and respectful approach to addressing a disagreement with their manager. They outlined a structured method for communicating their disagreement, emphasizing the importance of maintaining a professional tone and providing a clear explanation of their perspective.\n\nDETAILED EVALUATION:\n- Situational Score: 6.5 / 10.0\n- Problem Analysis: Competent — The User identified the key issue of disagreeing with a manager's decision and considered the need for a respectful approach.\n- Solution Quality: Competent — The User proposed a structured method for communicating their disagreement, including explaining the manager's decision, their own perspective, and a recommendation.\n- Professional Reasoning: Competent — The User's reasoning was logical and focused on maintaining professionalism and facilitating understanding.\n- Communication Clarity: Competent — The User's explanation was clear and structured, though it could benefit from more detail and specificity.\n- Practical Application: Competent — The approach is practical and could be effective in a real-world scenario, though it may require refinement for maximum impact.\n- Time Management: Competent — The User effectively used the response time to provide a thoughtful and structured response.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Strength: The User demonstrated a respectful and professional approach to addressing a disagreement, which is crucial for maintaining workplace harmony.\n2. Skill Gap: The User could benefit from more specific examples and a deeper analysis of potential outcomes and risks associated with their approach.\n3. Development Priority: The User should focus on enhancing their ability to provide detailed and actionable solutions, as well as considering alternative perspectives and potential challenges.\n\nPLACEMENT EVALUATION: Competent (Acceptable with development)"
+          },
+          "end_time": {
+            "S": "2026-01-16 13:35:51"
+          },
+          "score": {
+            "N": "6.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 13:32:54"
+          }
+        }
+      },
+      "situation_test-4789119": {
+        "M": {
+          "ai_feedback": {
+            "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: Your teammate is underperforming. How will you help him improve?\n\nRESPONSE ANALYSIS:\nThe User's response demonstrates a basic understanding of the scenario and proposes a structured approach to address the issue. The User plans to observe the teammate's work, identify mistakes, and provide suggestions and resources to improve performance. However, the response lacks depth in terms of specific strategies and actionable steps.\n\nDETAILED EVALUATION:\n- Situational Score: 6.5 / 10.0\n- Problem Analysis: Competent — Understands the basic situation and identifies primary issues.\n- Solution Quality: Competent — Proposes relevant solutions with basic reasoning.\n- Professional Reasoning: Competent — Basic logical flow, reasonable conclusions.\n- Communication Clarity: Competent — Clear structure and articulation.\n- Practical Application: Competent — Relevant solutions with some real-world viability.\n- Time Management: Competent — Effective use of response time.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: Structured approach to problem-solving.\n2. Critical skill gap: Lack of specific strategies and actionable steps.\n3. Professional development priority: Develop more detailed and practical solutions.\n\nPLACEMENT EVALUATION: Competent - Acceptable with development"
+          },
+          "end_time": {
+            "S": "2026-01-16 19:04:01"
+          },
+          "score": {
+            "N": "6.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 19:02:24"
+          }
+        }
+      },
+      "situation_test-6543892": {
+        "S": "2026-01-17 20:57:14"
+      },
+      "situation_test-9518468": {
+        "M": {
+          "ai_feedback": {
+            "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: Your internet fails during an online interview. How do you handle it?\n\nRESPONSE ANALYSIS:\nThe User demonstrated a basic understanding of the situation but lacked a structured approach and actionable solutions. The response was simple and did not delve into deeper analysis or multiple solutions.\n\nDETAILED EVALUATION:\n- Situational Score: 5.5 / 10.0\n- Problem Analysis: Basic — Recognized the main problem but missed key elements\n- Solution Quality: Basic — Simple solution with limited development\n- Professional Reasoning: Basic — Simple reasoning with some logical gaps\n- Communication Clarity: Basic — Adequate structure and articulation\n- Practical Application: Basic — Limited real-world viability\n- Time Management: Competent — Effective use of response time\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: Recognized the main issue of internet failure during an interview.\n2. Critical skill gap: Lack of structured problem-solving and multiple solutions.\n3. Professional development priority: Develop a more comprehensive approach to handling unexpected issues during interviews.\n\nPLACEMENT EVALUATION: Competent - Acceptable with development"
+          },
+          "end_time": {
+            "S": "2026-01-16 19:23:34"
+          },
+          "score": {
+            "N": "5.5"
+          },
+          "start_time": {
+            "S": "2026-01-16 19:22:48"
+          }
+        }
+      },
+      "situation_test-9920257": {
+        "M": {
+          "ai_feedback": {
+            "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You have to choose between helping family and career growth. How do you decide?\n\nRESPONSE ANALYSIS:\nThe User demonstrated a basic understanding of the scenario and proposed a simple approach to balance family support and career growth. The response included a part-time job to support the family and dedicated time for career development. However, the reasoning was limited, and the response lacked depth and structure.\n\nDETAILED EVALUATION:\n- Situational Score: 6.0 / 10.0\n- Problem Analysis: Competent — Understands the basic situation and identifies primary issues.\n- Solution Quality: Competent — Relevant solutions with basic reasoning.\n- Professional Reasoning: Basic — Simple reasoning with some logical gaps.\n- Communication Clarity: Basic — Adequate structure and articulation.\n- Practical Application: Competent — Real-world viability of response.\n- Time Management: Competent — Effective use of response time.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: Proposed a practical approach to balance family and career.\n2. Critical skill gap: Lack of depth in reasoning and structured problem-solving.\n3. Professional development priority: Enhance analytical skills and structured thinking.\n\nPLACEMENT EVALUATION: Competent - Acceptable with development"
+          },
+          "end_time": {
+            "S": "2026-01-16 13:44:00"
+          },
+          "score": {
+            "N": "6"
+          },
+          "start_time": {
+            "S": "2026-01-16 13:41:46"
+          }
+        }
+      }
+    }
+  },
+  "Situation_Attempts": {
+    "N": "5"
+  },
+  "tests": {
+    "M": {
+      "image_speak": {
+        "N": "2"
+      },
+      "jam_test": {
+        "N": "0"
+      },
+      "listen_test": {
+        "N": "1"
+      },
+      "pronu_test": {
+        "N": "2"
+      },
+      "situation_test": {
+        "N": "2"
+      }
+    }
+  },
+  "unique_id": {
+    "S": "skillroute-mits-22691a2828"
+  },
+  "user_type": {
+    "S": "premium"
+  }
+}

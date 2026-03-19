@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, Play, ChevronLeft, ChevronRight } from "lucide-react";
-import { profileAPI, resultsAPI } from "../services/api";
+import { profileAPI, resultsAPI, activityUsageAPI } from "../services/api";
 import "./test-custom.css";
 
 const buildTestInstructions = () => ({
@@ -272,37 +272,86 @@ function Test() {
     const [instructionIndex, setInstructionIndex] = useState(0);
     const [apiData, setApiData] = useState({});
     const [userType, setUserType] = useState('free');
+    const [streak, setStreak] = useState({ current_streak: 0, longest_streak: 0 });
     const [showLevelModal, setShowLevelModal] = useState(false);
-    const [showPremiumModal, setShowPremiumModal] = useState(false);
     const [showPremiumLockModal, setShowPremiumLockModal] = useState(false);
     const [showInstructionModal, setShowInstructionModal] = useState(false);
     const navigate = useNavigate();
     const testInstructions = buildTestInstructions();
 
     useEffect(() => {
+        // warm start from cached values to avoid showing zeros
+        const cachedUserType = localStorage.getItem('user_type');
+        if (cachedUserType) setUserType(cachedUserType);
+        const cachedCurrent = Number(localStorage.getItem('streak_current') || 0);
+        const cachedBest = Number(localStorage.getItem('streak_longest') || 0);
+        if (cachedCurrent || cachedBest) setStreak({ current_streak: cachedCurrent, longest_streak: cachedBest });
+
         const storedEmail = localStorage.getItem("email");
         if (!storedEmail) {
             setLoading(false);
             return;
-        }  
+        }
         
-        Promise.all([
-            profileAPI.get(storedEmail),
-            resultsAPI.getTest(storedEmail)
-        ])
-        .then(async ([profile, dashboard]) => {
-            if (profile?.statusCode === 200) {
-                setTests(profile.tests || {});
-                setUserType(profile.user_type === 'premium' && profile.premium_status === 'active' ? 'premium' : 'free');
+        const loadTestData = async () => {
+            try {
+                // Try to load usage data first, then fall back to full profile
+                const [usageData, profile, dashboard] = await Promise.all([
+                    profileAPI.get(storedEmail, 'usage', 'communication_tests').catch(() => ({ statusCode: 400 })),
+                    profileAPI.get(storedEmail).catch(() => ({ statusCode: 400 })),
+                    resultsAPI.getTest(storedEmail).catch(() => ({ statusCode: 400 }))
+                ]);
+
+                // Set user type from profile data
+                if (profile?.statusCode === 200) {
+                    setUserType(profile.user_type === 'premium' && profile.premium_status === 'active' ? 'premium' : 'free');
+                    if (profile?.streak) {
+                        setStreak({
+                            current_streak: profile.streak.current_streak || 0,
+                            longest_streak: profile.streak.longest_streak || 0
+                        });
+                    }
+                }
+                
+                // Set test counts - try usage data first, then fallback to profile data
+                if (usageData?.statusCode === 200) {
+                    setTests(usageData);
+                } else if (profile?.statusCode === 200 && profile.tests) {
+                    // Fallback to old structure
+                    setTests(profile.tests);
+                } else {
+                    // Default test counts if all fails
+                    setTests({
+                        jam_test: 0,
+                        pronu_test: 0,
+                        listen_test: 0,
+                        situation_test: 0,
+                        image_speak: 0
+                    });
+                }
+                
+                // Set dashboard data
+                if (dashboard?.statusCode === 200) {
+                    setApiData(dashboard.dashboard || {});
+                }
+                
+            } catch (error) {
+                console.error('Error loading test data:', error);
+                // Set default values on error
+                setTests({
+                    jam_test: 0,
+                    pronu_test: 0,
+                    listen_test: 0,
+                    situation_test: 0,
+                    image_speak: 0
+                });
+                setUserType('free');
+            } finally {
+                setLoading(false);
             }
-            
-            if (dashboard?.statusCode === 200) {
-                setApiData(dashboard.dashboard || {});
-            }
-            
-            setLoading(false);
-        })
-        .catch(() => setLoading(false));
+        };
+
+        loadTestData();
     }, []);
 
     const getTestStats = (activityId) => {
@@ -408,17 +457,15 @@ function Test() {
 
     const handleStartChallenge = (id) => {
         const activity = activities.find(a => a.id === id);
+        
+        // If no tests remaining, show premium lock modal
         if (activity?.count === 0) {
-            if (userType !== 'premium') {
-                setShowPremiumLockModal(true);
-            }
+            setShowPremiumLockModal(true);
             return;
         }
-        if (userType !== 'premium' && activity?.count > 0) {
-            setActiveChallenge(id);
-            setShowPremiumModal(true);
-            return;
-        }
+        
+        // If user has tests remaining (count > 0), proceed to level selection
+        // regardless of user type (free users can use their remaining tests)
         setActiveChallenge(id);
         setShowLevelModal(true);
     };
@@ -445,10 +492,10 @@ function Test() {
 
     // disable background scroll when modals are open
     useEffect(() => {
-        if (showPremiumModal || showPremiumLockModal || showInstructionModal) document.body.style.overflow = 'hidden';
+        if (showPremiumLockModal || showInstructionModal) document.body.style.overflow = 'hidden';
         else document.body.style.overflow = '';
         return () => { document.body.style.overflow = ''; };
-    }, [showPremiumModal, showPremiumLockModal, showInstructionModal]);
+    }, [showPremiumLockModal, showInstructionModal]);
 
     if (loading) {
         return (
@@ -581,32 +628,7 @@ function Test() {
                 </div>
             )}
 
-            {showPremiumModal && (
-                <div className="test-modal-overlay" onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}>
-                    <div className="test-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
-                        <div className="test-modal-header">
-                            <h3 className="test-modal-title">Upgrade to Premium</h3>
-                            <button
-                                onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}
-                                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <div className="test-modal-content">
-                            <p style={{ fontSize: '0.95rem', marginBottom: '12px' }}>
-                                You're on the Free plan. Upgrade to Premium to unlock more features, advanced analytics, and unlimited attempts.
-                            </p>
-                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                                <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
-                                    Buy Premium
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+
 
 {showInstructionModal && activeChallenge && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'hsl(var(--foreground)/0.5)', backdropFilter: 'blur(4px)' }}>

@@ -173,9 +173,10 @@ export default function TestSessionPopup({
     <div className="fixed inset-0 z-50 bg-background">
       <div className="h-full w-full max-w-7xl mx-auto px-4 py-4 md:py-6 flex flex-col">
         <div className="mb-4 rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between gap-3">
-          <div>
+          <div className="space-y-1">
             <h2 className="font-heading text-lg md:text-xl font-bold text-foreground">{testTitle}</h2>
             <p className="text-xs text-muted-foreground">{`Level: ${levelLabel}`}</p>
+            <p className="text-[11px] text-muted-foreground break-all">Session Id: {sessionId}</p>
           </div>
           <div className="flex items-center gap-2">
             <div

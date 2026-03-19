@@ -87,9 +87,6 @@ export default function TestNavBar({
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          <span className="interview-badge accent hidden sm:inline">Streak {streakData.current_streak || 0}</span>
-          <span className="interview-badge primary hidden md:inline">{userType === "premium" ? "Premium" : "Free"}</span>
-
           <select
             value={theme}
             onChange={(e) => setTheme(e.target.value)}
@@ -155,8 +152,6 @@ export default function TestNavBar({
                 <option value="dark">Dark</option>
                 <option value="custom">Custom</option>
               </select>
-              <div className="text-xs text-muted-foreground">Streak: {streakData.current_streak || 0}</div>
-              <div className="text-xs text-muted-foreground">Plan: {userType === "premium" ? "Premium" : "Free"}</div>
               {userEmail && <div className="text-xs text-muted-foreground truncate">{userEmail}</div>}
             </div>
           </div>

@@ -62,14 +62,51 @@ function InterviewPractice() {
             return;
         }
 
-        profileAPI.get(storedEmail)
-            .then((profile) => {
-                if (profile?.statusCode === 200) {
-                    setInterviews(profile.basic_interviews_practices || {});
+        const loadInterviewData = async () => {
+            try {
+                // Try to load usage data first, then fall back to full profile
+                const [usageData, profile] = await Promise.all([
+                    profileAPI.get(storedEmail, 'usage', 'interview_practices').catch(() => ({ statusCode: 400 })),
+                    profileAPI.get(storedEmail).catch(() => ({ statusCode: 400 }))
+                ]);
+
+                // Set interview counts - try usage data first, then fallback to profile data
+                if (usageData?.statusCode === 200) {
+                    setInterviews(usageData);
+                } else if (profile?.statusCode === 200 && profile.basic_interviews_practices) {
+                    // Fallback to old structure
+                    setInterviews(profile.basic_interviews_practices);
+                } else {
+                    // Default interview counts if all fails
+                    setInterviews({
+                        self_introduction_practice: 0,
+                        programming_knowledge_practice: 0,
+                        worked_domain_practice: 0,
+                        project_discussion_practice: 0,
+                        future_career_planning_practice: 0,
+                        hobbies_interests_practice: 0,
+                        internship_review_practice: 0
+                    });
                 }
+
+            } catch (error) {
+                console.error('Error loading interview practice data:', error);
+                // Set default values on error
+                setInterviews({
+                    self_introduction_practice: 0,
+                    programming_knowledge_practice: 0,
+                    worked_domain_practice: 0,
+                    project_discussion_practice: 0,
+                    future_career_planning_practice: 0,
+                    hobbies_interests_practice: 0,
+                    internship_review_practice: 0
+                });
+            } finally {
                 setLoading(false);
-            })
-            .catch(() => setLoading(false));
+            }
+        };
+
+        loadInterviewData();
     }, []);
 
     const basicInterviews = [
@@ -260,7 +297,7 @@ function InterviewPractice() {
                                 index={i}
                                 variant="practice"
                                 comingSoon={true}
-                                onStart={() => {}}
+                                onStart={() => { }}
                                 isPremium={userType === 'premium'}
                             />
                         ))}

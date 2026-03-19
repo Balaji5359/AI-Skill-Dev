@@ -5,6 +5,13 @@ export const getTestKey = (testType) => {
   return `${testType}_test`;
 };
 
+export const getPracticeKey = (testType) => {
+  if (testType === "pronunciation") return "pronu_practice";
+  if (testType === "listening") return "listen_practice";
+  if (testType === "situation") return "situation_practice";
+  return `${testType}_practice`;
+};
+
 export const formatTime = (seconds) => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;

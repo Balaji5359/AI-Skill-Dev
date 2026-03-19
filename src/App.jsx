@@ -46,6 +46,8 @@ const SituationSpeakDashboard = lazy(() => import("./Dashboard_LeaderboardFiles/
 const ListeningDashboard = lazy(() => import("./Dashboard_LeaderboardFiles/ListeningDashboard.jsx"));
 const PronunciationDashboard = lazy(() => import("./Dashboard_LeaderboardFiles/PronunciationDashboard.jsx"));
 const Leaderboard = lazy(() => import("./Dashboard_LeaderboardFiles/Leaderboard.jsx"))
+const BasicInterviewDashboard = lazy(() => import("./Dashboard_LeaderboardFiles/BasicInterviewDashboard.jsx"));
+const AdvancedInterviewDashboard = lazy(() => import("./Dashboard_LeaderboardFiles/AdvancedInterviewDashboard.jsx"));
 
 
 const MainLayout = ({ children }) => (
@@ -202,6 +204,16 @@ function App() {
           <Route path="student-dashboard/pronunciation" element={
             <ProtectedRoute>
               <PronunciationDashboard />
+            </ProtectedRoute>
+          }/>
+          <Route path="student-dashboard/interview-basic" element={
+            <ProtectedRoute>
+              <BasicInterviewDashboard />
+            </ProtectedRoute>
+          }/>
+          <Route path="student-dashboard/interview-advanced" element={
+            <ProtectedRoute>
+              <AdvancedInterviewDashboard />
             </ProtectedRoute>
           }/>
 

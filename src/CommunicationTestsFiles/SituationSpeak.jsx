@@ -1,6 +1,8 @@
 import React from 'react';
 import BaseComponent from './BaseComponent';
 
+const AGENT_API = import.meta.env.VITE_COMM_TEST_AGENT_API;
+
 export default function SituationSpeak() {
     return (
         <BaseComponent
@@ -9,7 +11,7 @@ export default function SituationSpeak() {
             testDescription={<span>Practice real-life scenarios to build confidence with <strong>Tara AI</strong></span>}
             testLevel="basic"
             testDuration={180}
-            apiEndpoint="https://ibxdsy0e40.execute-api.ap-south-1.amazonaws.com/dev/jamagent-test"
+            apiEndpoint={AGENT_API}
             recordingMode="long"
             autoStartMessage="hi"
         />

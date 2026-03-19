@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Mic, Square, Clock, MessageSquare, Bot, User, Loader2 } from "lucide-react";
-import { interviewAPI, interviewResultsAPI, platformAPI, profileAPI, speechToTextAPI, testAPI } from "../services/api";
+import { interviewAPI, interviewResultsAPI, platformAPI, profileAPI, speechToTextAPI, testAPI, activityUsageAPI } from "../services/api";
 import "./interview-clone-theme.css";
 import useInterviewUserInfo from "./useInterviewUserInfo";
 import { createWavRecorder } from "../CommunicationTestsFiles/wavRecorder";
@@ -218,7 +218,11 @@ const InterviewSession = () => {
                 console.warn("[interview:decrement:missing-key]", { interviewType, interviewTitle });
                 return;
             }
-            const response = await profileAPI.decrementInterviewCount(email, mode, interviewKey);
+            
+            // Determine the level based on interview key
+            const level = interviewKey.includes('advanced') ? 'advanced_interview' : 'basic_interview';
+            
+            const response = await activityUsageAPI.decrement(email, mode, level, interviewKey);
             if (response.statusCode !== 200) {
                 console.warn("[interview:decrement-count:warning]", { status: response.statusCode, error: response.error || response.message });
             }

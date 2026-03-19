@@ -5,7 +5,7 @@ import TestResultModal from "./components/TestResultModal";
 import TestSessionPopup from "./components/TestSessionPopup";
 import TestStartCard from "./components/TestStartCard";
 import { getTestKey } from "./testUtils";
-import { profileAPI, platformAPI, speechToTextAPI, testAPI } from "../services/api";
+import { profileAPI, platformAPI, speechToTextAPI, testAPI, activityUsageAPI } from "../services/api";
 import { createWavRecorder } from "./wavRecorder";
 import "../InterviewModule/interview-clone-theme.css";
 import "./test-custom.css";
@@ -213,14 +213,26 @@ export default function CommunicationTestBase({
       const storedEmail = localStorage.getItem("email");
       if (!storedEmail) return;
 
+      // preload from localStorage to avoid showing zeros
+      const cachedUserType = localStorage.getItem("user_type");
+      if (cachedUserType) setUserType(cachedUserType);
+      const cachedCurrent = Number(localStorage.getItem("streak_current") || 0);
+      const cachedBest = Number(localStorage.getItem("streak_longest") || 0);
+      if (cachedCurrent || cachedBest) {
+        setStreakData({ current_streak: cachedCurrent, best_streak: cachedBest });
+      }
+
       const [profile, streak] = await Promise.all([
         profileAPI.get(storedEmail),
         platformAPI.updateStreak(storedEmail, true),
       ]);
 
+      const profileStreak = profile?.streak || profile?.user_info?.streak;
+
       if (profile?.statusCode === 200) {
         const isPremium = profile.user_type === "premium" && profile.premium_status === "active";
         setUserType(isPremium ? "premium" : "free");
+        localStorage.setItem("user_type", isPremium ? "premium" : "free");
       }
 
       if (streak?.statusCode === 200) {
@@ -228,6 +240,15 @@ export default function CommunicationTestBase({
           current_streak: streak.current_streak || 0,
           best_streak: streak.longest_streak || 0,
         });
+        localStorage.setItem("streak_current", String(streak.current_streak || 0));
+        localStorage.setItem("streak_longest", String(streak.longest_streak || 0));
+      } else if (profileStreak) {
+        setStreakData({
+          current_streak: profileStreak.current_streak || 0,
+          best_streak: profileStreak.longest_streak || 0,
+        });
+        localStorage.setItem("streak_current", String(profileStreak.current_streak || 0));
+        localStorage.setItem("streak_longest", String(profileStreak.longest_streak || 0));
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -239,9 +260,9 @@ export default function CommunicationTestBase({
     if (!email) return;
 
     try {
-      const data = await profileAPI.get(email);
       const testKey = getTestKey(testType);
-      setRemainingTests(data?.tests?.[testKey] || 0);
+      const data = await profileAPI.get(email, "usage", "communication_tests", testKey);
+      setRemainingTests(data?.[testKey] || data[testKey] || 0);
     } catch (error) {
       console.error("Error fetching test count:", error);
     }
@@ -250,9 +271,24 @@ export default function CommunicationTestBase({
   const decrementTestCount = useCallback(async () => {
     try {
       const email = localStorage.getItem("email");
-      const resp = await testAPI.decrement(email, "test", getTestKey(testType));
+      const testKey = getTestKey(testType);
+      
+      // Use the new activity usage API
+      const resp = await activityUsageAPI.decrement(email, "test", "communication", testKey);
       if (resp.statusCode === 200) {
-        setRemainingTests((prev) => Math.max(0, prev - 1));
+        // After successful decrement, get the updated count from backend
+        try {
+          const updatedCountResp = await profileAPI.get(email, "usage", "communication_tests", testKey);
+          if (updatedCountResp.statusCode === 200 && updatedCountResp[testKey] !== undefined) {
+            setRemainingTests(updatedCountResp[testKey]);
+          } else {
+            // Fallback to local decrement if specific key API fails
+            setRemainingTests((prev) => Math.max(0, prev - 1));
+          }
+        } catch (error) {
+          // Fallback to local decrement if API call fails
+          setRemainingTests((prev) => Math.max(0, prev - 1));
+        }
         return true;
       }
     } catch (error) {
@@ -290,26 +326,40 @@ export default function CommunicationTestBase({
     logTestFlow("ai-request:start", { sessionId, testType, level: actualTestLevel, message });
 
     try {
+      const payload = {
+        message,
+        sessionId,
+        email: localStorage.getItem("email"),
+        level: actualTestLevel,
+        testType,
+      };
+
       const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          body: {
-            message,
-            sessionId,
-            email: localStorage.getItem("email"),
-            level: actualTestLevel,
-            testType,
-          },
-        }),
+        // Send both flattened and nested for backward compatibility with gateway mappings
+        body: JSON.stringify({ ...payload, body: payload }),
       });
 
       if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
       logTestFlow("ai-request:response", { sessionId, statusCode: response.status, data });
-      const decoded = JSON.parse(data.body).aiResponse;
+      const parsed =
+        typeof data?.body === "string"
+          ? JSON.parse(data.body)
+          : data?.body && typeof data.body === "object"
+            ? data.body
+            : data;
+
+      const aiResponse =
+        parsed?.aiResponse ||
+        parsed?.response ||
+        parsed?.message ||
+        parsed?.error ||
+        "AI could not generate a response. Please try again.";
+
       const textarea = document.createElement("textarea");
-      textarea.innerHTML = decoded;
+      textarea.innerHTML = aiResponse;
 
       setChatMessages((prev) => [
         ...prev,

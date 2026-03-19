@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, LayoutDashboard, MessageSquare, TrendingUp } from "lucide-react";
+import { profileAPI } from "../services/api";
 import "../InterviewModule/interview-clone-theme.css";
 import "./test-custom.css";
 
@@ -27,7 +28,27 @@ export default function TestFeedbackPage() {
     situation: "/student-dashboard/situationspeak",
   };
 
+  const normalizeFeedbackOrder = (feedback = "") => {
+    const marker = "FINAL SPEAKING ASSESSMENT REPORT";
+    const idx = feedback.indexOf(marker);
+    if (idx === -1) return feedback;
+
+    const finalSection = feedback.slice(idx);
+    const introSection = feedback.slice(0, idx).trim();
+    return introSection ? `${marker}\n${finalSection.slice(marker.length)}\n\n${introSection}` : feedback;
+  };
+
   const detailMessages = chatMessages.filter((message) => message?.content);
+  const [userType, setUserType] = React.useState("free");
+  React.useEffect(() => {
+    const email = localStorage.getItem("email");
+    if (!email) return;
+    profileAPI.get(email).then((res) => {
+      if (res?.statusCode === 200) {
+        setUserType(res.user_type === "premium" && res.premium_status === "active" ? "premium" : "free");
+      }
+    }).catch(() => {});
+  }, []);
 
   return (
     <div className="interview-theme min-h-screen bg-background">
@@ -61,7 +82,7 @@ export default function TestFeedbackPage() {
           {aiFeedback ? (
             <div
               className="text-sm text-foreground leading-relaxed whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: formatAIMessage(aiFeedback) }}
+              dangerouslySetInnerHTML={{ __html: formatAIMessage(normalizeFeedbackOrder(aiFeedback)) }}
             />
           ) : (
             <p className="text-sm text-muted-foreground">AI feedback is not available for this session.</p>
@@ -108,7 +129,13 @@ export default function TestFeedbackPage() {
             Back to Tests
           </button>
           <button
-            onClick={() => navigate(dashboardPathMap[testType] || "/student-dashboard")}
+            onClick={() => {
+              if (userType !== "premium") {
+                navigate("/student-dashboard"); // shows premium modal there
+              } else {
+                navigate(dashboardPathMap[testType] || "/student-dashboard");
+              }
+            }}
             className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             <LayoutDashboard className="w-4 h-4" />

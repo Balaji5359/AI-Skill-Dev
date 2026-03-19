@@ -1,5 +1,5 @@
-// API Wrapper - Handles consolidated endpoints with backward compatibility
-import { authAPI, profileAPI, testAPI, resultsAPI, platformAPI } from './api';
+// API Wrapper - Handles updated backend endpoints with backward compatibility
+import { authAPI, profileAPI, testAPI, resultsAPI, platformAPI, activityUsageAPI } from './api';
 
 // Wrapper functions that match old API call patterns
 export const apiWrapper = {
@@ -38,8 +38,8 @@ export const apiWrapper = {
     };
   },
 
-  async login(college_email, password, college_name) {
-    const data = await authAPI.login(college_email, password, college_name);
+  async login(college_email, password) {
+    const data = await authAPI.login(college_email, password);
     return {
       statusCode: data.statusCode || 200,
       body: JSON.stringify(data)
@@ -98,6 +98,15 @@ export const apiWrapper = {
 
   async submitPracticeResult(resultData) {
     const data = await resultsAPI.submitPractice(resultData);
+    return {
+      statusCode: data.statusCode || 200,
+      body: JSON.stringify(data)
+    };
+  },
+
+  // Activity Usage API
+  async decrementActivity(college_email, mode, level, interview_key) {
+    const data = await activityUsageAPI.decrement(college_email, mode, level, interview_key);
     return {
       statusCode: data.statusCode || 200,
       body: JSON.stringify(data)

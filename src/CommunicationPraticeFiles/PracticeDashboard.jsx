@@ -92,10 +92,29 @@ const PracticeDashboard = ({
   }, [dashboardApiData, practiceType, practiceLevel, streakData, profileData, remainingPractices]);
 
   const trendData = useMemo(() => {
-    const days = selectedTimeRange === "month" ? Array.from({ length: 10 }).map((_, i) => `D${i + 1}`) : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const base = stats.averageScore || 5;
-    return days.map((day, idx) => ({ day, score: Math.max(1, Math.min(10, Number((base + ((idx % 3) - 1) * 0.6).toFixed(1)))) }));
-  }, [selectedTimeRange, stats.averageScore]);
+    const practiceKey = practiceType.includes("_practice") ? practiceType : `${practiceType}_practice`;
+    const practiceEntry = dashboardApiData?.[practiceKey];
+    const rawTrend = practiceEntry?.trend || [];
+    const filtered = rawTrend.filter((t) => (t.level || "").toLowerCase() === practiceLevel.toLowerCase());
+    const points = (filtered.length ? filtered : rawTrend).map((t, idx) => ({
+      day: t.end_time ? t.end_time.split(" ")[0] : `#${idx + 1}`,
+      score: Number(t.score) || 0,
+    }));
+
+    const limit = selectedTimeRange === "all" ? points.length : selectedTimeRange === "month" ? 30 : 7;
+    const sliced = points.slice(-limit);
+
+    // Fallback if no data
+    if (!sliced.length) {
+      const base = stats.averageScore || 0;
+      return Array.from({ length: limit || 7 }).map((_, i) => ({
+        day: `#${i + 1}`,
+        score: base,
+      }));
+    }
+
+    return sliced;
+  }, [dashboardApiData, practiceLevel, practiceType, selectedTimeRange, stats.averageScore]);
 
   const levelLabel = `${practiceLevel.charAt(0).toUpperCase()}${practiceLevel.slice(1)}`;
 
@@ -153,8 +172,8 @@ const PracticeDashboard = ({
           <div className="xl:col-span-2 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs text-muted-foreground">Total Attempts</p><p className="text-2xl font-bold text-foreground">{stats.totalAttempts}</p></div>
-              <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs text-muted-foreground">Average Score</p><p className="text-2xl font-bold text-foreground">{stats.averageScore.toFixed(1)}/10</p></div>
-              <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs text-muted-foreground">Best Score</p><p className="text-2xl font-bold text-foreground">{stats.bestScore.toFixed(1)}/10</p></div>
+              <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs text-muted-foreground">Average Score</p><p className="text-2xl font-bold text-foreground">{stats.averageScore ? `${stats.averageScore.toFixed(1)}/10` : "—"}</p></div>
+              <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs text-muted-foreground">Best Score</p><p className="text-2xl font-bold text-foreground">{stats.bestScore ? `${stats.bestScore.toFixed(1)}/10` : "—"}</p></div>
               <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs text-muted-foreground">Current Streak</p><p className="text-2xl font-bold text-foreground">{stats.currentStreak}</p></div>
             </div>
 
@@ -175,17 +194,21 @@ const PracticeDashboard = ({
                   ))}
                 </div>
               </div>
-              <div className="grid grid-cols-7 gap-2 items-end h-40">
-                {trendData.map((point, idx) => (
-                  <div key={idx} className="flex flex-col items-center gap-2">
-                    <div className="text-[10px] text-muted-foreground">{point.score}</div>
-                    <div className="w-full max-w-[28px] rounded-md bg-primary/20 relative h-28 overflow-hidden">
-                      <div className="absolute bottom-0 left-0 right-0 bg-primary rounded-md" style={{ height: `${point.score * 10}%` }} />
+              {trendData.length ? (
+                <div className="grid grid-cols-7 gap-2 items-end h-40">
+                  {trendData.map((point, idx) => (
+                    <div key={idx} className="flex flex-col items-center gap-2">
+                      <div className="text-[10px] text-muted-foreground">{point.score}</div>
+                      <div className="w-full max-w-[28px] rounded-md bg-primary/20 relative h-28 overflow-hidden">
+                        <div className="absolute bottom-0 left-0 right-0 bg-primary rounded-md" style={{ height: `${Math.min(100, point.score * 10)}%` }} />
+                      </div>
+                      <div className="text-[10px] text-muted-foreground truncate max-w-[36px]">{point.day}</div>
                     </div>
-                    <div className="text-[10px] text-muted-foreground">{point.day}</div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">No practice history yet.</p>
+              )}
             </div>
           </div>
 
@@ -221,14 +244,14 @@ const PracticeDashboard = ({
           <div className="rounded-xl border border-border bg-card p-4">
             <h3 className="text-sm font-semibold text-foreground mb-3">Speaking Quality</h3>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground">Fluency</span><span className="font-medium text-foreground">{Math.min(10, stats.averageScore + 0.6).toFixed(1)}/10</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Clarity</span><span className="font-medium text-foreground">{Math.min(10, stats.averageScore + 0.3).toFixed(1)}/10</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Confidence</span><span className="font-medium text-foreground">{Math.min(10, stats.averageScore + 0.8).toFixed(1)}/10</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Fluency</span><span className="font-medium text-foreground">{stats.averageScore ? `${stats.averageScore.toFixed(1)}/10` : "—"}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Clarity</span><span className="font-medium text-foreground">{stats.averageScore ? `${stats.averageScore.toFixed(1)}/10` : "—"}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Confidence</span><span className="font-medium text-foreground">{stats.averageScore ? `${stats.averageScore.toFixed(1)}/10` : "—"}</span></div>
             </div>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <h3 className="text-sm font-semibold text-foreground mb-3">Consistency</h3>
-            <p className="text-3xl font-bold text-foreground">{stats.practicesThisWeek}</p>
+            <p className="text-3xl font-bold text-foreground">{stats.totalAttempts}</p>
             <p className="text-xs text-muted-foreground mt-1">sessions tracked</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">

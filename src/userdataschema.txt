@@ -1,0 +1,314 @@
+{
+  "college_email": {
+    "S": "23691a2828@mits.ac.in"
+  },
+  "academic_info": {
+    "M": {
+      "branch": {
+        "S": "CST"
+      },
+      "college_name": {
+        "S": "MITS University"
+      },
+      "program": {
+        "S": "B.Tech"
+      },
+      "section": {
+        "S": "A"
+      },
+      "semester": {
+        "S": "1"
+      },
+      "year": {
+        "S": "1"
+      }
+    }
+  },
+  "active_dates": {
+    "L": [
+      {
+        "S": "2026-03-18"
+      }
+    ]
+  },
+  "college_name": {
+    "S": "MITS University"
+  },
+  "CommunicationPractice_Attempts": {
+    "M": {
+      "jam_practice": {
+        "M": {
+          "basic": {
+            "N": "1"
+          }
+        }
+      }
+    }
+  },
+  "CommunicationPractice_AvgScores": {
+    "M": {
+      "jam_practice": {
+        "M": {
+          "basic": {
+            "N": "6.5"
+          }
+        }
+      }
+    }
+  },
+  "CommunicationTest_Attempts": {
+    "M": {
+      "situation_test": {
+        "M": {
+          "intermediate": {
+            "N": "1"
+          }
+        }
+      }
+    }
+  },
+  "CommunicationTest_AvgScores": {
+    "M": {
+      "situation_test": {
+        "M": {
+          "intermediate": {
+            "N": "6.5"
+          }
+        }
+      }
+    }
+  },
+  "current_streak": {
+    "N": "1"
+  },
+  "is_registered": {
+    "BOOL": true
+  },
+  "JAMAgent-Practice-Id": {
+    "M": {
+      "jam_practice-basic-2174887": {
+        "M": {
+          "basic": {
+            "M": {
+              "ai_feedback": {
+                "S": "ASSESSMENT REPORT\nTOPIC: A situation where patience helped me\n\nPERFORMANCE SUMMARY:\nYour response demonstrated a clear understanding of the importance of patience in achieving success and maintaining professional relationships. However, there were some grammatical errors and the delivery could have been more fluent.\n\nDETAILED EVALUATION:\n- JAM Score: 6.5 / 10.0\n- Grammar & Language: Good — Several minor errors but generally clear communication.\n- Vocabulary & Expression: Good — Adequate word choice and variety.\n- Content Relevance: Good — Relevant content with adequate development.\n- Fluency & Delivery: Average — Adequate pace with noticeable breaks.\n- Structure & Organization: Good — Logical flow and coherence.\n- Time Utilization: Good — Effective use of 60-second window.\n\nPROFESSIONAL DEVELOPMENT AREAS:\n1. Improve grammatical accuracy to enhance clarity and professionalism.\n2. Practice speaking more fluently to reduce hesitations and improve delivery.\n3. Focus on maintaining a consistent pace throughout the response.\n\nPLACEMENT READINESS: Needs Improvement"
+              },
+              "end_time": {
+                "S": "2026-03-18 00:21:12"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-18 00:19:55"
+          }
+        }
+      }
+    }
+  },
+  "last_active_date": {
+    "S": "2026-03-18"
+  },
+  "longest_streak": {
+    "N": "1"
+  },
+  "personal_info": {
+    "M": {
+      "age": {
+        "S": "20"
+      },
+      "created_at": {
+        "S": "2026-03-17 23:47:15"
+      },
+      "date_of_birth": {
+        "S": "2005-05-08"
+      },
+      "full_name": {
+        "S": "R Balaji"
+      },
+      "gender": {
+        "S": "Male"
+      },
+      "last_login": {
+        "S": "2026-03-18 18:52:48"
+      },
+      "password_hash": {
+        "S": "a1cf1a7dc57e12c08e39862eca6e7df5:045f1d2a5b308a68fd676ba176c30bfd171f29f08ccfa4c356d5ff2be0b4388a"
+      },
+      "profile_updated_at": {
+        "S": "2026-03-17 23:54:21"
+      },
+      "unique_id": {
+        "S": "skillroute-mits-23691a2828"
+      }
+    }
+  },
+  "SituationSpeak-Test-Id": {
+    "M": {
+      "situation-test-Intermediate-1471954": {
+        "M": {
+          "intermediate": {
+            "M": {
+              "ai_feedback": {
+                "S": "SITUATIONAL ASSESSMENT REPORT\nSCENARIO: You are part of a technical team where deadlines are tight and expectations are high. How will you manage pressure and maintain quality?\n\nRESPONSE ANALYSIS:\nThe response demonstrates a basic understanding of managing pressure and maintaining quality in a high-stakes environment. The User suggests prioritizing tasks, seeking help, and leveraging teamwork to manage the workload effectively.\n\nDETAILED EVALUATION:\n- Situational Score: 6.5 / 10.0\n- Problem Analysis: Competent — The User identifies the need to prioritize tasks and seek help, which is a basic understanding of the situation.\n- Solution Quality: Competent — The proposed solutions involve prioritizing tasks, seeking help, and leveraging teamwork, which are relevant but lack depth.\n- Professional Reasoning: Competent — The reasoning is logical but basic, with some gaps in detail and strategic thinking.\n- Communication Clarity: Competent — The response is clear but lacks structure and depth.\n- Practical Application: Competent — The response is practical but could benefit from more specific examples and implementation steps.\n- Time Management: Competent — The response shows an understanding of managing time but could be more detailed.\n\nINTERVIEW READINESS ASSESSMENT:\n1. Specific strength: The User demonstrates an understanding of teamwork and seeking help, which are valuable skills in a professional setting.\n2. Critical skill gap: The response lacks depth in problem analysis and solution development, indicating a need for more strategic thinking and detailed planning.\n3. Professional development priority: The User should focus on developing a more structured approach to problem-solving and enhancing their ability to provide detailed, actionable solutions.\n\nPLACEMENT EVALUATION: Competent (Acceptable with development)"
+              },
+              "end_time": {
+                "S": "2026-03-18 00:42:04"
+              },
+              "score": {
+                "N": "6.5"
+              }
+            }
+          },
+          "start_time": {
+            "S": "2026-03-18 00:40:21"
+          }
+        }
+      }
+    }
+  },
+  "usage_info": {
+    "M": {
+      "advanced_interview_practices": {
+        "M": {
+          "followup_practice": {
+            "N": "0"
+          },
+          "logical_practice": {
+            "N": "0"
+          },
+          "project_reviews_practice": {
+            "N": "0"
+          },
+          "resume_based_practice": {
+            "N": "0"
+          },
+          "role_based_practice": {
+            "N": "0"
+          },
+          "stress_practice": {
+            "N": "0"
+          },
+          "technical_practice": {
+            "N": "0"
+          }
+        }
+      },
+      "advanced_interview_tests": {
+        "M": {
+          "followup_test": {
+            "N": "0"
+          },
+          "logical_test": {
+            "N": "0"
+          },
+          "project_reviews_test": {
+            "N": "0"
+          },
+          "resume_based_test": {
+            "N": "0"
+          },
+          "role_based_test": {
+            "N": "0"
+          },
+          "stress_test": {
+            "N": "0"
+          },
+          "technical_test": {
+            "N": "0"
+          }
+        }
+      },
+      "basic_interview_practices": {
+        "M": {
+          "certifications_exploration_practice": {
+            "N": "2"
+          },
+          "future_career_planning_practice": {
+            "N": "2"
+          },
+          "hobbies_interests_practice": {
+            "N": "2"
+          },
+          "programming_knowledge_practice": {
+            "N": "2"
+          },
+          "project_discussion_practice": {
+            "N": "2"
+          },
+          "self_introduction_practice": {
+            "N": "2"
+          },
+          "worked_domain_practice": {
+            "N": "2"
+          }
+        }
+      },
+      "basic_interview_tests": {
+        "M": {
+          "certifications_exploration_test": {
+            "N": "2"
+          },
+          "future_career_planning_test": {
+            "N": "2"
+          },
+          "hobbies_interests_test": {
+            "N": "2"
+          },
+          "programming_knowledge_test": {
+            "N": "2"
+          },
+          "project_discussion_test": {
+            "N": "2"
+          },
+          "self_introduction_test": {
+            "N": "2"
+          },
+          "worked_domain_test": {
+            "N": "2"
+          }
+        }
+      },
+      "communication_practices": {
+        "M": {
+          "image_speak_practice": {
+            "N": "2"
+          },
+          "jam_practice": {
+            "N": "1"
+          },
+          "listen_practice": {
+            "N": "2"
+          },
+          "pronu_practice": {
+            "N": "2"
+          },
+          "situation_practice": {
+            "N": "2"
+          }
+        }
+      },
+      "communication_tests": {
+        "M": {
+          "image_speak": {
+            "N": "2"
+          },
+          "jam_test": {
+            "N": "2"
+          },
+          "listen_test": {
+            "N": "2"
+          },
+          "pronu_test": {
+            "N": "2"
+          },
+          "situation_test": {
+            "N": "1"
+          }
+        }
+      }
+    }
+  }
+}

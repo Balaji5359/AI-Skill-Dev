@@ -25,11 +25,24 @@ function Header() {
 
                 if (profile?.statusCode === 200) {
                     setProfileData(profile);
-                    setUserType(profile?.user_type === 'premium' && profile?.premium_status === 'active' ? 'premium' : 'free');
-                }
-
-                if (streak?.statusCode === 200) {
+                    const computedUserType = profile?.user_type === 'premium' && profile?.premium_status === 'active' ? 'premium' : 'free';
+                    setUserType(computedUserType);
+                    localStorage.setItem('user_type', computedUserType);
+                    const profStreak = profile.streak || {};
+                    const streakObj = {
+                        current_streak: profStreak.current_streak || streak?.current_streak || 0,
+                        longest_streak: profStreak.longest_streak || streak?.longest_streak || 0,
+                        active_dates: profStreak.active_dates || streak?.active_dates || []
+                    };
+                    setStreakData(streakObj);
+                    localStorage.setItem('streak_current', String(streakObj.current_streak));
+                    localStorage.setItem('streak_longest', String(streakObj.longest_streak || 0));
+                    localStorage.setItem('active_dates', JSON.stringify(streakObj.active_dates || []));
+                } else if (streak?.statusCode === 200) {
                     setStreakData(streak);
+                    localStorage.setItem('streak_current', String(streak.current_streak || 0));
+                    localStorage.setItem('streak_longest', String(streak.longest_streak || 0));
+                    localStorage.setItem('active_dates', JSON.stringify(streak.active_dates || []));
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -97,14 +110,18 @@ function Header() {
                             Dashboard
                         </button>
                         {mobileMenuOpen && (
-                            <button
-                                onClick={() => {
-                                    localStorage.removeItem('email');
-                                    navigate('/signup');
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="btn-logout mobile-only"
-                            >
+                        <button
+                            onClick={() => {
+                                localStorage.removeItem('email');
+                                localStorage.removeItem('user_type');
+                                localStorage.removeItem('streak_current');
+                                localStorage.removeItem('streak_longest');
+                                localStorage.removeItem('active_dates');
+                                navigate('/signup');
+                                setMobileMenuOpen(false);
+                            }}
+                            className="btn-logout mobile-only"
+                        >
                                 Logout
                             </button>
                         )}
@@ -120,6 +137,10 @@ function Header() {
                         className="btn-logout"
                         onClick={() => {
                             localStorage.removeItem('email');
+                            localStorage.removeItem('user_type');
+                            localStorage.removeItem('streak_current');
+                            localStorage.removeItem('streak_longest');
+                            localStorage.removeItem('active_dates');
                             navigate('/signup');
                         }}
                     >

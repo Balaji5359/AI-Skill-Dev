@@ -97,6 +97,8 @@ function Dashboard() {
       listening: "/student-dashboard/listening",
       situational: "/student-dashboard/situationspeak",
       "image-speak": "/student-dashboard/imagespeak",
+      "interview-basic": "/student-dashboard/interview-basic",
+      "interview-advanced": "/student-dashboard/interview-advanced",
     };
     navigate(routes[activity.id]);
   };
@@ -153,8 +155,12 @@ function Dashboard() {
               <div key={activity.id} className="rounded-2xl border border-border bg-card p-5">
                 <h3 className="font-semibold text-foreground mb-2">{activity.title}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{activity.description}</p>
-                <button onClick={() => navigate("/test")} className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-accent text-accent-foreground text-sm font-semibold hover:opacity-90">
-                  View Interview Tests
+                <button
+                  onClick={() => handleAnalyticsClick(activity)}
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90"
+                >
+                  Open Dashboard
+                  {userType !== "premium" && <Lock className="w-4 h-4 ml-2" />}
                 </button>
               </div>
             ))}

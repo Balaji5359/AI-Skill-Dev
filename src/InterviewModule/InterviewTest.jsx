@@ -34,7 +34,7 @@ const buildInstructions = () => ([
             <div className="space-y-3">
                 <p><strong>Content quality</strong> and relevance are evaluated.</p>
                 <p><strong>Communication skills</strong> and clarity are scored.</p>
-                <p><strong>Tara AI</strong> provides detailed scoring and certificates.</p>
+                <p><strong>Tara AI</strong> provides detailed scoring and report.</p>
             </div>
         ),
     },
@@ -62,14 +62,51 @@ function InterviewTest() {
             return;
         }
 
-        profileAPI.get(storedEmail)
-            .then((profile) => {
-                if (profile?.statusCode === 200) {
-                    setInterviews(profile.basic_interviews_tests || {});
+        const loadInterviewData = async () => {
+            try {
+                // Try to load usage data first, then fall back to full profile
+                const [usageData, profile] = await Promise.all([
+                    profileAPI.get(storedEmail, 'usage', 'interview_tests').catch(() => ({ statusCode: 400 })),
+                    profileAPI.get(storedEmail).catch(() => ({ statusCode: 400 }))
+                ]);
+
+                // Set interview counts - try usage data first, then fallback to profile data
+                if (usageData?.statusCode === 200) {
+                    setInterviews(usageData);
+                } else if (profile?.statusCode === 200 && profile.basic_interviews_tests) {
+                    // Fallback to old structure
+                    setInterviews(profile.basic_interviews_tests);
+                } else {
+                    // Default interview counts if all fails
+                    setInterviews({
+                        self_introduction_test: 0,
+                        programming_knowledge_test: 0,
+                        worked_domain_test: 0,
+                        project_discussion_test: 0,
+                        future_career_planning_test: 0,
+                        hobbies_interests_test: 0,
+                        internship_review_test: 0
+                    });
                 }
+                
+            } catch (error) {
+                console.error('Error loading interview test data:', error);
+                // Set default values on error
+                setInterviews({
+                    self_introduction_test: 0,
+                    programming_knowledge_test: 0,
+                    worked_domain_test: 0,
+                    project_discussion_test: 0,
+                    future_career_planning_test: 0,
+                    hobbies_interests_test: 0,
+                    internship_review_test: 0
+                });
+            } finally {
                 setLoading(false);
-            })
-            .catch(() => setLoading(false));
+            }
+        };
+
+        loadInterviewData();
     }, []);
 
     const basicInterviews = [
