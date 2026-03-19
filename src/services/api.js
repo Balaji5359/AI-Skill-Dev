@@ -450,6 +450,14 @@ export const activityUsageAPI = {
       console.error('Activity usage API error:', error);
       return { statusCode: 500, error: error.message };
     }
+  },
+  getRemaining: async (college_email, mode, level, interview_key) => {
+    try {
+      return await apiCall(VITE_USAGE_API, 'get_remaining', { college_email, mode, level, interview_key });
+    } catch (error) {
+      console.error('Activity usage API error:', error);
+      return { statusCode: 500, error: error.message };
+    }
   }
 };
 

@@ -29,6 +29,7 @@ export default function PracticeSessionPopup({
         <div className="mb-4 rounded-xl border border-border bg-card px-4 py-3">
           <h2 className="font-heading text-lg md:text-xl font-bold text-foreground">{practiceTitle}</h2>
           <p className="text-xs text-muted-foreground">{`Level: ${actualPracticeLevel}`}</p>
+          <p className="text-[11px] text-muted-foreground break-all">Practice Id: {sessionId}</p>
         </div>
 
         <div className="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-4">

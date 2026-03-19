@@ -80,10 +80,14 @@ const PracticeDashboard = ({
     const avgScore = parseFloat(levelData.avgScore) || 0;
     let remainingPracticesFromProfile = remainingPractices;
     if (profileData?.practices) remainingPracticesFromProfile = profileData.practices[practiceTypeKey] || 0;
+    const bestScore = Math.max(
+      avgScore,
+      ...(practiceTypeData.trend || []).filter(t => (t.level || "").toLowerCase() === practiceLevel.toLowerCase()).map(t => Number(t.score) || 0)
+    );
     return {
       totalAttempts: attempts,
       averageScore: avgScore,
-      bestScore: Math.max(avgScore, attempts ? avgScore : 0),
+      bestScore: bestScore || avgScore,
       currentStreak: streakData.current_streak || 0,
       bestStreak: streakData.best_streak || 0,
       practicesThisWeek: attempts,
@@ -245,8 +249,8 @@ const PracticeDashboard = ({
             <h3 className="text-sm font-semibold text-foreground mb-3">Speaking Quality</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between"><span className="text-muted-foreground">Fluency</span><span className="font-medium text-foreground">{stats.averageScore ? `${stats.averageScore.toFixed(1)}/10` : "—"}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Clarity</span><span className="font-medium text-foreground">{stats.averageScore ? `${stats.averageScore.toFixed(1)}/10` : "—"}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Confidence</span><span className="font-medium text-foreground">{stats.averageScore ? `${stats.averageScore.toFixed(1)}/10` : "—"}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Clarity</span><span className="font-medium text-foreground">{stats.bestScore ? `${stats.bestScore.toFixed(1)}/10` : "—"}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Confidence</span><span className="font-medium text-foreground">{stats.bestScore ? `${stats.bestScore.toFixed(1)}/10` : "—"}</span></div>
             </div>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">

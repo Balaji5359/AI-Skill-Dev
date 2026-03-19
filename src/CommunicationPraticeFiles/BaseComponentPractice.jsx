@@ -144,9 +144,10 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
           setStreakData({ current_streak: cachedCurrent, best_streak: cachedBest });
         }
 
-        const [profile, streak] = await Promise.all([
+        const [profile, streak, usage] = await Promise.all([
           profileAPI.get(localUserEmail),
-          platformAPI.updateStreak(localUserEmail, true)
+          platformAPI.updateStreak(localUserEmail, true),
+          profileAPI.get(localUserEmail, "usage", "communication_practices", practiceType).catch(() => ({}))
         ]);
 
         const normalizeStreak = (src = {}) => ({
@@ -174,6 +175,10 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
           localStorage.setItem("streak_current", String(ns.current_streak));
           localStorage.setItem("streak_longest", String(ns.best_streak));
           localStorage.setItem("active_dates", JSON.stringify(ns.active_dates || []));
+        }
+
+        if (usage?.statusCode === 200 && usage[practiceType] !== undefined) {
+          setRemainingPractices(usage[practiceType]);
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -283,7 +288,7 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
   const decrementPracticeCount = async () => {
     try {
       const email = localStorage.getItem("email");
-      
+
       // Use the new activity usage API
       const response = await activityUsageAPI.decrement(email, "practice", "communication", practiceType);
       if (response.statusCode === 200) {
@@ -663,18 +668,22 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
     try {
       setIsLoading(true);
       setChatMessages([]);
-      const response = await fetch(import.meta.env.VITE_PRACTICE_AI_AGENT_API, {
+      const payload = { testType: practiceType, level: actualPracticeLevel, sessionId, email: userEmail, message: "hi" };
+      const response = await fetch(import.meta.env.VITE_COMM_PRACTICE_AGENT_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          body: { testType: practiceType, level: actualPracticeLevel, sessionId, email: userEmail, message: "hi" },
-        }),
+        body: JSON.stringify({ ...payload, body: payload }),
       });
-      const data = await response.json();
-      const bodyData = JSON.parse(data.body);
-      if (bodyData.aiResponse) {
-        setChatMessages([{ type: "ai", content: bodyData.aiResponse, timestamp: Date.now() }]);
-      }
+      const text = await response.text();
+      const parsed = text ? (() => { try { return JSON.parse(text); } catch { return {}; } })() : {};
+      const bodyData =
+        typeof parsed?.body === "string"
+          ? (() => { try { return JSON.parse(parsed.body); } catch { return {}; } })()
+          : parsed?.body && typeof parsed.body === "object"
+            ? parsed.body
+            : parsed;
+      const aiResponse = bodyData?.aiResponse || bodyData?.response || bodyData?.message;
+      if (aiResponse) setChatMessages([{ type: "ai", content: aiResponse, timestamp: Date.now() }]);
     } catch (error) {
       console.error("Error initializing AI agent:", error);
       setChatMessages([{ type: "ai", content: "Error connecting to AI agent. Please try again.", timestamp: Date.now() }]);
@@ -766,18 +775,22 @@ const BaseComponentPractice = ({ practiceType, practiceTitle, practiceDescriptio
     setChatMessages((prev) => [...prev, { type: "user", content: userMessage, timestamp: Date.now() }]);
     try {
       setIsLoading(true);
+      const payload = { testType: practiceType, level: actualPracticeLevel, sessionId, email: userEmail, message: userMessage };
       const response = await fetch(import.meta.env.VITE_COMM_PRACTICE_AGENT_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          body: { testType: practiceType, level: actualPracticeLevel, sessionId, email: userEmail, message: userMessage },
-        }),
+        body: JSON.stringify({ ...payload, body: payload }),
       });
-      const data = await response.json();
-      const bodyData = JSON.parse(data.body);
-      if (bodyData.aiResponse) {
-        setChatMessages((prev) => [...prev, { type: "ai", content: bodyData.aiResponse, timestamp: Date.now() }]);
-      }
+      const text = await response.text();
+      const parsed = text ? (() => { try { return JSON.parse(text); } catch { return {}; } })() : {};
+      const bodyData =
+        typeof parsed?.body === "string"
+          ? (() => { try { return JSON.parse(parsed.body); } catch { return {}; } })()
+          : parsed?.body && typeof parsed.body === "object"
+            ? parsed.body
+            : parsed;
+      const aiResponse = bodyData?.aiResponse || bodyData?.response || bodyData?.message;
+      if (aiResponse) setChatMessages((prev) => [...prev, { type: "ai", content: aiResponse, timestamp: Date.now() }]);
     } catch (error) {
       console.error("Error sending message:", error);
       setChatMessages((prev) => [...prev, { type: "ai", content: "Error communicating with AI. Please try again.", timestamp: Date.now() }]);
