@@ -230,7 +230,9 @@ export default function CommunicationTestBase({
       const profileStreak = profile?.streak || profile?.user_info?.streak;
 
       if (profile?.statusCode === 200) {
-        const isPremium = profile.user_type === "premium" && profile.premium_status === "active";
+        const userType = profile?.user_info?.user_type || profile?.user_type || 'free';
+        const paymentDetails = profile?.user_info?.payment_details || profile?.payment_details || {};
+        const isPremium = userType === 'premium' && paymentDetails?.status === 'success';
         setUserType(isPremium ? "premium" : "free");
         localStorage.setItem("user_type", isPremium ? "premium" : "free");
       }
@@ -392,14 +394,25 @@ export default function CommunicationTestBase({
             size: audioBlob.size,
             base64Length: base64Audio.length
           });
-          await testAPI.uploadRecording(base64Audio, sessionId);
-          logTestFlow("audio-upload:queued", { sessionId, mode: "short" });
-          const success = await pollTranscript(sessionId, 0, SHORT_TRANSCRIPT_MAX_ATTEMPTS);
-          if (!success) {
-            setChatMessages((prev) => [
-              ...prev,
-              { type: "ai", content: "Could not process audio. Please try again.", timestamp: Date.now() },
-            ]);
+          
+          // Use CommunicationTestService for short recording via testAPI
+          const response = await testAPI.uploadRecording({
+            data: base64Audio,
+            sessionId: sessionId
+          });
+          
+          logTestFlow("audio-upload:queued", { sessionId, mode: "short", response });
+          
+          if (response.statusCode === 200) {
+            const success = await pollTranscript(sessionId, 0, SHORT_TRANSCRIPT_MAX_ATTEMPTS);
+            if (!success) {
+              setChatMessages((prev) => [
+                ...prev,
+                { type: "ai", content: "Could not process audio. Please try again.", timestamp: Date.now() },
+              ]);
+            }
+          } else {
+            throw new Error(response.error || "Upload failed");
           }
         } catch (error) {
           console.error("Direct audio upload failed:", error);
@@ -478,14 +491,25 @@ export default function CommunicationTestBase({
             size: audioBlob.size,
             base64Length: base64Audio.length
           });
-          await testAPI.uploadRecording(base64Audio, sessionId);
-          logTestFlow("audio-upload:queued", { sessionId, mode: "long" });
-          const success = await pollTranscript(sessionId, 0, LONG_TRANSCRIPT_MAX_ATTEMPTS);
-          if (!success) {
-            setChatMessages((prev) => [
-              ...prev,
-              { type: "ai", content: "Audio is still processing. Please wait a bit and try again.", timestamp: Date.now() },
-            ]);
+          
+          // Use CommunicationTestService for long recording (JAM and Situation)
+          const response = await testAPI.uploadRecording({
+            data: base64Audio,
+            sessionId: sessionId
+          });
+          
+          logTestFlow("audio-upload:queued", { sessionId, mode: "long", response });
+          
+          if (response.statusCode === 200) {
+            const success = await pollTranscript(sessionId, 0, LONG_TRANSCRIPT_MAX_ATTEMPTS);
+            if (!success) {
+              setChatMessages((prev) => [
+                ...prev,
+                { type: "ai", content: "Audio is still processing. Please wait a bit and try again.", timestamp: Date.now() },
+              ]);
+            }
+          } else {
+            throw new Error(response.error || "Upload failed");
           }
         } catch (error) {
           console.error("Long audio upload failed:", error);
