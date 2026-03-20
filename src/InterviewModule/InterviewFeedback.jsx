@@ -18,6 +18,7 @@ const InterviewFeedback = () => {
         improvements = [],
         recommendations = [],
         answers = [],
+        conversationHistory = [],
         terminated = false,
     } = location.state || {};
 
@@ -72,6 +73,16 @@ const InterviewFeedback = () => {
     ];
 
     const sections = report.split("\n\n").filter(Boolean);
+    const resolvedConversation = conversationHistory.length
+        ? conversationHistory
+        : answers.flatMap((item) => {
+            const transcript = item?.answer || item?.transcript;
+            const aiResponse = item?.aiResponse;
+            const messages = [];
+            if (transcript) messages.push({ role: "user", content: transcript });
+            if (aiResponse) messages.push({ role: "ai", content: aiResponse });
+            return messages;
+        });
 
     return (
         <div className="interview-theme min-h-screen bg-background">
@@ -186,20 +197,19 @@ const InterviewFeedback = () => {
                     </div>
                 )}
 
-                {!!answers.length && (
+                {!!resolvedConversation.length && (
                     <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-6 space-y-4">
                         <h4 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
                             <MessageSquare className="w-5 h-5 text-accent" />
-                            Interview Transcript
+                            Interview Conversation
                         </h4>
                         <div className="space-y-4">
-                            {answers.map((item) => (
-                                <div key={item.sessionId || item.questionNumber} className="rounded-xl border border-border p-4">
+                            {resolvedConversation.map((item, index) => (
+                                <div key={`${item.role}-${index}`} className="rounded-xl border border-border p-4">
                                     <p className="text-xs font-semibold text-muted-foreground mb-2">
-                                        Question {item.questionNumber}
+                                        {item.role === "ai" ? "Tara AI" : "You"}
                                     </p>
-                                    <p className="text-sm font-medium text-foreground mb-2">{item.question}</p>
-                                    <p className="text-sm text-muted-foreground whitespace-pre-line">{item.answer}</p>
+                                    <p className="text-sm text-muted-foreground whitespace-pre-line">{item.content}</p>
                                 </div>
                             ))}
                         </div>

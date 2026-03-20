@@ -28,6 +28,36 @@ const TEST_CODE_MAP = {
   SITUATIONSPEAK: "SITUATIONSPEAK",
 };
 
+const MEDIA_RICH_TEST_TYPES = new Set(["JAM", "SITUATIONSPEAK"]);
+
+const normalizeTestType = (testType) => TEST_CODE_MAP[testType] || testType;
+
+const isMediaRichTestType = (testType) => MEDIA_RICH_TEST_TYPES.has(normalizeTestType(testType));
+
+const unwrapLambdaPayload = (value) => {
+  let current = value;
+
+  for (let i = 0; i < 4; i += 1) {
+    if (typeof current === "string") {
+      try {
+        current = JSON.parse(current);
+        continue;
+      } catch {
+        return {};
+      }
+    }
+
+    if (current && typeof current === "object" && "body" in current) {
+      current = current.body;
+      continue;
+    }
+
+    break;
+  }
+
+  return current && typeof current === "object" ? current : {};
+};
+
 const apiCall = async (url, action, data = {}) => {
   if (!url) {
     console.error("API url missing for action", action);
@@ -308,12 +338,16 @@ export const profileAPI = {
 
 export const testAPI = {
   getIds: (college_email, test_type) => {
-    const mapped = TEST_CODE_MAP[test_type] || test_type;
+    const mapped = normalizeTestType(test_type);
     return apiCall(VITE_COMM_RESULTS_API, 'get_test_ids', { college_email, test_type: mapped });
   },
 
   getData: (college_email, test_type, sessionId, role = 'student') => {
-    const mapped = TEST_CODE_MAP[test_type] || test_type;
+    const mapped = normalizeTestType(test_type);
+    if (isMediaRichTestType(mapped)) {
+      return apiCall(VITE_COMM_TEST_API, 'get_test_data', { college_email, test_type: mapped, sessionId, role });
+    }
+
     return apiCall(VITE_COMM_RESULTS_API, 'get_test_data', { college_email, test_type: mapped, sessionId, role });
   },
 
@@ -333,7 +367,21 @@ export const testAPI = {
   },
 
   getTranscript: (sessionId) =>
-    apiCall(VITE_COMM_TEST_API, 'get_transcript', { sessionId })
+    apiCall(VITE_COMM_TEST_API, 'get_transcript', { sessionId }),
+
+  getTranscriptAnalysis: async (sessionId) => {
+    const result = await apiCall(VITE_COMM_TEST_API, 'get_transcript_analysis', { sessionId });
+
+    if (typeof result?.body === 'string') {
+      try {
+        return { ...result, ...JSON.parse(result.body) };
+      } catch {
+        return result;
+      }
+    }
+
+    return result;
+  }
 };
 
 export const speechToTextAPI = {
@@ -407,30 +455,18 @@ export const interviewAPI = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        body: {
-          interviewType,
-          level,
-          mode,
-          sessionId,
-          email,
-          message
-        }
+        interviewType,
+        level,
+        mode,
+        sessionId,
+        email,
+        message
       })
     });
 
     const result = await response.json();
-
-    // Response comes wrapped in body as JSON string
-    if (typeof result?.body === 'string') {
-      try {
-        const parsedBody = JSON.parse(result.body);
-        return { statusCode: response.status, ...parsedBody };
-      } catch {
-        return { statusCode: response.status, body: result.body };
-      }
-    }
-
-    return { statusCode: response.status, ...result };
+    const payload = unwrapLambdaPayload(result);
+    return { statusCode: response.status, ...payload };
   }
 };
 
@@ -439,7 +475,31 @@ export const interviewResultsAPI = {
     apiCall(VITE_INTERVIEW_RESULTS_API, 'submit_interview_result', resultData),
 
   getDashboard: (college_email, mode = 'all') =>
-    apiCall(VITE_INTERVIEW_RESULTS_API, 'get_interview_results', { college_email, mode })
+    apiCall(VITE_INTERVIEW_RESULTS_API, 'get_interview_results', { college_email, mode }),
+
+  getIds: async (college_email, interview_key, mode = 'practice') => {
+    const result = await apiCall(VITE_INTERVIEW_RESULTS_API, 'get_interview_ids', { college_email, interview_key, mode });
+    if (typeof result?.body === 'string') {
+      try {
+        return { ...result, ...JSON.parse(result.body) };
+      } catch {
+        return result;
+      }
+    }
+    return result;
+  },
+
+  getData: async (college_email, interview_key, sessionId, mode = 'practice') => {
+    const result = await apiCall(VITE_INTERVIEW_RESULTS_API, 'get_interview_data', { college_email, interview_key, sessionId, mode });
+    if (typeof result?.body === 'string') {
+      try {
+        return { ...result, ...JSON.parse(result.body) };
+      } catch {
+        return result;
+      }
+    }
+    return result;
+  }
 };
 
 export const activityUsageAPI = {

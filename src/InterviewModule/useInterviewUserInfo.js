@@ -13,6 +13,20 @@ const useInterviewUserInfo = () => {
     const [profileData, setProfileData] = useState(null);
 
     useEffect(() => {
+        const cachedUserType = localStorage.getItem("user_type");
+        const cachedCurrent = Number(localStorage.getItem("streak_current") || 0);
+        const cachedLongest = Number(localStorage.getItem("streak_longest") || 0);
+
+        if (cachedUserType) {
+            setUserType(cachedUserType === "premium" ? "premium" : "free");
+        }
+        if (cachedCurrent || cachedLongest) {
+            setStreakData({
+                current_streak: cachedCurrent,
+                longest_streak: cachedLongest,
+            });
+        }
+
         const storedEmail = localStorage.getItem("email");
         if (!storedEmail) return;
 
@@ -25,11 +39,15 @@ const useInterviewUserInfo = () => {
 
                 if (profile?.statusCode === 200) {
                     setProfileData(profile);
-                    setUserType(getUserType(profile));
+                    const resolvedUserType = getUserType(profile);
+                    setUserType(resolvedUserType);
+                    localStorage.setItem("user_type", resolvedUserType);
                 }
 
                 if (streak?.statusCode === 200) {
                     setStreakData(streak);
+                    localStorage.setItem("streak_current", String(streak.current_streak || 0));
+                    localStorage.setItem("streak_longest", String(streak.longest_streak || 0));
                 }
             } catch (error) {
                 console.error("Error fetching interview user data:", error);

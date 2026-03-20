@@ -21,6 +21,12 @@ function Interview() {
     const { userType, streakData, email, isPremium } = useInterviewUserInfo();
     const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+    const handleLogout = () => {
+        localStorage.clear();
+        sessionStorage.clear();
+        navigate("/signup");
+    };
+
     return (
         <div className="interview-theme min-h-screen" style={{ background: "var(--gradient-hero)" }}>
             <div className="sticky top-0 z-40 glass border-b border-border">
@@ -46,6 +52,12 @@ function Interview() {
                     </div>
                     <div className="ml-auto flex items-center gap-2">
                         <span className="interview-badge primary hidden md:inline">Interview Hub</span>
+                        <button
+                            onClick={handleLogout}
+                            className="hidden sm:inline-flex px-3 py-2 rounded-lg bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors"
+                        >
+                            Logout
+                        </button>
                         <div className="relative group hidden sm:block">
                             <button className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
                                 <Menu className="w-4 h-4" />
@@ -86,6 +98,15 @@ function Interview() {
                                 className="px-3 py-2 rounded-lg bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors text-left"
                             >
                                 Dashboard
+                            </button>
+                            <button
+                                onClick={() => {
+                                    handleLogout();
+                                    setShowMobileMenu(false);
+                                }}
+                                className="px-3 py-2 rounded-lg bg-muted text-foreground text-sm font-medium hover:bg-muted/80 transition-colors text-left"
+                            >
+                                Logout
                             </button>
                             <div className="border-t border-border pt-2 mt-2 space-y-1">
                                 <div className="text-xs text-muted-foreground">Streak: {streakData.current_streak || 0}</div>

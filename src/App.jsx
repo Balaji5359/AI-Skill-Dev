@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 
 
 // Basic Components
-import Navigation from "./basic_components/Navigation.jsx";
 import LoadingSpinner from "./basic_components/LoadingSpinner.jsx";
 import ScrollToTop from "./basic_components/ScrollToTop.jsx";
 import Layout from "./components/Layout.jsx";

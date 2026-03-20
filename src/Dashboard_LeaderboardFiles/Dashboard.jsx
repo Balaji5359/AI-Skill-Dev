@@ -15,7 +15,7 @@ function Dashboard() {
 
   const interviewActivities = [
     { id: "interview-basic", title: "Basic Interview Skills", description: "Master fundamental interview communication skills" },
-    { id: "interview-advanced", title: "Advanced Interview Skills", description: "Advanced interview techniques and complex scenarios" },
+    { id: "interview-advanced", title: "Advanced Interview Skills", description: "Advanced interview techniques and complex scenarios", disabled: true },
   ];
 
   const activities = [
@@ -89,6 +89,9 @@ function Dashboard() {
   };
 
   const handleAnalyticsClick = (activity) => {
+    if (activity.disabled) {
+      return;
+    }
     if (userType !== "premium") {
       setShowPremiumModal(true);
       return;
@@ -99,8 +102,8 @@ function Dashboard() {
       listening: "/student-dashboard/listening",
       situational: "/student-dashboard/situationspeak",
       "image-speak": "/student-dashboard/imagespeak",
-      "interview-basic": "/student-dashboard/interview-basic",
-      "interview-advanced": "/student-dashboard/interview-advanced",
+      "interview-basic": "/student-dashboard/interview-basic#top",
+      "interview-advanced": "/student-dashboard/interview-advanced#top",
     };
     navigate(routes[activity.id]);
   };
@@ -159,10 +162,15 @@ function Dashboard() {
                 <p className="text-sm text-muted-foreground mb-4">{activity.description}</p>
                 <button
                   onClick={() => handleAnalyticsClick(activity)}
-                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90"
+                  disabled={activity.disabled}
+                  className={`inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold ${
+                    activity.disabled
+                      ? "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                      : "bg-primary text-primary-foreground hover:opacity-90"
+                  }`}
                 >
-                  Open Dashboard
-                  {userType !== "premium" && <Lock className="w-4 h-4 ml-2" />}
+                  {activity.disabled ? "Coming Soon" : "Open Dashboard"}
+                  {!activity.disabled && userType !== "premium" && <Lock className="w-4 h-4 ml-2" />}
                 </button>
               </div>
             ))}

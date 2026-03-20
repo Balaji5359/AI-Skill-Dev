@@ -228,6 +228,7 @@ function Practice() {
   const [showInstructionModal, setShowInstructionModal] = useState(false);
   const navigate = useNavigate();
   const practiceInstructions = buildPracticeInstructions();
+  const isPremiumUser = userType === 'premium';
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
@@ -395,7 +396,7 @@ function Practice() {
           <p style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '600px', margin: '0 auto' }}>
             Improve your communication skills through guided practice sessions with instant feedback.
           </p>
-          {userType !== 'premium' && (
+          {!isPremiumUser && (
             <div className="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
               <p className="text-sm text-amber-800">
                 <strong>Free Plan:</strong> Basic level only. Upgrade to Premium for Intermediate & Advanced levels.
@@ -483,26 +484,36 @@ function Practice() {
         <div className="practice-modal-overlay" onClick={() => setShowPremiumLockModal(false)}>
           <div className="practice-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
             <div className="practice-modal-header">
-              <h3 className="practice-modal-title">🔒 Premium Required</h3>
+              <h3 className="practice-modal-title">{isPremiumUser ? 'Daily Limit Reached' : 'Premium Required'}</h3>
               <button
                 onClick={() => setShowPremiumLockModal(false)}
                 className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
                 style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
               >
-                ×
+                X
               </button>
             </div>
             <div className="practice-modal-content">
-              <p style={{ fontSize: '0.95rem', marginBottom: '16px', textAlign: 'center' }}>
-                {userType === 'premium' 
-                  ? 'You\'ve used all your premium practice attempts for today. Come back tomorrow for more practices!' 
-                  : 'Upgrade to Premium to unlock Intermediate and Advanced levels, plus unlimited daily practices!'}
-              </p>
+              <div style={{ display: 'grid', gap: '12px', marginBottom: '16px', textAlign: 'center' }}>
+                <p style={{ fontSize: '0.98rem', margin: 0, color: 'hsl(var(--foreground))' }}>
+                  {isPremiumUser
+                    ? 'You have completed your premium practices for today. Your next set will be available tomorrow.'
+                    : 'Upgrade to Premium to unlock Intermediate and Advanced levels, plus unlimited daily practices!'}
+                </p>
+                <div style={{ padding: '14px 16px', borderRadius: '14px', background: 'hsl(var(--muted))', border: '1px solid hsl(var(--border))' }}>
+                  <div style={{ fontSize: '0.78rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', marginBottom: '6px' }}>
+                    Remember This
+                  </div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'hsl(var(--foreground))' }}>
+                    Confidence is not built in a day, it is built daily.
+                  </div>
+                </div>
+              </div>
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <button className="practice-level-button" onClick={() => setShowPremiumLockModal(false)}>
                   Cancel
                 </button>
-                {userType !== 'premium' && (
+                {!isPremiumUser && (
                   <button className="app-btn-primary" onClick={() => navigate('/payment-plans')}>
                     Buy Premium
                   </button>

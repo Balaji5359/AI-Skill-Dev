@@ -22,22 +22,51 @@ const BaseDashboard = ({ testTitle, apiTestType, children }) => {
       try {
         const storedEmail = localStorage.getItem("email");
         if (!storedEmail) return;
+
+        const cachedUserType = localStorage.getItem("user_type");
+        const cachedCurrent = Number(localStorage.getItem("streak_current") || 0);
+        const cachedBest = Number(localStorage.getItem("streak_longest") || 0);
+
+        if (cachedUserType) {
+          setUserType(cachedUserType === "premium" ? "premium" : "free");
+        }
+        if (cachedCurrent || cachedBest) {
+          setStreakData({
+            current_streak: cachedCurrent,
+            best_streak: cachedBest,
+          });
+        }
+
         const [profile, streak] = await Promise.all([
           profileAPI.get(storedEmail),
           platformAPI.updateStreak(storedEmail, true),
         ]);
+
+        const profileStreak = profile?.streak || profile?.user_info?.streak || {};
+        const resolvedCurrentStreak = Math.max(
+          Number(streak?.current_streak || 0),
+          Number(profileStreak.current_streak || 0),
+          Number(cachedCurrent || 0)
+        );
+        const resolvedBestStreak = Math.max(
+          Number(streak?.longest_streak || 0),
+          Number(profileStreak.longest_streak || 0),
+          Number(cachedBest || 0)
+        );
+
         if (profile?.statusCode === 200) {
           const userType = profile?.user_info?.user_type || profile?.user_type || 'free';
           const paymentDetails = profile?.user_info?.payment_details || profile?.payment_details || {};
           const isPremium = userType === 'premium' && paymentDetails?.status === 'success';
           setUserType(isPremium ? "premium" : "free");
+          localStorage.setItem("user_type", isPremium ? "premium" : "free");
         }
-        if (streak?.statusCode === 200) {
-          setStreakData({
-            current_streak: streak.current_streak || 0,
-            best_streak: streak.longest_streak || 0,
-          });
-        }
+        setStreakData({
+          current_streak: resolvedCurrentStreak,
+          best_streak: resolvedBestStreak,
+        });
+        localStorage.setItem("streak_current", String(resolvedCurrentStreak));
+        localStorage.setItem("streak_longest", String(resolvedBestStreak));
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

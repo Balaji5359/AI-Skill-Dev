@@ -116,11 +116,8 @@ function Header() {
                         {mobileMenuOpen && (
                         <button
                             onClick={() => {
-                                localStorage.removeItem('email');
-                                localStorage.removeItem('user_type');
-                                localStorage.removeItem('streak_current');
-                                localStorage.removeItem('streak_longest');
-                                localStorage.removeItem('active_dates');
+                                localStorage.clear();
+                                sessionStorage.clear();
                                 navigate('/signup');
                                 setMobileMenuOpen(false);
                             }}
@@ -140,11 +137,8 @@ function Header() {
                     <button 
                         className="btn-logout"
                         onClick={() => {
-                            localStorage.removeItem('email');
-                            localStorage.removeItem('user_type');
-                            localStorage.removeItem('streak_current');
-                            localStorage.removeItem('streak_longest');
-                            localStorage.removeItem('active_dates');
+                            localStorage.clear();
+                            sessionStorage.clear();
                             navigate('/signup');
                         }}
                     >
