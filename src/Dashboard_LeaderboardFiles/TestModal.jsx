@@ -87,7 +87,7 @@ const TestModal = ({ test, onClose, testType }) => {
               </div>
             </section>
 
-            {(testType === "JAM" || testType === "SITUATIONSPEAK") && test.audioFiles && test.audioFiles.length > 0 && (
+            {(testType === "jam" || testType === "situation") && test.audioFiles && test.audioFiles.length > 0 && (
               <section className="rounded-xl border border-border bg-muted/40 p-4">
                 <h4 className="text-sm font-semibold text-foreground mb-3 inline-flex items-center gap-2"><AudioLines className="w-4 h-4 text-primary" />Audio Recordings</h4>
                 <div className="space-y-3">
@@ -104,7 +104,7 @@ const TestModal = ({ test, onClose, testType }) => {
               </section>
             )}
 
-            {(testType === "JAM" || testType === "SITUATIONSPEAK") && test.transcripts && test.transcripts.length > 0 && (
+            {(testType === "jam" || testType === "situation") && test.transcripts && test.transcripts.length > 0 && (
               <section className="rounded-xl border border-border bg-muted/40 p-4">
                 <h4 className="text-sm font-semibold text-foreground mb-3 inline-flex items-center gap-2"><ChartColumn className="w-4 h-4 text-accent" />Speech Analysis</h4><br></br>
                 <button

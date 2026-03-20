@@ -309,12 +309,12 @@ export const profileAPI = {
 export const testAPI = {
   getIds: (college_email, test_type) => {
     const mapped = TEST_CODE_MAP[test_type] || test_type;
-    return apiCall(VITE_COMM_TEST_API, 'get_test_ids', { college_email, test_type: mapped });
+    return apiCall(VITE_COMM_RESULTS_API, 'get_test_ids', { college_email, test_type: mapped });
   },
 
   getData: (college_email, test_type, sessionId, role = 'student') => {
     const mapped = TEST_CODE_MAP[test_type] || test_type;
-    return apiCall(VITE_COMM_TEST_API, 'get_test_data', { college_email, test_type: mapped, sessionId, role });
+    return apiCall(VITE_COMM_RESULTS_API, 'get_test_data', { college_email, test_type: mapped, sessionId, role });
   },
 
   uploadRecording: (data, sessionId) => {

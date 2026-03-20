@@ -49,7 +49,12 @@ const AdvancedDashboard = ({ testType, userEmail }) => {
       try {
         setLoading(true);
         const data = await testAPI.getIds(userEmail, testType);
-        setTests(data?.sessions || []);
+        if (data?.statusCode === 200) {
+          setTests(data?.sessions || []);
+        } else {
+          console.error("Error fetching tests:", data);
+          setTests([]);
+        }
       } catch (error) {
         console.error("Error fetching tests:", error);
         setTests([]);
@@ -109,8 +114,12 @@ const AdvancedDashboard = ({ testType, userEmail }) => {
     }
     try {
       const data = await testAPI.getData(userEmail, testType, test.sessionId);
-      setSessionDetails((prev) => ({ ...prev, [test.sessionId]: data }));
-      setSelectedTest({ ...test, ...data });
+      if (data?.statusCode === 200) {
+        setSessionDetails((prev) => ({ ...prev, [test.sessionId]: data }));
+        setSelectedTest({ ...test, ...data });
+      } else {
+        console.error("Error fetching test details:", data);
+      }
     } catch (error) {
       console.error("Error fetching test details:", error);
     }
