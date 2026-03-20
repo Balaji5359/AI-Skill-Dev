@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { profileAPI, platformAPI } from "../services/api";
 
-const getUserType = (profile) =>
-    profile?.user_type === "premium" && profile?.premium_status === "active" ? "premium" : "free";
+const getUserType = (profile) => {
+    const userType = profile?.user_info?.user_type || profile?.user_type || 'free';
+    const paymentDetails = profile?.user_info?.payment_details || profile?.payment_details || {};
+    return userType === 'premium' && paymentDetails?.status === 'success' ? 'premium' : 'free';
+};
 
 const useInterviewUserInfo = () => {
     const [userType, setUserType] = useState("free");

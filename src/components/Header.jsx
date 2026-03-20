@@ -25,10 +25,14 @@ function Header() {
 
                 if (profile?.statusCode === 200) {
                     setProfileData(profile);
-                    const computedUserType = profile?.user_type === 'premium' && profile?.premium_status === 'active' ? 'premium' : 'free';
+                    const userType = profile?.user_info?.user_type || profile?.user_type || 'free';
+                    const paymentDetails = profile?.user_info?.payment_details || profile?.payment_details || {};
+                    const isPremium = userType === 'premium' && paymentDetails?.status === 'success';
+                    const computedUserType = isPremium ? 'premium' : 'free';
                     setUserType(computedUserType);
                     localStorage.setItem('user_type', computedUserType);
-                    const profStreak = profile.streak || {};
+                    
+                    const profStreak = profile?.user_info?.streak || profile?.streak || {};
                     const streakObj = {
                         current_streak: profStreak.current_streak || streak?.current_streak || 0,
                         longest_streak: profStreak.longest_streak || streak?.longest_streak || 0,

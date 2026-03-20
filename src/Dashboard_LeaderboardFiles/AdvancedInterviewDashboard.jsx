@@ -25,7 +25,9 @@ const AdvancedInterviewDashboard = () => {
           interviewResultsAPI.getDashboard(userEmail, "test"),
         ]);
         if (profile?.statusCode === 200) {
-          const isPremium = profile.user_type === "premium" && profile.premium_status === "active";
+          const userType = profile?.user_info?.user_type || profile?.user_type || 'free';
+          const paymentDetails = profile?.user_info?.payment_details || profile?.payment_details || {};
+          const isPremium = userType === 'premium' && paymentDetails?.status === 'success';
           setUserType(isPremium ? "premium" : "free");
         }
         if (streakRes?.statusCode === 200) {

@@ -14,6 +14,7 @@ const LandingPage = lazy(() => import("./LandingPageFiles/LandingPage.jsx"));
 // Registration components
 const Signup = lazy(() => import("./RegisterFiles/Signup.jsx"));
 const ProfileData = lazy(() => import("./components/ProfileData.jsx"));
+const PaymentPlans = lazy(() => import("./components/PaymentPlans.jsx"));
 const ProfileCreation_Survey = lazy(() => import("./RegisterFiles/ProfileCreation/ProfileCreation.jsx"));
 
 // Pratice Components
@@ -169,6 +170,7 @@ function App() {
           {/* Protected routes with Layout */}
           <Route path="/" element={<ProtectedLayout />}>
             <Route path="profiledata" element={<ProfileData />} />
+            <Route path="payment-plans" element={<PaymentPlans />} />
             <Route path="practice" element={<Practice />} />
             <Route path="test" element={<Test />} />
             <Route path="student-dashboard" element={<Dashboard />} />

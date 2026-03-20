@@ -302,16 +302,20 @@ function Test() {
                     resultsAPI.getTest(storedEmail).catch(() => ({ statusCode: 400 }))
                 ]);
 
-                // Set user type from profile data
-                if (profile?.statusCode === 200) {
-                    setUserType(profile.user_type === 'premium' && profile.premium_status === 'active' ? 'premium' : 'free');
-                    if (profile?.streak) {
-                        setStreak({
-                            current_streak: profile.streak.current_streak || 0,
-                            longest_streak: profile.streak.longest_streak || 0
-                        });
-                    }
-                }
+        // Set user type from profile data
+        if (profile?.statusCode === 200) {
+          const userType = profile?.user_info?.user_type || profile?.user_type || 'free';
+          const paymentDetails = profile?.user_info?.payment_details || profile?.payment_details || {};
+          const isPremium = userType === 'premium' && paymentDetails?.status === 'success';
+          setUserType(isPremium ? 'premium' : 'free');
+          if (profile?.user_info?.streak || profile?.streak) {
+            const streakData = profile?.user_info?.streak || profile?.streak;
+            setStreak({
+              current_streak: streakData.current_streak || 0,
+              longest_streak: streakData.longest_streak || 0
+            });
+          }
+        }
                 
                 // Set test counts - try usage data first, then fallback to profile data
                 if (usageData?.statusCode === 200) {
@@ -471,6 +475,13 @@ function Test() {
     };
 
     const handleLevelChoice = (level) => {
+        // For free users, only allow Basic level
+        if (userType !== 'premium' && level !== 'Basic') {
+            setShowPremiumLockModal(true);
+            setShowLevelModal(false);
+            return;
+        }
+        
         setSelectedLevel(level);
         setShowLevelModal(false);
         setInstructionIndex(0);
@@ -586,10 +597,18 @@ function Test() {
                                     <button
                                         key={level}
                                         onClick={() => handleLevelChoice(level)}
-                                        className="test-level-button"
-                                        style={{ width: '100%', padding: '12px' }}
+                                        className={`test-level-button ${userType !== 'premium' && level !== 'Basic' ? 'locked' : ''}`}
+                                        style={{ 
+                                            width: '100%', 
+                                            padding: '12px',
+                                            opacity: userType !== 'premium' && level !== 'Basic' ? 0.6 : 1,
+                                            position: 'relative'
+                                        }}
                                     >
                                         {level}
+                                        {userType !== 'premium' && level !== 'Basic' && (
+                                            <span style={{ marginLeft: '8px', fontSize: '12px' }}>🔒 Premium</span>
+                                        )}
                                     </button>
                                 ))}
                             </div>
@@ -613,7 +632,9 @@ function Test() {
                         </div>
                         <div className="test-modal-content">
                             <p style={{ fontSize: '0.95rem', marginBottom: '16px', textAlign: 'center' }}>
-                                You've used all your free test attempts. Upgrade to Premium to unlock unlimited tests and advanced features!
+                                {userType === 'premium' 
+                                    ? 'You\'ve used all your premium test attempts for today. Come back tomorrow for more tests!' 
+                                    : 'Upgrade to Premium to unlock Intermediate and Advanced levels, plus unlimited daily tests!'}
                             </p>
                             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <button className="test-level-button" onClick={() => setShowPremiumLockModal(false)}>

@@ -238,31 +238,31 @@ function Practice() {
 
     const loadPracticeData = async () => {
       try {
-        // Try to load usage data first, then fall back to full profile
         const [usageData, profile] = await Promise.all([
           profileAPI.get(storedEmail, 'usage', 'communication_practices').catch(() => ({ statusCode: 400 })),
           profileAPI.get(storedEmail).catch(() => ({ statusCode: 400 }))
         ]);
 
-        // Set user type from profile data
         if (profile?.statusCode === 200) {
-          setUserType(profile.user_type === 'premium' && profile.premium_status === 'active' ? 'premium' : 'free');
-          if (profile?.streak) {
+          const userType = profile?.user_info?.user_type || profile?.user_type || 'free';
+          const paymentDetails = profile?.user_info?.payment_details || profile?.payment_details || {};
+          const isPremium = userType === 'premium' && paymentDetails?.status === 'success';
+          setUserType(isPremium ? 'premium' : 'free');
+          
+          if (profile?.user_info?.streak || profile?.streak) {
+            const streakData = profile?.user_info?.streak || profile?.streak;
             setStreak({
-              current_streak: profile.streak.current_streak || 0,
-              longest_streak: profile.streak.longest_streak || 0
+              current_streak: streakData.current_streak || 0,
+              longest_streak: streakData.longest_streak || 0
             });
           }
         }
 
-        // Set practice counts - try usage data first, then fallback to profile data
         if (usageData?.statusCode === 200) {
           setPractices(usageData);
         } else if (profile?.statusCode === 200 && profile.practices) {
-          // Fallback to old structure
           setPractices(profile.practices);
         } else {
-          // Default practice counts if all fails
           setPractices({
             jam_practice: 0,
             pronu_practice: 0,
@@ -274,7 +274,6 @@ function Practice() {
 
       } catch (error) {
         console.error('Error loading practice data:', error);
-        // Set default values on error
         setPractices({
           jam_practice: 0,
           pronu_practice: 0,
@@ -290,7 +289,6 @@ function Practice() {
 
     loadPracticeData();
   }, []);
-
 
   const activities = [
     {
@@ -328,14 +326,7 @@ function Practice() {
   const handleStartChallenge = (id) => {
     const activity = activities.find(a => a.id === id);
     if (activity?.count === 0) {
-      if (userType !== 'premium') {
-        setShowPremiumLockModal(true);
-      }
-      return;
-    }
-    if (userType !== 'premium' && activity?.count > 0) {
-      setActiveChallenge(id);
-      setShowPremiumModal(true);
+      setShowPremiumLockModal(true);
       return;
     }
     setActiveChallenge(id);
@@ -343,6 +334,13 @@ function Practice() {
   };
 
   const handleLevelChoice = (level) => {
+    // For free users, only allow Basic level
+    if (userType !== 'premium' && level !== 'Basic') {
+      setShowPremiumLockModal(true);
+      setShowLevelModal(false);
+      return;
+    }
+    
     setSelectedLevel(level);
     setShowLevelModal(false);
     setInstructionIndex(0);
@@ -370,7 +368,6 @@ function Practice() {
     }
   };
 
-  // disable background scroll when modals are open
   useEffect(() => {
     if (showPremiumModal || showPremiumLockModal || showInstructionModal) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
@@ -398,6 +395,13 @@ function Practice() {
           <p style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '600px', margin: '0 auto' }}>
             Improve your communication skills through guided practice sessions with instant feedback.
           </p>
+          {userType !== 'premium' && (
+            <div className="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
+              <p className="text-sm text-amber-800">
+                <strong>Free Plan:</strong> Basic level only. Upgrade to Premium for Intermediate & Advanced levels.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="practice-activity-grid">
@@ -455,10 +459,18 @@ function Practice() {
                   <button
                     key={level}
                     onClick={() => handleLevelChoice(level)}
-                    className="practice-level-button"
-                    style={{ width: '100%', padding: '12px' }}
+                    className={`practice-level-button ${userType !== 'premium' && level !== 'Basic' ? 'locked' : ''}`}
+                    style={{ 
+                      width: '100%', 
+                      padding: '12px',
+                      opacity: userType !== 'premium' && level !== 'Basic' ? 0.6 : 1,
+                      position: 'relative'
+                    }}
                   >
                     {level}
+                    {userType !== 'premium' && level !== 'Basic' && (
+                      <span style={{ marginLeft: '8px', fontSize: '12px' }}>🔒 Premium</span>
+                    )}
                   </button>
                 ))}
               </div>
@@ -482,76 +494,20 @@ function Practice() {
             </div>
             <div className="practice-modal-content">
               <p style={{ fontSize: '0.95rem', marginBottom: '16px', textAlign: 'center' }}>
-                You've used all your free practice attempts. Upgrade to Premium to unlock unlimited practice sessions and advanced features!
+                {userType === 'premium' 
+                  ? 'You\'ve used all your premium practice attempts for today. Come back tomorrow for more practices!' 
+                  : 'Upgrade to Premium to unlock Intermediate and Advanced levels, plus unlimited daily practices!'}
               </p>
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <button className="practice-level-button" onClick={() => setShowPremiumLockModal(false)}>
                   Cancel
                 </button>
-                <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
-                  Buy Premium
-                </button>
+                {userType !== 'premium' && (
+                  <button className="app-btn-primary" onClick={() => navigate('/payment-plans')}>
+                    Buy Premium
+                  </button>
+                )}
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showPremiumModal && (
-        <div className="practice-modal-overlay" onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}>
-          <div className="practice-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
-            <div className="practice-modal-header">
-              <h3 className="practice-modal-title">Upgrade to Premium</h3>
-              <button
-                onClick={() => { setShowPremiumModal(false); setActiveChallenge(null); }}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
-              >
-                ×
-              </button>
-            </div>
-            <div className="practice-modal-content">
-              <p style={{ fontSize: '0.95rem', marginBottom: '12px' }}>
-                You're on the Free plan. Upgrade to Premium to unlock more features, advanced analytics, and unlimited practice sessions.
-              </p>
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                <button className="app-btn-primary" onClick={() => navigate('/profiledata')}>
-                  Buy Premium
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeChallenge && !showLevelModal && (
-        <div className="practice-modal-overlay">
-          <div className="practice-modal">
-            <div className="practice-modal-header">
-              <h2 className="practice-modal-title">
-                {practiceInstructions[activeChallenge]?.[instructionIndex]?.title}
-              </h2>
-              <button
-                onClick={() => setActiveChallenge(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))' }}
-              >
-                X
-              </button>
-            </div>
-
-            <div className="practice-modal-content">
-              {practiceInstructions[activeChallenge]?.[instructionIndex]?.content}
-            </div>
-
-            <div className="practice-modal-actions">
-              <button
-                onClick={handleLaunchChallenge}
-                className="practice-level-button"
-                style={{ padding: '10px 24px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
-              >
-                START PRACTICE
-              </button>
             </div>
           </div>
         </div>
