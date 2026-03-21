@@ -449,59 +449,87 @@ export const resultsAPI = {
     apiCall(VITE_COMM_RESULTS_API, 'get_practice_results', { college_email })
 };
 
+// Unwrap body string from apiCall response for InterviewResultsService
+const unwrapApiCallBody = (result) => {
+  if (typeof result?.body === 'string') {
+    try {
+      const parsed = JSON.parse(result.body);
+      return { statusCode: result.statusCode, ...parsed };
+    } catch { return result; }
+  }
+  return result;
+};
+
 export const interviewAPI = {
   sendMessage: async ({ interviewType, level, mode, sessionId, email, message }) => {
-    const response = await fetch(VITE_BASIC_INTERVIEW_AGENT_API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        interviewType,
-        level,
-        mode,
-        sessionId,
-        email,
-        message
-      })
-    });
-
-    const result = await response.json();
-    const payload = unwrapLambdaPayload(result);
-    return { statusCode: response.status, ...payload };
+    if (!VITE_BASIC_INTERVIEW_AGENT_API) {
+      console.error('[interviewAPI] VITE_BASIC_INTERVIEW_AGENT_API missing');
+      return { statusCode: 500, error: 'Interview API URL missing' };
+    }
+    const payload = { interviewType, level, mode, sessionId, email, message };
+    console.log('[interviewAPI:sendMessage:req]', { interviewType, level, mode, sessionId, email, msgLen: message?.length });
+    try {
+      const response = await fetch(VITE_BASIC_INTERVIEW_AGENT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body: JSON.stringify(payload) })
+      });
+      const result = await response.json();
+      console.log('[interviewAPI:sendMessage:raw]', result);
+      const unwrapped = unwrapLambdaPayload(result);
+      console.log('[interviewAPI:sendMessage:unwrapped]', unwrapped);
+      return { statusCode: response.status, ...unwrapped };
+    } catch (error) {
+      console.error('[interviewAPI:sendMessage:error]', error);
+      return { statusCode: 500, error: error.message };
+    }
   }
 };
 
 export const interviewResultsAPI = {
-  submitSession: (resultData) =>
-    apiCall(VITE_INTERVIEW_RESULTS_API, 'submit_interview_result', resultData),
+  // ntjkr8rnd6 gateway: send { body: JSON.stringify({action,...data}) }
+  // Lambda parse_body unwraps the nested body string
+  _call: async (action, data) => {
+    if (!VITE_INTERVIEW_RESULTS_API) return { statusCode: 500, error: 'VITE_INTERVIEW_RESULTS_API missing' };
+    try {
+      const response = await fetch(VITE_INTERVIEW_RESULTS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body: JSON.stringify({ action, ...data }) })
+      });
+      const raw = await response.json();
+      console.log(`[interviewResultsAPI:${action}:raw]`, raw);
+      // Unwrap Lambda response body string
+      const result = typeof raw?.body === 'string'
+        ? { statusCode: raw.statusCode ?? response.status, ...JSON.parse(raw.body) }
+        : { statusCode: response.status, ...raw };
+      return result;
+    } catch (e) {
+      return { statusCode: 500, error: e.message };
+    }
+  },
 
-  getDashboard: (college_email, mode = 'all') =>
-    apiCall(VITE_INTERVIEW_RESULTS_API, 'get_interview_results', { college_email, mode }),
+  submitSession: async (resultData) => {
+    console.log('[interviewResultsAPI:submit:req]', resultData);
+    const result = await interviewResultsAPI._call('submit', resultData);
+    console.log('[interviewResultsAPI:submit:res]', result);
+    return result;
+  },
 
   getIds: async (college_email, interview_key, mode = 'practice') => {
-    const result = await apiCall(VITE_INTERVIEW_RESULTS_API, 'get_interview_ids', { college_email, interview_key, mode });
-    if (typeof result?.body === 'string') {
-      try {
-        return { ...result, ...JSON.parse(result.body) };
-      } catch {
-        return result;
-      }
-    }
+    console.log('[interviewResultsAPI:getIds:req]', { college_email, interview_key, mode });
+    const result = await interviewResultsAPI._call('get_ids', { college_email, interview_key, mode });
+    console.log('[interviewResultsAPI:getIds:res]', { statusCode: result?.statusCode, sessions: result?.sessions?.length ?? 0 });
     return result;
   },
 
   getData: async (college_email, interview_key, sessionId, mode = 'practice') => {
-    const result = await apiCall(VITE_INTERVIEW_RESULTS_API, 'get_interview_data', { college_email, interview_key, sessionId, mode });
-    if (typeof result?.body === 'string') {
-      try {
-        return { ...result, ...JSON.parse(result.body) };
-      } catch {
-        return result;
-      }
-    }
+    console.log('[interviewResultsAPI:getData:req]', { college_email, interview_key, sessionId, mode });
+    const result = await interviewResultsAPI._call('get_data', { college_email, interview_key, sessionId, mode });
+    console.log('[interviewResultsAPI:getData:res]', { statusCode: result?.statusCode, hasSession: !!result?.session });
     return result;
   }
 };
-
 export const activityUsageAPI = {
   decrement: async (college_email, mode, level, interview_key) => {
     try {

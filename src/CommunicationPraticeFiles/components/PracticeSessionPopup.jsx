@@ -84,13 +84,13 @@ export default function PracticeSessionPopup({
               </div>
 
               <button
-                className={`mx-auto w-28 h-28 rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                  recording ? "bg-red-500 text-white" : "bg-primary text-primary-foreground"
+                className={`mx-auto w-36 h-36 rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${
+                  recording ? "bg-red-500 text-white scale-95" : "bg-primary text-primary-foreground hover:scale-105"
                 }`}
                 onClick={recordingState === "recording" ? stopRecording : startRecording}
                 disabled={isLoading || recordingState === "preparing" || recordingState === "processing"}
               >
-                {recording ? <Square className="w-8 h-8" /> : <Mic className="w-8 h-8" />}
+                {recording ? <Square className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
               </button>
 
               <p className="text-xs text-muted-foreground">
