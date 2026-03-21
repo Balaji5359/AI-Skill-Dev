@@ -9,7 +9,7 @@ const getUserType = (profile) => {
 
 const useInterviewUserInfo = () => {
     const [userType, setUserType] = useState("free");
-    const [streakData, setStreakData] = useState({ current_streak: 0 });
+    const [streakData, setStreakData] = useState({ current_streak: 0, longest_streak: 0 });
     const [profileData, setProfileData] = useState(null);
 
     useEffect(() => {
@@ -20,12 +20,10 @@ const useInterviewUserInfo = () => {
         if (cachedUserType) {
             setUserType(cachedUserType === "premium" ? "premium" : "free");
         }
-        if (cachedCurrent || cachedLongest) {
-            setStreakData({
-                current_streak: cachedCurrent,
-                longest_streak: cachedLongest,
-            });
-        }
+        setStreakData({
+            current_streak: cachedCurrent,
+            longest_streak: cachedLongest,
+        });
 
         const storedEmail = localStorage.getItem("email");
         if (!storedEmail) return;
@@ -37,6 +35,9 @@ const useInterviewUserInfo = () => {
                     platformAPI.updateStreak(storedEmail, true)
                 ]);
 
+                const profileStreak = profile?.user_info?.streak || profile?.streak || {};
+                const profileActiveDates = profile?.user_info?.active_dates || profile?.active_dates || [];
+
                 if (profile?.statusCode === 200) {
                     setProfileData(profile);
                     const resolvedUserType = getUserType(profile);
@@ -44,11 +45,22 @@ const useInterviewUserInfo = () => {
                     localStorage.setItem("user_type", resolvedUserType);
                 }
 
-                if (streak?.statusCode === 200) {
-                    setStreakData(streak);
-                    localStorage.setItem("streak_current", String(streak.current_streak || 0));
-                    localStorage.setItem("streak_longest", String(streak.longest_streak || 0));
-                }
+                const resolvedStreak =
+                    streak?.statusCode === 200
+                        ? {
+                            current_streak: streak.current_streak || profileStreak.current_streak || 0,
+                            longest_streak: streak.longest_streak || profileStreak.longest_streak || 0,
+                            active_dates: streak.active_dates?.length ? streak.active_dates : profileActiveDates,
+                        }
+                        : {
+                            current_streak: profileStreak.current_streak || 0,
+                            longest_streak: profileStreak.longest_streak || 0,
+                            active_dates: profileActiveDates,
+                        };
+
+                setStreakData(resolvedStreak);
+                localStorage.setItem("streak_current", String(resolvedStreak.current_streak || 0));
+                localStorage.setItem("streak_longest", String(resolvedStreak.longest_streak || 0));
             } catch (error) {
                 console.error("Error fetching interview user data:", error);
             }

@@ -25,11 +25,6 @@ function ProfileData() {
 
   useEffect(() => {
     const storedPaymentSuccess = sessionStorage.getItem("payment_success") === "true";
-    console.log("[profile-data:payment-flag-check]", {
-      routeState: location.state,
-      storedPaymentSuccess,
-      currentPath: window.location.pathname,
-    });
     if (storedPaymentSuccess) {
       setPaymentSuccessFlag(true);
       sessionStorage.removeItem("payment_success");
@@ -117,18 +112,6 @@ function ProfileData() {
   const isPremium = getUserType() === "premium" && getPaymentDetails()?.status === "success";
   const showPaymentSuccess = Boolean((location.state?.paymentSuccess || paymentSuccessFlag) && isPremium);
   const studentName = profileData?.personal_info?.full_name || profileData?.full_name || "Student";
-
-  useEffect(() => {
-    if (!loading) {
-      console.log("[profile-data:resolved-state]", {
-        isPremium,
-        showPaymentSuccess,
-        userType: getUserType(),
-        paymentDetails: getPaymentDetails(),
-        currentPath: window.location.pathname,
-      });
-    }
-  }, [loading, isPremium, showPaymentSuccess]);
 
   useEffect(() => {
     if (showPaymentSuccess) {

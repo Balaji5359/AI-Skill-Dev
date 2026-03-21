@@ -47,12 +47,10 @@ const BaseInterviewResultsDashboard = ({ mode = "practice", title }) => {
         if (cachedUserType) {
           setUserType(cachedUserType === "premium" ? "premium" : "free");
         }
-        if (cachedCurrent || cachedLongest) {
-          setStreak({
-            current_streak: cachedCurrent,
-            longest_streak: cachedLongest,
-          });
-        }
+        setStreak({
+          current_streak: cachedCurrent,
+          longest_streak: cachedLongest,
+        });
 
         const [profile, streakRes, dash] = await Promise.all([
           profileAPI.get(userEmail),
@@ -68,15 +66,21 @@ const BaseInterviewResultsDashboard = ({ mode = "practice", title }) => {
           localStorage.setItem("user_type", isPremium ? "premium" : "free");
         }
 
-        if (streakRes?.statusCode === 200) {
-          const nextStreak = {
-            current_streak: streakRes.current_streak || 0,
-            longest_streak: streakRes.longest_streak || 0,
-          };
-          setStreak(nextStreak);
-          localStorage.setItem("streak_current", String(nextStreak.current_streak || 0));
-          localStorage.setItem("streak_longest", String(nextStreak.longest_streak || 0));
-        }
+        const profileStreak = profile?.user_info?.streak || profile?.streak || {};
+        const nextStreak =
+          streakRes?.statusCode === 200
+            ? {
+                current_streak: streakRes.current_streak || profileStreak.current_streak || 0,
+                longest_streak: streakRes.longest_streak || profileStreak.longest_streak || 0,
+              }
+            : {
+                current_streak: profileStreak.current_streak || 0,
+                longest_streak: profileStreak.longest_streak || 0,
+              };
+
+        setStreak(nextStreak);
+        localStorage.setItem("streak_current", String(nextStreak.current_streak || 0));
+        localStorage.setItem("streak_longest", String(nextStreak.longest_streak || 0));
 
         if (dash?.statusCode === 200 && dash.dashboard) {
           setDashboardData(dash.dashboard);

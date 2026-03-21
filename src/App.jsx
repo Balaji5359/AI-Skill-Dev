@@ -29,11 +29,12 @@ const TestFeedbackPage = lazy(() => import("./CommunicationTestsFiles/TestFeedba
 
 // Interview Components
 const Interview = lazy(() => import("./InterviewModule/Interview.jsx"));
-const InterviewPractice = lazy(() => import("./InterviewModule/InterviewPractice.jsx"));
-const InterviewTest = lazy(() => import("./InterviewModule/InterviewTest.jsx"));
-const BasicInterview = lazy(() => import("./InterviewModule/BasicInterview.jsx"));
-const InterviewSession = lazy(() => import("./InterviewModule/InterviewSession.jsx"));
-const InterviewFeedback = lazy(() => import("./InterviewModule/InterviewFeedback.jsx"));
+const InterviewPracticeHub = lazy(() => import("./InterviewModule/InterviewPracticeFiles/InterviewPracticeHub.jsx"));
+const InterviewTestHub = lazy(() => import("./InterviewModule/InterviewTestFiles/InterviewTestHub.jsx"));
+const InterviewPracticeSession = lazy(() => import("./InterviewModule/InterviewPracticeFiles/InterviewPracticeSession.jsx"));
+const InterviewPracticeFeedbackPage = lazy(() => import("./InterviewModule/InterviewPracticeFiles/InterviewPracticeFeedbackPage.jsx"));
+const InterviewTestSession = lazy(() => import("./InterviewModule/InterviewTestFiles/InterviewTestSession.jsx"));
+const InterviewTestFeedbackPage = lazy(() => import("./InterviewModule/InterviewTestFiles/InterviewTestFeedbackPage.jsx"));
 
 // Practice Components - Base
 const BaseComponentPractice = lazy(() => import("./CommunicationPraticeFiles/BaseComponentPractice.jsx"));
@@ -296,7 +297,7 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* Interview routes (no global Header) */}
+          {/* Interview routes */}
           <Route path="interview" element={
             <ProtectedRoute>
               <Interview />
@@ -304,27 +305,32 @@ function App() {
           } />
           <Route path="interview/practice" element={
             <ProtectedRoute>
-              <InterviewPractice />
+              <InterviewPracticeHub />
+            </ProtectedRoute>
+          } />
+          <Route path="interview/practice/session" element={
+            <ProtectedRoute>
+              <InterviewPracticeSession />
+            </ProtectedRoute>
+          } />
+          <Route path="interview/practice/feedback" element={
+            <ProtectedRoute>
+              <InterviewPracticeFeedbackPage />
             </ProtectedRoute>
           } />
           <Route path="interview/test" element={
             <ProtectedRoute>
-              <InterviewTest />
+              <InterviewTestHub />
             </ProtectedRoute>
           } />
-          <Route path="interview/session" element={
+          <Route path="interview/test/session" element={
             <ProtectedRoute>
-              <InterviewSession />
+              <InterviewTestSession />
             </ProtectedRoute>
           } />
-          <Route path="interview/feedback" element={
+          <Route path="interview/test/feedback" element={
             <ProtectedRoute>
-              <InterviewFeedback />
-            </ProtectedRoute>
-          } />
-          <Route path="interview/basic" element={
-            <ProtectedRoute>
-              <BasicInterview />
+              <InterviewTestFeedbackPage />
             </ProtectedRoute>
           } />
 

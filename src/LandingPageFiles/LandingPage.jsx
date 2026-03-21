@@ -4,6 +4,38 @@ import { Sparkles, BookOpen, Zap, BarChart3, Users, ArrowRight, Menu, X } from '
 import './landing-theme.css';
 import logo from '../assets/logo.png';
 
+const createPayload = (payload) => JSON.stringify(payload);
+
+const unwrapPayload = (value) => {
+  let current = value;
+
+  for (let i = 0; i < 4; i += 1) {
+    if (typeof current === 'string') {
+      try {
+        current = JSON.parse(current);
+        continue;
+      } catch {
+        return {};
+      }
+    }
+
+    if (current && typeof current === 'object' && 'body' in current) {
+      current = current.body;
+      continue;
+    }
+
+    break;
+  }
+
+  return current && typeof current === 'object' ? current : {};
+};
+
+const PLAN_META_BY_TYPE = {
+  monthly: { tag: '1 Month', button: 'Start Plan', highlight: false },
+  quarterly: { tag: 'Most Popular', button: 'Upgrade Now', highlight: true },
+  yearly: { tag: 'Best Value', button: 'Go Premium', highlight: false },
+};
+
 function LandingPage() {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -15,6 +47,7 @@ function LandingPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [showPlanFeatures, setShowPlanFeatures] = useState(null);
   const [pendingPlan, setPendingPlan] = useState(null);
+  const [premiumPlans, setPremiumPlans] = useState([]);
 
   useEffect(() => {
     const observerOptions = {
@@ -56,6 +89,45 @@ function LandingPage() {
       }
       document.body.classList.remove('landing-page');
     };
+  }, []);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      const paymentApi = import.meta.env.VITE_PAYMENT_API || import.meta.env.VITE_PAYMENT_API_URL;
+      if (!paymentApi) return;
+
+      try {
+        const response = await fetch(paymentApi, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: createPayload({ action: 'get_plans' })
+        });
+
+        if (!response.ok) return;
+
+        const text = await response.text();
+        const body = unwrapPayload(text);
+        const payload = body.data || body;
+        const userPlans = payload.user_plans || {};
+        const planDays = payload.plans_days || {};
+
+        const plans = Object.entries(userPlans).map(([type, value]) => ({
+          type,
+          tag: PLAN_META_BY_TYPE[type]?.tag || type,
+          button: PLAN_META_BY_TYPE[type]?.button || 'Choose Plan',
+          highlight: Boolean(PLAN_META_BY_TYPE[type]?.highlight),
+          price: `Rs ${Number(value) || 0}`,
+          duration: `${Number(planDays[type]) || 0} days`,
+          durationDays: Number(planDays[type]) || 0,
+        }));
+
+        setPremiumPlans(plans);
+      } catch {
+        setPremiumPlans([]);
+      }
+    };
+
+    fetchPlans();
   }, []);
 
   const handleNavClick = (e, targetId) => {
@@ -197,8 +269,14 @@ function LandingPage() {
       setShowTerms(true);
       return;
     }
+    if (plan?.type) {
+      navigate('/payment-plans#pp-duration-section', { state: { selectedPlan: plan.type } });
+      return;
+    }
     navigate('/signup', { state: { selectedPlan: plan } });
   };
+
+  const displayPremiumPlans = premiumPlans.length ? premiumPlans : plans.slice(1, 4);
 
   return (
     <div className="landing-theme min-h-screen">
@@ -480,7 +558,7 @@ function LandingPage() {
                   <p className="flex items-start gap-2 text-sm text-foreground"><span className="text-primary font-bold">✓</span> Basic streak tracking</p>
                   <p className="flex items-start gap-2 text-sm text-muted-foreground"><span className="font-bold">✗</span> No advanced analytics</p>
                 </div>
-                <button onClick={() => setShowPlanFeatures(plans[0])} className="w-full py-2.5 rounded-lg bg-muted text-foreground font-bold hover:bg-muted/80 transition-all text-sm">
+                <button onClick={() => setShowPlanFeatures({ tag: 'Free', price: 'Rs 0', duration: 'Free Trial' })} className="w-full py-2.5 rounded-lg bg-muted text-foreground font-bold hover:bg-muted/80 transition-all text-sm">
                   Get Started
                 </button>
               </div>
@@ -500,14 +578,14 @@ function LandingPage() {
                   <p className="flex items-start gap-2 text-sm text-foreground"><span className="text-primary font-bold">✓</span> All Levels Access</p>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  {plans.slice(1, 4).map((plan, idx) => (
+                  {displayPremiumPlans.map((plan, idx) => (
                     <button
                       key={idx}
                       onClick={() => setShowPlanFeatures(plan)}
                       className="py-3 rounded-lg bg-primary text-primary-foreground font-bold hover:opacity-90 transition-all text-xs flex flex-col items-center"
                     >
                       <span className="text-lg">{plan.price}</span>
-                      <span className="text-xs opacity-90">{plan.tag}</span>
+                      <span className="text-xs opacity-90">{plan.durationDays} days</span>
                     </button>
                   ))}
                 </div>
@@ -718,7 +796,7 @@ function LandingPage() {
                 }}
                 className="landing-btn-primary w-full text-center text-base font-bold"
               >
-                Continue to Signup
+                {showPlanFeatures.tag === 'Free' ? 'Continue to Signup' : 'Continue to Plans'}
               </button>
             </div>
           </div>
