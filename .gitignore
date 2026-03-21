@@ -13,6 +13,7 @@ dist-ssr
 *.local
 package-lock.json
 user-data-schema.txt
+admin-data-schema.txt
 
 # Editor directories and files
 .vscode/*
