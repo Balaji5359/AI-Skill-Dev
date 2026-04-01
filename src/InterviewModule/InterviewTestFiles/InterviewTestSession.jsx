@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Bot, Clock, Loader2, MessageSquare, Mic, Square, User } from "lucide-react";
-import { activityUsageAPI, interviewAPI, interviewResultsAPI, platformAPI, profileAPI, speechToTextAPI } from "../../services/api";
+import { activityUsageAPI, interviewAPI, interviewResultsAPI, platformAPI, profileAPI, testAPI } from "../../services/api";
 import { createWavRecorder } from "../../CommunicationTestsFiles/wavRecorder";
 import { getInterviewModuleByKey } from "../interviewConfig";
 import { extractInterviewScore, isInterviewCompletionResponse } from "../interviewUtils";
@@ -10,6 +10,8 @@ import "../interview-clone-theme.css";
 
 const MAX_RECORDING_SECONDS = 90;          // 1 min 30 sec cap per response
 const SESSION_DURATION_SECONDS = 300;      // 5-minute hard stop per test
+const TRANSCRIPT_POLL_INTERVAL_MS = 2000;
+const TRANSCRIPT_MAX_ATTEMPTS = 20;       // ~40s wait to match JAM-style long polling
 
 const cleanMessage = (msg = "") => String(msg).replace(/\*\*/g, "").replace(/\r/g, "").trim();
 
@@ -46,6 +48,7 @@ const InterviewTestSession = () => {
   const [fullscreenWarnings, setFullscreenWarnings] = useState(0);
   const [showStartInstruction, setShowStartInstruction] = useState(false);
   const [quickReplies, setQuickReplies] = useState([]);
+  const audioSessionRef = useRef(null);
 
   const chatRef = useRef(null);
   const timerRef = useRef(null);
@@ -145,6 +148,10 @@ const InterviewTestSession = () => {
     const msg = { role, content: cleanMessage(content), timestamp: Date.now() };
     setChatMessages((prev) => [...prev, msg]);
     conversationHistoryRef.current = [...conversationHistoryRef.current, msg];
+  };
+
+  const logFlow = (event, data = {}) => {
+    console.log(`[interview-audio:${event}]`, { sessionId: sessionIdRef.current, ...data });
   };
 
   const formatTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -329,12 +336,30 @@ const InterviewTestSession = () => {
           reader.readAsDataURL(audioBlob);
         });
         recordingCounterRef.current += 1;
-        const sttId = `test-${sessionIdRef.current}-${Date.now()}-${recordingCounterRef.current}`;
-        console.log("[test-session:stt:req]", { sttId, blobSize: audioBlob.size });
-        const res = await speechToTextAPI.transcribeShortAudio(base64Audio, sttId, `basic_interview_${interviewTypeKey}`);
-        console.log("[test-session:stt:res]", res);
-        const transcript = cleanMessage(res?.transcript || res?.text || "");
-        if (!transcript) appendMessage("ai", "I could not hear a clear response. Please speak again.");
+        const audioSessionId = `test-${sessionIdRef.current}-${Date.now()}-${recordingCounterRef.current}`;
+        audioSessionRef.current = audioSessionId;
+        logFlow("upload:start", { audioSessionId, size: audioBlob.size, base64Length: base64Audio.length });
+
+        // Upload to CommunicationTestService to persist in S3 and trigger transcript job
+        const uploadRes = await testAPI.uploadRecording({
+          data: base64Audio,
+          sessionId: audioSessionId,
+        });
+        logFlow("upload:response", { audioSessionId, uploadRes });
+
+        let transcript = "";
+        if (uploadRes?.statusCode === 200) {
+          // Poll transcript just like JAM flow
+          for (let attempt = 1; attempt <= TRANSCRIPT_MAX_ATTEMPTS; attempt += 1) {
+            await new Promise((r) => setTimeout(r, TRANSCRIPT_POLL_INTERVAL_MS));
+            const tRes = await testAPI.getTranscript(audioSessionId);
+            logFlow("transcript:poll", { audioSessionId, attempt, tRes });
+            const candidate = cleanMessage(tRes?.transcript || tRes?.text || "");
+            if (candidate) { transcript = candidate; break; }
+          }
+        }
+
+        if (!transcript) appendMessage("ai", "Audio is still processing. Please wait 30–40 seconds and try again.");
         else await sendTranscriptToAi(transcript);
       } catch (e) {
         console.error("[test-session:stt:error]", e);
