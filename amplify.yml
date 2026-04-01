@@ -17,3 +17,8 @@ frontend:
 environment:
   variables:
     VITE_CONTACT_API_URL: https://nrkg7cmta3.execute-api.ap-south-1.amazonaws.com/dev/skillroute_landingpagecontactsection_api
+redirects:
+  # SPA fallback so React Router routes (/profiledata, /interview/test, etc.) resolve to index.html
+  - source: "/<*>"
+    target: "/index.html"
+    status: "200"
