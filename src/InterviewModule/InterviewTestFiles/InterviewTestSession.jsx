@@ -8,8 +8,8 @@ import { extractInterviewScore, isInterviewCompletionResponse } from "../intervi
 import useInterviewUserInfo from "../useInterviewUserInfo";
 import "../interview-clone-theme.css";
 
-const MAX_RECORDING_SECONDS = 90;
-const SESSION_DURATION_SECONDS = 1800;
+const MAX_RECORDING_SECONDS = 90;          // 1 min 30 sec cap per response
+const SESSION_DURATION_SECONDS = 300;      // 5-minute hard stop per test
 
 const cleanMessage = (msg = "") => String(msg).replace(/\*\*/g, "").replace(/\r/g, "").trim();
 
@@ -45,6 +45,7 @@ const InterviewTestSession = () => {
   const [showFullscreenAlert, setShowFullscreenAlert] = useState(false);
   const [fullscreenWarnings, setFullscreenWarnings] = useState(0);
   const [showStartInstruction, setShowStartInstruction] = useState(false);
+  const [quickReplies, setQuickReplies] = useState([]);
 
   const chatRef = useRef(null);
   const timerRef = useRef(null);
@@ -250,7 +251,17 @@ const InterviewTestSession = () => {
         message: "hi",
       });
       console.log("[test-session:start:response]", res);
-      appendMessage("ai", cleanMessage(res?.aiResponse || res?.message || "Hello! Let's begin your interview test."));
+      if (interviewTypeKey === "self_introduction") {
+        const introPrompt = "Hi! I'm TaraAI, and I'll help you practice your self-introduction today. This is your chance to make a great first impression. I'm here to support you! Are you ready to begin? Tap 'Yes' or 'No'.";
+        appendMessage("ai", introPrompt);
+        setQuickReplies([
+          { label: "Yes", value: "yes" },
+          { label: "No", value: "no" },
+        ]);
+      } else {
+        appendMessage("ai", cleanMessage(res?.aiResponse || res?.message || "Hello! Let's begin your interview test."));
+        setQuickReplies([]);
+      }
     } catch (e) {
       console.error("[test-session:start:error]", e);
       appendMessage("ai", "Unable to start the test. Please try again.");
@@ -273,6 +284,7 @@ const InterviewTestSession = () => {
 
   const sendTranscriptToAi = async (transcript) => {
     appendMessage("user", transcript);
+    setQuickReplies([]);
     setIsLoading(true);
     console.log("[test-session:send]", { transcript: transcript.slice(0, 60), sessionId: sessionIdRef.current });
     try {
@@ -287,6 +299,10 @@ const InterviewTestSession = () => {
       console.log("[test-session:send:response]", res);
       const aiResponse = cleanMessage(res?.aiResponse || res?.message || "I could not process that response.");
       appendMessage("ai", aiResponse);
+      if (interviewTypeKey === "self_introduction" && transcript.toLowerCase() === "yes") {
+        appendMessage("ai", "Great! Let's choose your level:\n\nBasic - Entry-level introduction\nTap 'Basic' to select your level.");
+        setQuickReplies([{ label: "Basic", value: "Basic" }]);
+      }
       if (isInterviewCompletionResponse(aiResponse)) {
         const extracted = extractInterviewScore(aiResponse) || 0;
         console.log("[test-session:completion-detected]", { extracted, preview: aiResponse.slice(0, 80) });
@@ -313,7 +329,7 @@ const InterviewTestSession = () => {
           reader.readAsDataURL(audioBlob);
         });
         recordingCounterRef.current += 1;
-        const sttId = `${sessionIdRef.current}-stt-${recordingCounterRef.current}`;
+        const sttId = `test-${sessionIdRef.current}-${Date.now()}-${recordingCounterRef.current}`;
         console.log("[test-session:stt:req]", { sttId, blobSize: audioBlob.size });
         const res = await speechToTextAPI.transcribeShortAudio(base64Audio, sttId, `basic_interview_${interviewTypeKey}`);
         console.log("[test-session:stt:res]", res);
@@ -366,8 +382,8 @@ const InterviewTestSession = () => {
               <h4 className="text-sm font-semibold text-foreground mb-2">Test Conditions</h4>
               <ul className="text-xs text-muted-foreground space-y-1">
                 <li>• Session runs in fullscreen mode. Exiting 3 times terminates the test.</li>
-                <li>• 30-minute time limit applies.</li>
-                <li>• Use the mic button for each spoken response.</li>
+                <li>• 5-minute time limit applies; the test auto-submits when the timer ends.</li>
+                <li>• Use the mic button for each spoken response (1:30 max per reply).</li>
                 <li>• Complete all prompts to receive your final assessment.</li>
               </ul>
             </div>
@@ -399,7 +415,7 @@ const InterviewTestSession = () => {
                 <span className={`interview-badge ${isPremium ? "accent" : ""}`}>{userType === "premium" ? "Premium" : "Free"}</span>
                 <span className="interview-badge">Remaining: {remainingSessions}</span>
               </div>
-              <div className={`flex items-center gap-1.5 text-sm font-mono font-semibold ${sessionTimeLeft < 300 ? "text-destructive" : "text-muted-foreground"}`}>
+              <div className={`flex items-center gap-1.5 text-sm font-mono font-semibold ${sessionTimeLeft < 60 ? "text-destructive" : "text-muted-foreground"}`}>
                 <Clock className="w-4 h-4" />{formatTime(sessionTimeLeft)}
               </div>
             </div>
@@ -423,6 +439,20 @@ const InterviewTestSession = () => {
                   <div className="bg-card border border-border rounded-2xl px-4 py-3 text-sm text-muted-foreground flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />Tara AI is preparing the next response...
                   </div>
+                </div>
+              )}
+              {!!quickReplies.length && !interviewCompleted && (
+                <div className="flex gap-2 flex-wrap">
+                  {quickReplies.map((qr) => (
+                    <button
+                      key={`${qr.label}-${qr.value}`}
+                      disabled={isLoading || recordingState === "recording"}
+                      onClick={() => sendTranscriptToAi(qr.value)}
+                      className="px-3 py-1.5 rounded-full bg-accent/10 text-sm font-semibold text-accent hover:bg-accent/20 transition-colors disabled:opacity-50"
+                    >
+                      {qr.label}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>

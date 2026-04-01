@@ -412,7 +412,7 @@ const ProfileCreation = () => {
                         <select name="program" value={formData.program} onChange={handleInputChange} required>
                           <option value="">Select Program</option>
                           <option value="B.Tech">B.Tech</option>
-                          <option value="M.Tech">M.Tech</option>
+                          {/* <option value="M.Tech">M.Tech</option> */}
                         </select>
                       </div>
                       <div className="input-group">
@@ -420,10 +420,10 @@ const ProfileCreation = () => {
                         <select name="branch" value={formData.branch} onChange={handleInputChange} required>
                           <option value="">Select Branch</option>
                           <option value="CST">Computer Science and Technology</option>
-                          <option value="ECE">Electronics and Communication</option>
+                          {/* <option value="ECE">Electronics and Communication</option>
                           <option value="EEE">Electrical and Electronics</option>
                           <option value="MECH">Mechanical Engineering</option>
-                          <option value="CIVIL">Civil Engineering</option>
+                          <option value="CIVIL">Civil Engineering</option> */}
                         </select>
                       </div>
                       <div className="input-group">
