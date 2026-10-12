@@ -182,7 +182,7 @@ function SignUp() {
                 return;
             }
 
-            // Check password confirmation
+            // Checking password confirmation
             if (formData.password !== formData.confirmPassword) {
                 setErrorMessage("Passwords do not match.");
                 setShowErrorCard(true);
