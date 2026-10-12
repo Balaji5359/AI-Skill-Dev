@@ -80,8 +80,8 @@ const apiCall = async (url, action, data = {}) => {
 };
 
 export const authAPI = {
-  login: (college_email, password) =>
-    apiCall(VITE_STUDENT_AUTH_API, 'login', { college_email, password }),
+  login: (college_email, password, college_name) =>
+    apiCall(VITE_STUDENT_AUTH_API, 'login', { college_email, password, college_name }),
 
   signup: (college_email, full_name, password, college_name) =>
     apiCall(VITE_STUDENT_AUTH_API, 'signup', { college_email, full_name, password, college_name }),
@@ -553,6 +553,13 @@ const platformAvailableInitial = VITE_PLATFORM_ENABLED === "true" && !!VITE_PLAT
 let platformAvailable = platformAvailableInitial;
 
 export const platformAPI = {
+  getAcademicOptions: async () => {
+    if (!VITE_PLATFORM_API) {
+      return { statusCode: 500, error: "Platform API URL is missing." };
+    }
+    return apiCall(VITE_PLATFORM_API, 'get_academic_options');
+  },
+
   updateStreak: async (college_email, get_streak_data = false) => {
     // If platform endpoint is missing or previously 404'd, short-circuit to defaults to avoid console spam
     if (!VITE_PLATFORM_API || !platformAvailable) {

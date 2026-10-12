@@ -38,8 +38,8 @@ export const apiWrapper = {
     };
   },
 
-  async login(college_email, password) {
-    const data = await authAPI.login(college_email, password);
+  async login(college_email, password, college_name) {
+    const data = await authAPI.login(college_email, password, college_name);
     return {
       statusCode: data.statusCode || 200,
       body: JSON.stringify(data)

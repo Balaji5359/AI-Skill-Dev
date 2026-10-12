@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./login.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
-import { authAPI } from "../services/api";
+import { authAPI, platformAPI } from "../services/api";
 
 function SignUp() {
     const location = useLocation();
@@ -14,6 +14,9 @@ function SignUp() {
         confirmPassword: '',
         collegeName: ''
     });
+    const [collegeOptions, setCollegeOptions] = useState({});
+    const [collegeOptionsLoading, setCollegeOptionsLoading] = useState(true);
+    const [collegeOptionsError, setCollegeOptionsError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [message, setMessage] = useState("");
@@ -61,6 +64,29 @@ function SignUp() {
         };
     }, [location.state]);
 
+    useEffect(() => {
+        let isActive = true;
+
+        const loadCollegeOptions = async () => {
+            const result = await platformAPI.getAcademicOptions();
+            if (!isActive) return;
+
+            if (result.statusCode === 200 && result.colleges && Object.keys(result.colleges).length > 0) {
+                setCollegeOptions(result.colleges);
+                setCollegeOptionsError('');
+            } else {
+                setCollegeOptions({});
+                setCollegeOptionsError('Could not load the college list. Please refresh and try again.');
+            }
+            setCollegeOptionsLoading(false);
+        };
+
+        loadCollegeOptions();
+        return () => {
+            isActive = false;
+        };
+    }, []);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -93,9 +119,9 @@ function SignUp() {
         setApiMessage("");
 
         if (isLogin) {
-            // Validate email format for login
-            if (!formData.email.endsWith("@mits.ac.in")) {
-                setErrorMessage("Please use your MITS college email (@mits.ac.in)");
+            const expectedDomain = collegeOptions[formData.collegeName];
+            if (!expectedDomain || !formData.email.toLowerCase().endsWith(`@${String(expectedDomain).toLowerCase()}`)) {
+                setErrorMessage("Selected college and email domain do not match");
                 setShowErrorCard(true);
                 setIsLoading(false);
                 return;
@@ -105,7 +131,8 @@ function SignUp() {
             try {
                 const data = await authAPI.login(
                     formData.email,
-                    formData.password
+                    formData.password,
+                    formData.collegeName
                 );
                 
                 const errorMsg = data.message || "Login failed";
@@ -147,13 +174,6 @@ function SignUp() {
                 return;
             }
 
-            if (!formData.email.endsWith("@mits.ac.in")) {
-                setErrorMessage("Please use your MITS college email (@mits.ac.in)");
-                setShowErrorCard(true);
-                setIsLoading(false);
-                return;
-            }
-
             // Validate password requirements
             if (!isPasswordValid()) {
                 setErrorMessage("Password must have: 8+ chars, capital letter, number, and special character (!@#$%^&*)");
@@ -178,6 +198,21 @@ function SignUp() {
                 return;
             }
 
+            const expectedDomain = collegeOptions[formData.collegeName];
+            if (!expectedDomain) {
+                setErrorMessage("The selected college is not available. Please refresh and try again.");
+                setShowErrorCard(true);
+                setIsLoading(false);
+                return;
+            }
+
+            if (!formData.email.toLowerCase().endsWith(`@${expectedDomain.toLowerCase()}`)) {
+                setErrorMessage(`Please use your ${formData.collegeName} email (@${expectedDomain})`);
+                setShowErrorCard(true);
+                setIsLoading(false);
+                return;
+            }
+
             // Signup API call using updated backend structure
             try {
                 const data = await authAPI.signup(
@@ -194,6 +229,7 @@ function SignUp() {
                 if (data.statusCode === 200 || data.statusCode === 201) {
                     localStorage.setItem("email", formData.email);
                     localStorage.setItem("fullName", formData.name);
+                    localStorage.setItem("collegeName", formData.collegeName);
                     setShowErrorCard(false);
                     setApiMessage(errorMsg || "Account created successfully! Redirecting...");
                     setTimeout(() => {
@@ -366,11 +402,16 @@ function SignUp() {
                                     onFocus={handleInputFocus}
                                     required
                                     className="college-select"
+                                    disabled={collegeOptionsLoading || Object.keys(collegeOptions).length === 0}
                                 >
-                                    <option value="">Select College</option>
-                                    <option value="MITS University">MITS University</option>
-                                    <option value="ABCD University">ABCD University</option>
+                                    <option value="">
+                                        {collegeOptionsLoading ? 'Loading colleges...' : 'Select College'}
+                                    </option>
+                                    {Object.keys(collegeOptions).map((college) => (
+                                        <option key={college} value={college}>{college}</option>
+                                    ))}
                                 </select>
+                                {collegeOptionsError && <div className="error-text">{collegeOptionsError}</div>}
                             </div>
 
 

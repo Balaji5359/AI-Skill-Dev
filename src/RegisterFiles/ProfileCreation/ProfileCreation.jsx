@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProfileCreation.css';
-import { authAPI, profileAPI } from '../../services/api';
+import { profileAPI, platformAPI } from '../../services/api';
 
 const ProfileCreation = () => {
   const [formData, setFormData] = useState({
@@ -30,6 +30,9 @@ const ProfileCreation = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [academicOptions, setAcademicOptions] = useState({});
+  const [academicOptionsLoading, setAcademicOptionsLoading] = useState(true);
+  const [academicOptionsError, setAcademicOptionsError] = useState('');
 
   useEffect(() => {
     // Check if user is already authenticated/profile completed
@@ -61,9 +64,43 @@ const ProfileCreation = () => {
         collegeEmail: email,
         fullName: fullName || '',
         rollNumber: rollNumber,
-        collegeName: 'MITS University' // Default college name
+        collegeName: localStorage.getItem('collegeName') || ''
       }));
     }
+  }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const loadAcademicOptions = async () => {
+      const result = await platformAPI.getAcademicOptions();
+      if (!isActive) return;
+
+      if (result.statusCode === 200 && result.academic_options && result.colleges) {
+        setAcademicOptions(result.academic_options);
+        setAcademicOptionsError('');
+
+        const email = (localStorage.getItem('email') || '').toLowerCase();
+        const savedCollege = localStorage.getItem('collegeName');
+        const collegeFromEmail = Object.entries(result.colleges).find(([, domain]) =>
+          email.endsWith(`@${String(domain).toLowerCase()}`)
+        )?.[0] || '';
+
+        setFormData(prev => ({
+          ...prev,
+          collegeName: (savedCollege && result.colleges[savedCollege] ? savedCollege : collegeFromEmail) || prev.collegeName
+        }));
+      } else {
+        setAcademicOptions({});
+        setAcademicOptionsError('Could not load academic options. Please refresh and try again.');
+      }
+      setAcademicOptionsLoading(false);
+    };
+
+    loadAcademicOptions();
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const [currentSection, setCurrentSection] = useState(0);
@@ -109,6 +146,7 @@ const ProfileCreation = () => {
       if (!formData.gender) errors.push('Gender is required');
     } else if (sectionIndex === 1) {
       // Academic Information validation
+      if (academicOptionsLoading || academicOptionsError) errors.push('Academic options are unavailable');
       if (!formData.program) errors.push('Program is required');
       if (!formData.branch) errors.push('Branch is required');
       if (!formData.year) errors.push('Year is required');
@@ -398,6 +436,7 @@ const ProfileCreation = () => {
                 <div className="form-section">
                   <div className="section-card">
                     <h2>Academic Information</h2>
+                    {academicOptionsError && <p className="error-text">{academicOptionsError}</p>}
                     <div className="form-grid">
                       <div className="input-group">
                         <label>College Name *</label>
@@ -411,37 +450,36 @@ const ProfileCreation = () => {
                         <label>Program *</label>
                         <select name="program" value={formData.program} onChange={handleInputChange} required>
                           <option value="">Select Program</option>
-                          <option value="B.Tech">B.Tech</option>
-                          {/* <option value="M.Tech">M.Tech</option> */}
+                          {(Array.isArray(academicOptions.Program) ? academicOptions.Program : []).map((program) => (
+                            <option key={program} value={program}>{program}</option>
+                          ))}
                         </select>
                       </div>
                       <div className="input-group">
                         <label>Branch *</label>
                         <select name="branch" value={formData.branch} onChange={handleInputChange} required>
                           <option value="">Select Branch</option>
-                          <option value="CST">Computer Science and Technology</option>
-                          {/* <option value="ECE">Electronics and Communication</option>
-                          <option value="EEE">Electrical and Electronics</option>
-                          <option value="MECH">Mechanical Engineering</option>
-                          <option value="CIVIL">Civil Engineering</option> */}
+                          {Object.entries(academicOptions.Branch || {}).map(([branch, label]) => (
+                            <option key={branch} value={branch}>{label}</option>
+                          ))}
                         </select>
                       </div>
                       <div className="input-group">
                         <label>Year *</label>
                         <select name="year" value={formData.year} onChange={handleInputChange} required>
                           <option value="">Select Year</option>
-                          <option value="1">1st Year</option>
-                          <option value="2">2nd Year</option>
-                          <option value="3">3rd Year</option>
-                          <option value="4">4th Year</option>
+                          {(Array.isArray(academicOptions.Year) ? academicOptions.Year : []).map((year) => (
+                            <option key={year} value={year}>{year}</option>
+                          ))}
                         </select>
                       </div>
                       <div className="input-group">
                         <label>Semester *</label>
                         <select name="sem" value={formData.sem} onChange={handleInputChange} required>
                           <option value="">Select Semester</option>
-                          <option value="1">1st Sem</option>
-                          <option value="2">2nd Sem</option>
+                          {(Array.isArray(academicOptions.Semester) ? academicOptions.Semester : []).map((semester) => (
+                            <option key={semester} value={semester}>{semester}</option>
+                          ))}
                         </select>
                       </div>
 
@@ -449,10 +487,9 @@ const ProfileCreation = () => {
                         <label>Section *</label>
                         <select name="section" value={formData.section} onChange={handleInputChange} required>
                           <option value="">Select Section</option>
-                          <option value="A">A</option>
-                          <option value="B">B</option>
-                          <option value="C">C</option>
-                          <option value="D">D</option>
+                          {(Array.isArray(academicOptions.Section) ? academicOptions.Section : []).map((section) => (
+                            <option key={section} value={section}>{section}</option>
+                          ))}
                         </select>
                       </div>
                     </div>
